@@ -1,5 +1,13 @@
 import numpy as np
 
+
+def pctChange(values):
+    changes = values.pct_change()
+    changes.iloc[0] = 0
+    return changes
+
+
+# Relative strength index
 def rsiFunc(prices, n=14):
     deltas = np.diff(prices)
     seed = deltas[:n + 1]
@@ -28,13 +36,13 @@ def rsiFunc(prices, n=14):
     return rsi
 
 
-def movingaverage(values, window):
-    weigths = np.repeat(1.0, window) / window
-    smas = np.convolve(values, weigths, 'valid')
+def movingAverage(values, window):
+    weights = np.repeat(1.0, window) / window
+    smas = np.convolve(values, weights, 'valid')
     return smas  # as a numpy array
 
 
-def ExpMovingAverage(values, window):
+def expMovingAverage(values, window):
     weights = np.exp(np.linspace(-1., 0., window))
     weights /= weights.sum()
     a = np.convolve(values, weights, mode='full')[:len(values)]
@@ -50,6 +58,6 @@ def computeMACD(x, slow=26, fast=12):
     if fast <= 5:
         return 0, 0, np.zeros(len(x))
 
-    emaslow = ExpMovingAverage(x, slow)
-    emafast = ExpMovingAverage(x, fast)
+    emaslow = expMovingAverage(x, slow)
+    emafast = expMovingAverage(x, fast)
     return emaslow, emafast, emafast - emaslow
