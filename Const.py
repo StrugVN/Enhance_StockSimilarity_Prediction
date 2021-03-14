@@ -1,2 +1,3 @@
 time_col = 'Date'
-similarity_col = 'Close'
+target_col = 'Close'
+name_col = 'Name'

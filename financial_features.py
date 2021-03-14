@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def pctChange(values):
+def PROC(values):
     changes = values.pct_change()
     changes.iloc[0] = 0
     return changes

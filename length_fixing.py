@@ -64,12 +64,12 @@ def delay_time_join(stock1, stock2, delay=1):
 # https://www.witpress.com/Secure/elibrary/papers/CF04/CF04024FU.pdf
 def pip_fix(stock1, stock2, factor=10):
     stock1, stock2 = time_join(stock1, stock2)
-    min_len = min(len(stock1[similarity_col]), len(stock2[similarity_col]))
+    min_len = min(len(stock1[target_col]), len(stock2[target_col]))
     pip_size = min_len / factor
     if pip_size < 25 and min_len > 25:
         pip_size = 25
-    stock1_pairs = [(t, p) for t, p in zip(range(len(stock1[similarity_col])), stock1[similarity_col])]
-    stock2_pairs = [(t, p) for t, p in zip(range(len(stock2[similarity_col])), stock2[similarity_col])]
+    stock1_pairs = [(t, p) for t, p in zip(range(len(stock1[target_col])), stock1[target_col])]
+    stock2_pairs = [(t, p) for t, p in zip(range(len(stock2[target_col])), stock2[target_col])]
     stock1_pairs_pip = fastpip(stock1_pairs, pip_size)
     stock2_pairs_pip = fastpip(stock2_pairs, pip_size)
 
