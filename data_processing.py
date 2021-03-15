@@ -42,8 +42,8 @@ def cal_financial_features(data, norm_func=None):
         include=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns.tolist()
     # for c in numeric_cols:
     #    feature_df[c + '_proc'] = PROC(data[c])
-
     feature_df['Close_proc'] = PROC(data['Close'])
+
     feature_df['rsi'] = rsiFunc(data['Close'])  # Relative strength index
     feature_df['MACD'] = computeMACD(data['Close'])[2]  # Moving Average Convergence/Divergence
     feature_df['Open_Close_diff'] = data['Open'] - data['Close']

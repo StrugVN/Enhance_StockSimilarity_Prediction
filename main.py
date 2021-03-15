@@ -13,7 +13,7 @@ def read_data(path):
     return all_stocks
 
 
-""" TEST """
+""" TEST FLOW """
 df = read_data('data/' + data_name + '.csv')
 stock = 'GOOGL'
 k = 5
@@ -31,14 +31,14 @@ all_stock_name = stock_count[stock_count[const_time_col] > 5 + 7 + 30][const_nam
 # stock có ít nhất x điểm dữ liệu sau time join, x dựa vào time window, số ngày dự đoán, ...
 
 # calculate similarities
-sim_col = 'Close_norm'
+target_col = 'Close_norm'
 sim_func = apply_euclidean
 fix_len_func = time_join
 # use euclidean, time_join on feature Close_norm
 similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name[:50],
                                           similarity_func=sim_func,
                                           fix_len_func=fix_len_func,
-                                          similarity_col=sim_col)
+                                          similarity_col=target_col)
 # top k stocks
 top_k_stocks = get_top_k(all_stock_name, similarities, k)
 # normalize similarity
@@ -48,7 +48,6 @@ top_stock_norm = normalize_similarity(top_k_stocks, stock)
 train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
 
 next_t = [1, 3, 7]
-target_col = 'Close_norm'
 # Prepare X, Y
 ## Time window
 window_len = 5
