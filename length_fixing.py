@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from util.fastpip import fastpip
 from Const import *
 
+
 def padding(stock1, stock2):
     """
     fix 2 stock to be in same length, by multiplying the first value of the shorter stock

@@ -7,10 +7,37 @@ from functools import reduce
 
 from financial_features import *
 from Const import *
+from length_fixing import *
+from similarity_functions import *
 
 
-def cal_other_stock_similarity(data, stock_to_compare, other_stocks):
-    return
+def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_func, #similarity_file_path='',
+                               fix_len_func=time_join, similarity_col=target_col, force=False, split_time='', **kwargs):
+    print("calc similarities for " + stock_to_compare + " func " + str(similarity_func) + \
+          " fix len " + str(fix_len_func) + " on column " + similarity_col)
+
+    similarities = [
+        similarity_func(df_stocks[df_stocks[name_col] == stock_to_compare],  # [y_col].tolist(),
+                        df_stocks[df_stocks[name_col] == stock_name], fix_len_func,
+                        similarity_col)
+        for stock_name in stock_names
+    ]
+
+    return similarities
+
+def normalize_similarity(top_stocks, stock_to_compare):
+    stocks_val = list(top_stocks.values())
+    top_stock_w = {}
+    sum_vals = 0
+    for stock_k, v in top_stocks.items():
+        if stock_k != stock_to_compare:
+            top_stock_w[stock_k] = np.abs(float(v) - max(stocks_val)) / (max(stocks_val) - min(stocks_val))
+            sum_vals += top_stock_w[stock_k]
+
+    for stock_k, v in top_stock_w.items():
+        top_stock_w[stock_k] = top_stock_w[stock_k] / sum_vals
+
+    return top_stock_w
 
 
 def cal_financial_features(data, norm_func=None):
@@ -35,6 +62,6 @@ def cal_financial_features(data, norm_func=None):
         data_norm_df[time_col] = data.index
         data_norm_df = data_norm_df.set_index(time_col)
 
-        feature_df = pd.concat([feature_df, data_norm_df], axis=1, join='inner')
+        feature_df = pd.concat([feature_df, data_norm_df], axis=1)
 
     return feature_df

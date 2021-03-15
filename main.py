@@ -2,6 +2,7 @@ import pandas as pd
 
 from data_processing import *
 from Const import *
+from similarity_functions import *
 from sklearn.preprocessing import StandardScaler
 
 
@@ -14,7 +15,7 @@ def read_data(path):
 
 
 """ TEST """
-df = read_data('data/all_stocks_5yr.csv')
+df = read_data('data/' + data_name + '.csv')
 stock = 'GOOGL'
 k = 10
 
@@ -30,14 +31,18 @@ stock_count = all_stock_df.groupby([name_col]).count()[time_col].reset_index()  
 other_stocks = stock_count[stock_count[time_col] > 30][name_col].tolist()
 # stock có ít nhất x điểm dữ liệu sau time join, x dựa vào time window, số ngày dự đoán, ...
 
-""" 
-**Chỉ tính tương đồng các stock trong other_stocks**
+# calculate similarities
+simi_col = 'Close_norm'
+    # use euclidean, time_join on feature Close_norm
+similarities = cal_other_stock_similarity(feature_df, stock, other_stocks,
+                                          similarity_func=apply_euclidean,
+                                          fix_len_func=time_join,
+                                          similarity_col=simi_col)
+    # top k stocks
+top_k_stocks = get_top_k(other_stocks, similarities, k)
+    # normalize similarity
+top_stock_w = normalize_similarity(top_k_stocks, stock)
 
-similarity = dict stock: kq tương đồng 
-top_k_stock = chọn ra k stock
-normalize kết quả
-
-"""
 # split dataset
 stock_times = df[df[name_col] == stock][time_col].tolist()  # List of date
 
