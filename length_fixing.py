@@ -29,14 +29,14 @@ def time_join(stock1, stock2):
     stock2_ = stock2.copy()
     stock1_ = stock1.copy()
 
-    stock2_[time_col] = stock2_.index
-    stock1_[time_col] = stock1_.index
+    stock2_[const_time_col] = stock2_.index
+    stock1_[const_time_col] = stock1_.index
 
-    stock2_ = stock2_[stock2_[time_col].isin(stock1_[time_col])]
-    stock1_ = stock1_[stock1_[time_col].isin(stock2_[time_col])]
+    stock2_ = stock2_[stock2_[const_time_col].isin(stock1_[const_time_col])]
+    stock1_ = stock1_[stock1_[const_time_col].isin(stock2_[const_time_col])]
 
-    del stock2_[time_col]
-    del stock1_[time_col]
+    del stock2_[const_time_col]
+    del stock1_[const_time_col]
     return stock1_, stock2_
 
 
@@ -49,15 +49,15 @@ def delay_time_join(stock1, stock2, delay=1):
     stock2_ = stock2.copy()
     stock1_ = stock1.copy()
 
-    stock2_[time_col] = stock2_.index
-    stock1_[time_col] = stock1_.index
+    stock2_[const_time_col] = stock2_.index
+    stock1_[const_time_col] = stock1_.index
 
-    stock2_[time_col] = stock2_[time_col].shift(-delay)
-    stock2_ = stock2_[stock2_[time_col].isin(stock1_[time_col])]
-    stock1_ = stock1_[stock1_[time_col].isin(stock2_[time_col])]
+    stock2_[const_time_col] = stock2_[const_time_col].shift(-delay)
+    stock2_ = stock2_[stock2_[const_time_col].isin(stock1_[const_time_col])]
+    stock1_ = stock1_[stock1_[const_time_col].isin(stock2_[const_time_col])]
 
-    del stock2_[time_col]
-    del stock1_[time_col]
+    del stock2_[const_time_col]
+    del stock1_[const_time_col]
 
     return stock1_, stock2_
 
@@ -65,12 +65,12 @@ def delay_time_join(stock1, stock2, delay=1):
 # https://www.witpress.com/Secure/elibrary/papers/CF04/CF04024FU.pdf
 def pip_fix(stock1, stock2, factor=10):
     stock1, stock2 = time_join(stock1, stock2)
-    min_len = min(len(stock1[target_col]), len(stock2[target_col]))
+    min_len = min(len(stock1[const_target_col]), len(stock2[const_target_col]))
     pip_size = min_len / factor
     if pip_size < 25 and min_len > 25:
         pip_size = 25
-    stock1_pairs = [(t, p) for t, p in zip(range(len(stock1[target_col])), stock1[target_col])]
-    stock2_pairs = [(t, p) for t, p in zip(range(len(stock2[target_col])), stock2[target_col])]
+    stock1_pairs = [(t, p) for t, p in zip(range(len(stock1[const_target_col])), stock1[const_target_col])]
+    stock2_pairs = [(t, p) for t, p in zip(range(len(stock2[const_target_col])), stock2[const_target_col])]
     stock1_pairs_pip = fastpip(stock1_pairs, pip_size)
     stock2_pairs_pip = fastpip(stock2_pairs, pip_size)
 
@@ -90,10 +90,10 @@ def test():
     all_stocks = all_stocks.set_index('Date', drop=False)
 
     stock1 = all_stocks[all_stocks['Name'] == 'GOOGL']
-    stock1 = stock1[['Close']][:40]
+    stock1 = stock1[['Close']]
 
     stock2 = all_stocks[all_stocks['Name'] == 'AAPL']
-    stock2 = stock2[['Close']][:50]
+    stock2 = stock2[['Close']]
 
     """
     stock1 = pd.DataFrame()

@@ -1,28 +1,19 @@
-#from data_preperation import *
-import pickle
 from dtw import dtw
-from sklearn.metrics import mean_squared_error
 import statsmodels.tsa.stattools as ts
 
-import random
-import pandas as pd
-import numpy as np
-import os
-
-from Const import *
 from length_fixing import *
 
 from util.SAX_FILE import SAX
 
 
-def apply_dtw(stock1, stock2, fix_len_func=time_join, similarity_col=target_col):
+def apply_dtw(stock1, stock2, fix_len_func=time_join, similarity_col=const_target_col):
     stock1, stock2 = fix_len_func(stock1, stock2)
     if len(stock1) <= 25 or len(stock2) <= 25:
         return 1000
     return dtw(stock1[similarity_col].tolist(), stock2[similarity_col].tolist(), dist=lambda x, y: abs(x - y))[0]
 
 
-def apply_pearson(stock1, stock2, fix_len_func=time_join, similarity_col=target_col):
+def apply_pearson(stock1, stock2, fix_len_func=time_join, similarity_col=const_target_col):
     stock1, stock2 = fix_len_func(stock1, stock2)
     if len(stock1) <= 25 or len(stock2) <= 25:
         return 1000
@@ -30,12 +21,12 @@ def apply_pearson(stock1, stock2, fix_len_func=time_join, similarity_col=target_
     return abs(pearson - 1)
 
 
-def apply_euclidean(stock1, stock2, fix_len_func=time_join, similarity_col=target_col):
+def apply_euclidean(stock1, stock2, fix_len_func=time_join, similarity_col=const_target_col):
     stock1, stock2 = fix_len_func(stock1, stock2)
     return np.linalg.norm(np.array(stock1[similarity_col].tolist()) - np.array(stock2[similarity_col].tolist()))
 
 
-def compare_sax(stock1, stock2, fix_len_func=time_join, similarity_col=target_col):
+def compare_sax(stock1, stock2, fix_len_func=time_join, similarity_col=const_target_col):
     stock1, stock2 = fix_len_func(stock1, stock2)
     if len(stock1) <= 25 or len(stock2) <= 25:
         return 1000
@@ -45,11 +36,11 @@ def compare_sax(stock1, stock2, fix_len_func=time_join, similarity_col=target_co
     return sax_obj_.compare_strings(stock1_s, stock2_s)
 
 
-def cointegration(stock1, stock2, fix_len_func=time_join, similarity_col=target_col):
+def cointegration(stock1, stock2, fix_len_func=time_join, similarity_col=const_target_col):
     stock1, stock2 = fix_len_func(stock1, stock2)
     if len(stock1) <= 25 or len(stock2) <= 25:
         return 1000
-    oin_t, p_val, _crit = ts.coint(stock1[similarity_col].tolist(),stock2[similarity_col].tolist())
+    oin_t, p_val, _crit = ts.coint(stock1[similarity_col].tolist(), stock2[similarity_col].tolist())
     return p_val
 
 
@@ -109,9 +100,9 @@ def test():
     print('\t\t\t\t\t\tpadding\t\t\t\t\t\ttime_join\t\t\t\t\tdelay_time_join\t\t\t\t\tpip_fix')
     for sim_func in [cointegration, apply_euclidean, compare_sax, apply_dtw, apply_pearson]:
 
-        print(sim_func.__name__, end = ":\t" + ' '*(20 - len(sim_func.__name__)))
-        for fix_func in [padding,time_join,delay_time_join,pip_fix]:
-            sims = sim_func(stock1, stock2, fix_func, similarity_col=target_col)
+        print(sim_func.__name__, end=":\t" + ' ' * (20 - len(sim_func.__name__)))
+        for fix_func in [padding, time_join, delay_time_join, pip_fix]:
+            sims = sim_func(stock1, stock2, fix_func, similarity_col=const_target_col)
             print(sims, end='\t\t\t')
         print('')
 
@@ -119,4 +110,3 @@ def test():
 if __name__ == "__main__":
     print("Test similarity funcs")
     test()
-

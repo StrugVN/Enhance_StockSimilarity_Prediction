@@ -1,14 +1,13 @@
 import pandas as pd
 
 from data_processing import *
-from Const import *
 from similarity_functions import *
 from sklearn.preprocessing import StandardScaler
 
 
 def read_data(path):
     all_stocks = pd.read_csv(path)
-    all_stocks['Date'] = pd.to_datetime(all_stocks['Date'], format='%Y-%m-%d', errors='ignore')
+    all_stocks[const_time_col] = pd.to_datetime(all_stocks[const_time_col], format='%Y-%m-%d', errors='ignore')
     all_stocks = all_stocks.dropna(axis=0)
     all_stocks = all_stocks.set_index('Date', drop=False)
     return all_stocks
@@ -17,61 +16,57 @@ def read_data(path):
 """ TEST """
 df = read_data('data/' + data_name + '.csv')
 stock = 'GOOGL'
-k = 10
+k = 5
 
 # get feature all stock
-feature_df = cal_financial_features(df, StandardScaler())
+feature_df, scaler = cal_financial_features(df, StandardScaler())
 
 # cal sim
-stock_df = df[df[name_col] == stock]
-all_stock_df = df[df[time_col].isin(stock_df[time_col])]  # time join
+stock_df = feature_df[feature_df[const_name_col] == stock]
+all_stock_df = feature_df[feature_df[const_time_col].isin(stock_df[const_time_col])]  # time join
 
-stock_count = all_stock_df.groupby([name_col]).count()[time_col].reset_index()  # Số điểm dữ liệu các stock
+stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()  # Số điểm dữ liệu các stock
 
-other_stocks = stock_count[stock_count[time_col] > 30][name_col].tolist()
+all_stock_name = stock_count[stock_count[const_time_col] > 5 + 7 + 30][const_name_col].tolist()
 # stock có ít nhất x điểm dữ liệu sau time join, x dựa vào time window, số ngày dự đoán, ...
 
 # calculate similarities
-simi_col = 'Close_norm'
-    # use euclidean, time_join on feature Close_norm
-similarities = cal_other_stock_similarity(feature_df, stock, other_stocks,
-                                          similarity_func=apply_euclidean,
-                                          fix_len_func=time_join,
-                                          similarity_col=simi_col)
-    # top k stocks
-top_k_stocks = get_top_k(other_stocks, similarities, k)
-    # normalize similarity
-top_stock_w = normalize_similarity(top_k_stocks, stock)
+sim_col = 'Close_norm'
+sim_func = apply_euclidean
+fix_len_func = time_join
+# use euclidean, time_join on feature Close_norm
+similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name[:50],
+                                          similarity_func=sim_func,
+                                          fix_len_func=fix_len_func,
+                                          similarity_col=sim_col)
+# top k stocks
+top_k_stocks = get_top_k(all_stock_name, similarities, k)
+# normalize similarity
+top_stock_norm = normalize_similarity(top_k_stocks, stock)
 
 # split dataset
-stock_times = df[df[name_col] == stock][time_col].tolist()  # List of date
+train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
 
-train_len = int(len(stock_times) * 70 / 100)
-
-train_start, train_end = stock_times[0], stock_times[train_len]
-test_start, test_end = stock_times[train_len + 1], stock_times[-1]
-
-train_df = feature_df[(train_start <= feature_df[time_col])
-                      & (feature_df[time_col] < train_end) & feature_df[name_col].isin(other_stocks)]
-train_comparing_stock_df = train_df[train_df[name_col] == stock][time_col]
-train_df = train_df[train_df[time_col].isin(train_comparing_stock_df)]
-
-test_df = feature_df[(test_start <= feature_df[time_col])
-                     & (feature_df[time_col] < test_end) & feature_df[name_col].isin(other_stocks)]
-test_comparing_stock_df = test_df[test_df[name_col] == stock][time_col]
-test_df = test_df[test_df[time_col].isin(test_comparing_stock_df)]
-
+next_t = [1, 3, 7]
+target_col = 'Close_norm'
 # Prepare X, Y
-
 ## Time window
 window_len = 5
+selected_features = ['Close_norm']
+
+train_X_w, train_Y_w = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
+                                               target_col, top_stock_norm, weighted_sampling=True)
+test_X_w, test_Y_w = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
+                                             target_col, top_stock_norm, is_test=True)
+print(len(train_X_w), len(train_Y_w), len(test_X_w), len(test_Y_w))
 
 ## Time point
 window_len = 0
-
-""" Nháp
- 
-
-"""
+selected_features = ['Close', 'Close_norm', 'Close_proc', 'rsi', 'MACD', 'Open_Close_diff']
+train_X_p, train_Y_p = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
+                                               target_col, top_stock_norm, weighted_sampling=True)
+test_X_p, test_Y_p = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
+                                             target_col, top_stock_norm, is_test=True)
+print(len(train_X_p), len(train_Y_p), len(test_X_p), len(test_Y_p))
 
 print('End')
