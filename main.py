@@ -36,10 +36,15 @@ target_col = 'Close_norm'
 sim_func = apply_euclidean
 fix_len_func = time_join
 # use euclidean, time_join on feature Close_norm
-similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name[:50],
+similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name,
                                           similarity_func=sim_func,
                                           fix_len_func=fix_len_func,
                                           similarity_col=target_col)
+"""similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name,
+                                          similarity_func=sim_func,
+                                          fix_len_func=fix_len_func,
+                                          similarity_col=target_col,
+                                          similarity_file_path='similarities/GOOGL_v_501_stocks_Close_norm_apply_euclidean_time_join.pkl')"""
 # top k stocks
 top_k_stocks = get_top_k(all_stock_name, similarities, k)
 # normalize similarity
