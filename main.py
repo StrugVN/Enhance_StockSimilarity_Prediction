@@ -40,11 +40,6 @@ similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name,
                                           similarity_func=sim_func,
                                           fix_len_func=fix_len_func,
                                           similarity_col=target_col)
-"""similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name,
-                                          similarity_func=sim_func,
-                                          fix_len_func=fix_len_func,
-                                          similarity_col=target_col,
-                                          similarity_file_path='similarities/GOOGL_v_501_stocks_Close_norm_apply_euclidean_time_join.pkl')"""
 # top k stocks
 top_k_stocks = get_top_k(all_stock_name, similarities, k)
 # normalize similarity
