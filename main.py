@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.ensemble import *
 
 from data_processing import *
 from similarity_functions import *
@@ -61,11 +62,34 @@ print(len(train_X_w), len(train_Y_w), len(test_X_w), len(test_Y_w))
 
 ## Time point
 window_len = 0
-selected_features = ['Close', 'Close_norm', 'Close_proc', 'rsi', 'MACD', 'Open_Close_diff']
+selected_features = ['Close', 'Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 train_X_p, train_Y_p = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                                target_col, top_stock_norm, weighted_sampling=True)
 test_X_p, test_Y_p = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
                                              target_col, top_stock_norm, is_test=True)
 print(len(train_X_p), len(train_Y_p), len(test_X_p), len(test_Y_p))
+
+# Modeling
+model = RandomForestRegressor(n_estimators=100, random_state=0)
+
+model.fit(train_X_p, train_Y_p)
+
+pred_Y_p = model.predict(test_X_p)
+
+
+
+# Error cal
+error_p = (pred_Y_p - test_Y_p)
+
+mse_p = np.mean(error_p**2)
+
+close_norm_test_X = pd.DataFrame()
+close_norm_test_X['1'], close_norm_test_X['3'], close_norm_test_X['7'] = [test_X_p['Close_norm']]*3
+bool_test_Y_p = (test_Y_p - close_norm_test_X) > 0
+bool_pred_Y_p = (pred_Y_p - close_norm_test_X) > 0
+
+bool_error_p = bool_test_Y_p & bool_pred_Y_p
+
+
 
 print('End')

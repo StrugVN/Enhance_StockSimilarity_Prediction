@@ -51,11 +51,13 @@ def cal_financial_features(data, norm_func=None):
 
     if norm_func is not None:  # Normalize
         scaler = copy(norm_func)
+        features = ['rsi', 'MACD', 'Open_Close_diff', 'High_Low_diff']
 
-        scaler.fit(data[numeric_cols])
-        data_norm = scaler.transform(data[numeric_cols])
+        data[features] = feature_df[features]
+        scaler.fit(data[numeric_cols + features])
+        data_norm = scaler.transform(data[numeric_cols + features])
 
-        data_norm_df = pd.DataFrame(data_norm, columns=[s + '_norm' for s in numeric_cols])
+        data_norm_df = pd.DataFrame(data_norm, columns=[s + '_norm' for s in numeric_cols + features])
         data_norm_df[const_time_col] = data.index
         data_norm_df = data_norm_df.set_index(const_time_col)
 
@@ -160,7 +162,6 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
                 msk = (np.random.rand(len(sim_stock_X)) < top_stock[stock_name])
                 sim_stock_X = sim_stock_X[msk]
                 sim_stock_Y = sim_stock_Y[msk]
-
 
             X_df = pd.concat([X_df, sim_stock_X])
             Y_df = pd.concat([Y_df, sim_stock_Y])
