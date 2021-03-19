@@ -7,14 +7,12 @@ from financial_features import *
 from similarity_functions import *
 
 
-def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_func,
-                               fix_len_func=time_join, similarity_col=const_target_col, force=False):
-    similarity_file_path = os.path.join('similarities',
-                                        '_'.join([stock_to_compare, 'v', str(len(stock_names)),
-                                                  'stocks', similarity_col,
-                                                  similarity_func.__name__, fix_len_func.__name__]) + '.pkl')
-
-    if (not os.path.isfile(similarity_file_path)) or force:
+def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_file_path, similarity_func,
+                               fix_len_func=time_join, similarity_col=const_target_col, ):
+    if os.path.isfile(similarity_file_path):
+        print('loading existing similarity result')
+        similarities = pickle.load(open(similarity_file_path, 'rb'))
+    else:
         print('calc similarities for ' + stock_to_compare + ' func ' + str(similarity_func) + \
               ' fix len ' + str(fix_len_func) + ' on column ' + similarity_col)
         similarities = [
@@ -24,11 +22,12 @@ def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similar
             for stock_name in stock_names
         ]
 
+        similarity_file_path = os.path.join('similarities',
+                                            '_'.join([stock_to_compare, 'v', str(len(stock_names)),
+                                                      'stocks', similarity_col,
+                                                      similarity_func.__name__, fix_len_func.__name__]) + '.pkl')
         print('saving new similarity result')
         pickle.dump(similarities, open(similarity_file_path, 'wb+'))
-    else:
-        print('loading existing similarity result')
-        similarities = pickle.load(open(similarity_file_path, 'rb'))
 
     return similarities
 

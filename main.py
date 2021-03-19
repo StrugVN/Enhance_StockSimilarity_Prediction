@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.ensemble import *
+from xgboost import XGBRegressor
 
 from data_processing import *
 from similarity_functions import *
@@ -37,6 +38,7 @@ sim_func = apply_euclidean
 fix_len_func = time_join
 # use euclidean, time_join on feature Close_norm
 similarities = cal_other_stock_similarity(feature_df, stock, all_stock_name,
+                                          similarity_file_path='similarities/GOOGL_v_501_stocks_Close_norm_apply_euclidean_time_join.pkl',
                                           similarity_func=sim_func,
                                           fix_len_func=fix_len_func,
                                           similarity_col=target_col)
@@ -48,7 +50,7 @@ top_stock_norm = normalize_similarity(top_k_stocks, stock)
 # split dataset
 train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
 
-next_t = [1, 3, 7]
+next_t = [1]#[1, 3, 7]
 # Prepare X, Y
 ## Time window
 window_len = 5
@@ -70,13 +72,15 @@ test_X_p, test_Y_p = prepare_train_test_data(test_df, selected_features, stock, 
 print(len(train_X_p), len(train_Y_p), len(test_X_p), len(test_Y_p))
 
 # Modeling
-model = RandomForestRegressor(n_estimators=100, random_state=0)
+#model = RandomForestRegressor(n_estimators=100, random_state=0)
+#model = GradientBoostingRegressor(learning_rate=0.02, random_state=0)
+model = XGBRegressor(objective='reg:linear', learning_rate=0.02,  n_estimators=100, random_state=0)
 
 model.fit(train_X_p, train_Y_p)
+"""train_Y_p -> train_Y_p.values.ravel() de bo DataConversion warning cho RF voi GBT:
+    .values thanh shape (n, 1) + .ravel() thanh shape (n,)"""
 
 pred_Y_p = model.predict(test_X_p)
-
-
 
 # Error cal
 error_p = (pred_Y_p - test_Y_p)
