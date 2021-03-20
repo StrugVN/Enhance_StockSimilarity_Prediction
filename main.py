@@ -6,6 +6,7 @@ from data_processing import *
 from util.misc import *
 from config import *
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_score, mean_squared_error
 
 
 def run_exp(stock, target_col, sim_func, fix_len_func, k, next_t, selected_features, window_len, model_name):
@@ -58,6 +59,21 @@ def run_exp(stock, target_col, sim_func, fix_len_func, k, next_t, selected_featu
     # Error cal
     inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
     inverted_test_Y = inverse_scaling(target_col, test_Y.iloc[:, 0].to_numpy(), scaler_cols, scaler)
+
+    bin_pred_Y = get_y_bin(test_X, pred_Y, exp_param['window_len'], exp_param['target_col'])
+    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), exp_param['window_len'], exp_param['target_col'])
+
+    evals = dict()
+    evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
+    evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
+    evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
+    evals['roc_auc_score'] = 0  # for regressor (?)
+
+    # evals['mean_squared_error'] = mean_squared_error(test_Y, pred_Y)
+
+    evals["long_short_profit"], profits = long_short_profit_evaluation(inverted_test_Y.tolist(), inverted_pred_Y)
+    evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
+    print(evals)
 
     print('End')
 
