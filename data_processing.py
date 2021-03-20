@@ -138,8 +138,10 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col):
         X_period_dict = X_period.iloc[0].to_dict()
         X_period_dict[const_time_col] = period_time
         X.append(X_period_dict)
-
-    X_df = pd.DataFrame(X).set_index(const_time_col)
+    try:
+        X_df = pd.DataFrame(X).set_index(const_time_col)
+    except:
+        print('Error')
     Y_df = pd.DataFrame(Y, index=X_df.index)
 
     return X_df, Y_df
@@ -156,6 +158,8 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
     if not is_test and top_stock is not None:
         for stock_name in top_stock.keys():
             stock_df = data[data[const_name_col] == stock_name]
+            if stock_df.empty:
+                continue
             if w_len > 0:
                 sim_stock_X, sim_stock_Y = prepare_time_window(stock_df,
                                                                selected_features, w_len, next_t, target_col)

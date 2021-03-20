@@ -39,7 +39,6 @@ def run_exp(stock, target_col, sim_func, fix_len_func, k, next_t, selected_featu
     # split dataset
     train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
     # Prepare X, Y
-    fts = (set(selected_features) | set(scaler_cols))
     train_X, train_Y = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                                target_col, top_stock_norm, weighted_sampling=True)
 
@@ -48,14 +47,13 @@ def run_exp(stock, target_col, sim_func, fix_len_func, k, next_t, selected_featu
 
     if model_name not in fit_model_funcs.keys():
         raise ValueError(model_name + ' is not available')
-    # Bỏ .drop(columns=['Close'], axis=1)
-    #   và '-1' ở 'test_X.shape[1] - 1' khi test xong inverse transform scaler
-    model = fit_model_funcs[model_name](train_X.drop(columns=['Close'], axis=1), train_Y)
+
+    model = fit_model_funcs[model_name](train_X, train_Y)
 
     if model_name == 'LSTM':
-        pred_Y = model.predict(test_X.drop(columns=['Close'], axis=1).to_numpy().reshape(-1, 1, test_X.shape[1] - 1))
+        pred_Y = model.predict(test_X.to_numpy().reshape(-1, 1, test_X.shape[1]))
     else:
-        pred_Y = model.predict(test_X.drop(columns=['Close'], axis=1))
+        pred_Y = model.predict(test_X)
 
     # Error cal
     inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)

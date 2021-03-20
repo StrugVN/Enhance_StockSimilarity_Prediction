@@ -38,7 +38,7 @@ exp_param = {
     'fix_len_func': 'time_join',
     'k': 5,
     'next_t': 1,
-    'selected_features': ['Close', 'Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
-    'window_len': 0,
+    'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
+    'window_len': 3,
     'model_name': 'LSTM'
 }
