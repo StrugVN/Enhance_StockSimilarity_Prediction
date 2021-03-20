@@ -16,16 +16,12 @@ def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similar
         print('calc similarities for ' + stock_to_compare + ' func ' + str(similarity_func) + \
               ' fix len ' + str(fix_len_func) + ' on column ' + similarity_col)
         similarities = [
-            similarity_func(df_stocks[df_stocks[const_name_col] == stock_to_compare],  # [y_col].tolist(),
+            similarity_func(df_stocks[df_stocks[const_name_col] == stock_to_compare],
                             df_stocks[df_stocks[const_name_col] == stock_name], fix_len_func,
                             similarity_col)
             for stock_name in stock_names
         ]
 
-        similarity_file_path = os.path.join('similarities',
-                                            '_'.join([stock_to_compare, 'v', str(len(stock_names)),
-                                                      'stocks', similarity_col,
-                                                      similarity_func.__name__, fix_len_func.__name__]) + '.pkl')
         print('saving new similarity result')
         pickle.dump(similarities, open(similarity_file_path, 'wb+'))
 
@@ -75,7 +71,7 @@ def cal_financial_features(data, norm_func=None):
 
         feature_df = pd.concat([feature_df, data_norm_df], axis=1)
 
-        return feature_df, scaler
+        return feature_df, scaler, numeric_cols + features
 
     return feature_df
 
@@ -102,21 +98,20 @@ def split_train_test_set(data, stock, stock_names, ratio):
 
 
 def prepare_time_point(data, selected_features, next_t, target_col):
-    X_df = data[selected_features].iloc[:-max(next_t)].copy()
+    X_df = data[selected_features].iloc[:-next_t].copy()
 
     Y = []
     y = np.array(data[target_col].tolist())
 
-    for i in range(0, len(data[target_col]) - max(next_t)):
-        y_ti = i + np.asarray(next_t)
+    for i in range(0, len(data[target_col]) - next_t):
+        y_ti = i + next_t
         next_y = y[y_ti].tolist()
 
         to_dict_y = {}
-        for c in range(len(next_t)):
-            to_dict_y[str(next_t[c])] = next_y[c]
+        to_dict_y[next_t] = next_y
         Y.append(to_dict_y)
 
-    Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - max(next_t)])
+    Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - next_t])
 
     return X_df, Y_df
 
@@ -126,13 +121,12 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col):
     Y = []
     y = np.array(data[target_col].tolist())
 
-    for i in range(0, len(data[target_col]) - w_len + 1 - max(next_t)):
-        y_ti = i + w_len - 1 + np.asarray(next_t)
+    for i in range(0, len(data[target_col]) - w_len + 1 - next_t):
+        y_ti = i + w_len - 1 + next_t
         # Y
         next_y = y[y_ti].tolist()
         Y_period = {}
-        for c in range(len(next_t)):
-            Y_period[str(next_t[c])] = next_y[c]
+        Y_period[str(next_t)] = next_y
         Y.append(Y_period)
 
         # X
