@@ -10,3 +10,15 @@ def read_data(path, date_format='%Y-%m-%d'):
     return all_stocks
 
 
+def inverse_scaling(target_col, col_data, scaler_cols, scaler):
+    data = pd.DataFrame()
+
+    for c in scaler_cols:
+        data[c] = [0.0] * len(col_data)
+
+    data[target_col] = col_data
+
+    inverted_data = scaler.inverse_transform(data)
+    inverted_data = pd.DataFrame(inverted_data, columns=scaler_cols)
+
+    return inverted_data[target_col]

@@ -71,7 +71,7 @@ def cal_financial_features(data, norm_func=None):
 
         feature_df = pd.concat([feature_df, data_norm_df], axis=1)
 
-        return feature_df, scaler, numeric_cols + features
+        return feature_df, scaler, [s + '_norm' for s in numeric_cols + features]
 
     return feature_df
 
