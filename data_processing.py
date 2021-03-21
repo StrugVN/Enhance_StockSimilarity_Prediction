@@ -8,13 +8,12 @@ from similarity_functions import *
 
 
 def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_file_path, similarity_func,
-                               fix_len_func=time_join, similarity_col=const_target_col, ):
+                               fix_len_func=time_join, similarity_col=const_target_col):
     if os.path.isfile(similarity_file_path):
-        print('loading existing similarity result')
+        print('Loading existing similarity result: ' + similarity_file_path)
         similarities = pickle.load(open(similarity_file_path, 'rb'))
     else:
-        print('calc similarities for ' + stock_to_compare + ' func ' + str(similarity_func) + \
-              ' fix len ' + str(fix_len_func) + ' on column ' + similarity_col)
+        print('Calc similarities: ' + similarity_file_path)
         similarities = [
             similarity_func(df_stocks[df_stocks[const_name_col] == stock_to_compare],
                             df_stocks[df_stocks[const_name_col] == stock_name], fix_len_func,
@@ -22,7 +21,7 @@ def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similar
             for stock_name in stock_names
         ]
 
-        print('saving new similarity result')
+        print(' Saving new similarity result')
         pickle.dump(similarities, open(similarity_file_path, 'wb+'))
 
     return similarities
@@ -61,12 +60,13 @@ def cal_financial_features(data, norm_func=None):
         scaler = copy(norm_func)
         features = ['rsi', 'MACD', 'Open_Close_diff', 'High_Low_diff']
 
-        data[features] = feature_df[features]
-        scaler.fit(data[numeric_cols + features])
-        data_norm = scaler.transform(data[numeric_cols + features])
+        df = data.copy()
+        df[features] = feature_df[features]
+        scaler.fit(df[numeric_cols + features])
+        data_norm = scaler.transform(df[numeric_cols + features])
 
         data_norm_df = pd.DataFrame(data_norm, columns=[s + '_norm' for s in numeric_cols + features])
-        data_norm_df[const_time_col] = data.index
+        data_norm_df[const_time_col] = df.index
         data_norm_df = data_norm_df.set_index(const_time_col)
 
         feature_df = pd.concat([feature_df, data_norm_df], axis=1)
@@ -138,10 +138,8 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col):
         X_period_dict = X_period.iloc[0].to_dict()
         X_period_dict[const_time_col] = period_time
         X.append(X_period_dict)
-    try:
-        X_df = pd.DataFrame(X).set_index(const_time_col)
-    except:
-        print('Error')
+
+    X_df = pd.DataFrame(X).set_index(const_time_col)
     Y_df = pd.DataFrame(Y, index=X_df.index)
 
     return X_df, Y_df
@@ -149,7 +147,7 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col):
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,
                             top_stock, weighted_sampling=False, is_test=False):
-    if w_len > 0:
+    if w_len > 1:
         X_df, Y_df = prepare_time_window(data[data[const_name_col] == comparing_stock],
                                          selected_features, w_len, next_t, target_col)
     else:
@@ -160,7 +158,7 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
             stock_df = data[data[const_name_col] == stock_name]
             if stock_df.empty:
                 continue
-            if w_len > 0:
+            if w_len > 1:
                 sim_stock_X, sim_stock_Y = prepare_time_window(stock_df,
                                                                selected_features, w_len, next_t, target_col)
             else:

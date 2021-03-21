@@ -9,9 +9,9 @@ similarity_funcs = {'dtw': apply_dtw,
                     'sax': compare_sax,
                     'co-integration': cointegration}
 
-fix_length_funcs = {'padding': padding,
+fix_length_funcs = {#'padding': padding,
                     'time_join': time_join,
-                    'delay_time_join': delay_time_join,
+                    #'delay_time_join': delay_time_join,
                     'pip': pip_fix}
 
 fit_model_funcs = {'RandomForestRegressor': trainRFR,
@@ -29,16 +29,18 @@ window_len = 5
 selected_features = ['Close_norm']
 window_len = 0
 selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
+'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
 """
 
 exp_param = {
-    'stock': 'GOOGL',
+    'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
     'target_col': 'Close_norm',
     'sim_func': 'dtw',
     'fix_len_func': 'time_join',
     'k': 5,
     'next_t': 1,
     'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
-    'window_len': 3,
-    'model_name': 'LSTM'
+    'window_len': 0,
+    'model_name': 'LSTM',
+    'eval_result_path': 'test.csv',
 }

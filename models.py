@@ -16,18 +16,18 @@ def create_LSTM(input_shape, lr=0.02, output_shape=1):
     model.add(Dropout(0.25))
     model.add(Dense(units=50))
     model.add(Dense(units=output_shape))
-    model.compile(optimizer=Adam(lr=lr), loss='mean_squared_error')
+    model.compile(optimizer=Adam(lr=lr), loss='mse')
     return model
 
 
 LSTM_train_only_config = {'batch_size': 32,
-                          'verbose': 1,
+                          'verbose': 0,
                           'epochs': 100,
                           'callbacks': callbacks.EarlyStopping(monitor="loss", mode="min", patience=15,
                                                                restore_best_weights=True, verbose=2)}
 
 LSTM_with_val_config = {'batch_size': 32,
-                        'verbose': 1,
+                        'verbose': 0,
                         'epochs': 100,
                         'validation_split': 0.2,
                         'callbacks': callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=15,
@@ -62,10 +62,10 @@ def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.02, n_estimators=100, es=T
         eval_set = [(X_val, y_val)]
 
         model.fit(X_train, y_train,
-                  early_stopping_rounds=10, eval_metric="mse", eval_set=eval_set, verbose=True)
+                  early_stopping_rounds=10, eval_metric="rmse", eval_set=eval_set, verbose=False)
     else:
         model.fit(train_X, train_Y,
-                  early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="mse", verbose=True)
+                  early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="rmse", verbose=False)
 
     return model
 
