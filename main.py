@@ -169,8 +169,19 @@ def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 fe
 
 
 # sim_func_test1()
-#test = base_param
-#for m in fit_model_funcs.keys():
-#    test['model_name'] = m
-#    print('====== Run {} ========='.format(m))
-#    run_exp(**test)
+test = base_param
+test['window_len'] = 10
+test['eval_result_path'] = 'Model_test.csv'
+test['selected_features'] = ['Close_norm']
+test['next_t'] = 1
+
+selected_params = [['dtw', 'time_join', 5], ['euclidean', 'time_join', 5],
+                 ['dtw', 'time_join', 15], ['euclidean', 'time_join', 15],
+                 ['co-integration', 'pip', 25], ['euclidean', 'pip', 25]]
+
+for params in selected_params:
+    test['sim_func'] , test['fix_len_func'], test['k'] = params
+    for m in fit_model_funcs.keys():
+        test['model_name'] = m
+        print('====== Run {} with {}, {}, {} ========='.format(m, test['sim_func'] , test['fix_len_func'], test['k']))
+        run_exp(**test)
