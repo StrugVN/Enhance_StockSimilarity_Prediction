@@ -35,7 +35,11 @@ def get_y_bin(x, y, window_len, target_col):
 
     for i in range(1, len(y)):
         y_bin.append(np.sign(y[i] - y[i - 1]))
-    y_bin = [np.array(x) if x != 0 else 1 for x in y_bin]
+
+    for i in y_bin:
+        if i[0] == 0:
+            i[0] = 1
+
     return y_bin
 
 

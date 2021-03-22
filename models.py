@@ -9,7 +9,7 @@ from keras.optimizers import Adam
 """ LSTM Configuration """
 
 
-def create_LSTM(input_shape, lr=0.02, output_shape=1):
+def create_LSTM(input_shape, lr=0.01, output_shape=1):
     model = Sequential()
     model.add(LSTM(units=50, return_sequences=True, input_shape=input_shape))
     model.add(LSTM(units=50, return_sequences=False))
@@ -43,7 +43,7 @@ def trainRFR(train_X, train_Y, n_estimators=100):
     return model
 
 
-def trainGBR(train_X, train_Y, n_estimators=100, lr=0.02, es=True):
+def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
     if not es:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
@@ -55,7 +55,7 @@ def trainGBR(train_X, train_Y, n_estimators=100, lr=0.02, es=True):
     return model
 
 
-def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.02, n_estimators=100, es=True):
+def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.01, n_estimators=100, es=True):
     model = XGBRegressor(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)

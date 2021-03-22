@@ -148,7 +148,7 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
     if not is_test and top_stock is not None:
         for stock_name in top_stock.keys():
             stock_df = data[data[const_name_col] == stock_name]
-            if stock_df.empty:
+            if stock_df.empty or stock_df.shape[0] < w_len + next_t + 1:
                 continue
             if w_len > 1:
                 sim_stock_X, sim_stock_Y = prepare_time_window(stock_df,

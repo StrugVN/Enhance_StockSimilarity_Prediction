@@ -34,9 +34,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
         stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
-
         # sim
-        s = time.time()
         sim_path = 'similarities_data/5_years_' + stock + '_' + \
                    target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
         if os.path.isfile(sim_path):
@@ -62,14 +60,6 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         # normalize similarity
         top_stock_norm = normalize_similarity(top_k_stocks, stock)
 
-        e = time.time()
-        if e-s < 300:
-            print(' Elapsed: ', e - s, 's')
-        else:
-            print(' Elapsed: ', (e - s)/60, 'm')
-
-        continue  # XÓAAAAAAAAAAAAAAAAAAAAAAAA
-
         # split dataset
         train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
         # Prepare X, Y
@@ -94,7 +84,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         inverted_test_Y = inverse_scaling(target_col, test_Y.iloc[:, 0].to_numpy(), scaler_cols, scaler)
 
         bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
-        bin_test_Y = get_y_bin(test_X, test_Y.iloc[:, 0].to_numpy(), window_len, target_col)
+        bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
 
         _u_test, _u_pred = np.unique(bin_test_Y), np.unique(bin_pred_Y)
 
@@ -110,10 +100,6 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         print(evals)
         evals_list.append(evals)
 
-    # ============= Nhớ xóaaaaaaaaaaaaaaaaaaaaaaaaa =======================
-    return
-    # ============= Nhớ xóaaaaaaaaaaaaaaaaaaaaaaaaa =======================
-
     eval_df = pd.DataFrame(evals_list)
     """
     No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, 
@@ -124,7 +110,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
     mean_accuracy, std_accuracy = np.round((np.mean(eval_df['accuracy_score']), np.std(eval_df['accuracy_score'])), 4)
     mean_f1, std_f1 = np.round((np.mean(eval_df['f1_score']), np.std(eval_df['f1_score'])), 4)
     mean_mse, std_mse = np.round((np.mean(eval_df['rmse']), np.std(eval_df['rmse'])), 3)
-    mean_sharp_ratio, mean_profit = np.round((np.mean(eval_df['sharp_ratio']), np.mean(eval_df['long_short_profit'])), 3)
+    mean_sharp_ratio, mean_profit = np.round((np.mean(eval_df['sharp_ratio']), np.mean(eval_df['long_short_profit'])),
+                                             3)
 
     if not os.path.isfile(eval_result_path):
         with open(eval_result_path, "w") as file:
@@ -139,19 +126,32 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse, mean_sharp_ratio, mean_profit))
         file.close()
 
-""" RUN """
-run_param = exp_param
-run_param['eval_result_path'] = 'test_run.csv'
 
-fix_len_func_to_run = ['time_join', 'pip']
-sim_func_to_run = ['pearson', 'euclidean', 'sax', 'co-integration', 'dtw']
-
-for sim_func_name in sim_func_to_run:
-    run_param['sim_func'] = sim_func_name
-    for fix_func_name in fix_len_func_to_run:
-        run_param['fix_len_func'] = fix_func_name
+""" Experience """
 
 
-        print('\n=========Run ', sim_func_name, '+', fix_func_name, '=========')
-        run_exp(**run_param)
+def sim_func_test1(): # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 feature
+    run_param = base_param
+    run_param['eval_result_path'] = 'Sim_func_test.csv'
+    run_param['window_len'] = 10
+    run_param['model_name'] = 'LSTM'
+    run_param['selected_features'] = ['Close_norm']
+    run_param['next_t'] = 1
 
+    k = [15]
+
+    for _k in k:
+        run_param['k'] = _k
+        for sim_f_name in similarity_funcs:
+            run_param['sim_func'] = sim_f_name
+            for fix_f_name in fix_length_funcs:
+                run_param['fix_len_func'] = fix_f_name
+                print('Run {0}, {1}, {2}'.format(_k, sim_f_name, fix_f_name))
+                run_exp(**run_param)
+
+
+
+
+
+sim_func_test1()
+#run_exp(**base_param)

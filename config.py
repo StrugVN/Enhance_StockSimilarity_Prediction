@@ -32,15 +32,15 @@ selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
 """
 
-exp_param = {
+base_param = {
     'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
     'target_col': 'Close_norm',
-    'sim_func': 'dtw',
-    'fix_len_func': 'time_join',
+    'sim_func': '',
+    'fix_len_func': '',
     'k': 5,
     'next_t': 1,
-    'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
+    'selected_features': ['Close_norm'],
     'window_len': 0,
-    'model_name': 'LSTM',
+    'model_name': '',
     'eval_result_path': 'test.csv',
 }
