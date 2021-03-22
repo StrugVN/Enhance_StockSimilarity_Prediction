@@ -1,3 +1,5 @@
+import time
+
 from data_processing import *
 from util.misc import *
 from config import *
@@ -32,23 +34,41 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
         stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
-        all_stock_name = stock_count[stock_count[const_time_col] > window_len + next_t + 10][const_name_col].tolist()
 
-        # use euclidean, time_join on feature Close_norm
-        sim_path = 'sim_data/5_years' + stock + '_v_' + str(len(all_stock_name)) + 'stocks_' + \
+        # sim
+        s = time.time()
+        sim_path = 'similarities_data/5_years_' + stock + '_' + \
                    target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
-        similarities = cal_other_stock_similarity(
-            feature_df, stock, all_stock_name,
-            similarity_file_path=sim_path,
-            similarity_func=similarity_funcs[sim_func],
-            fix_len_func=fix_length_funcs[fix_len_func],
-            similarity_col=target_col
-        )
+        if os.path.isfile(sim_path):
+            print('Loading existing similarity result: ' + sim_path)
+            _sim_data = pickle.load(open(sim_path, 'rb'))
+            all_stock_name, similarities = _sim_data
+        else:
+            print('Calc similarities: ' + sim_path)
+            all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
+
+            similarities = cal_other_stock_similarity(
+                feature_df, stock, all_stock_name,
+                similarity_func=similarity_funcs[sim_func],
+                fix_len_func=fix_length_funcs[fix_len_func],
+                similarity_col=target_col
+            )
+
+            print(' Saving new similarity result')
+            pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
 
         # top k stocks
         top_k_stocks = get_top_k(all_stock_name, similarities, k)
         # normalize similarity
         top_stock_norm = normalize_similarity(top_k_stocks, stock)
+
+        e = time.time()
+        if e-s < 300:
+            print(' Elapsed: ', e - s, 's')
+        else:
+            print(' Elapsed: ', (e - s)/60, 'm')
+
+        continue  # XÓAAAAAAAAAAAAAAAAAAAAAAAA
 
         # split dataset
         train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
@@ -90,8 +110,11 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         print(evals)
         evals_list.append(evals)
 
-    eval_df = pd.DataFrame(evals_list)
+    # ============= Nhớ xóaaaaaaaaaaaaaaaaaaaaaaaaa =======================
+    return
+    # ============= Nhớ xóaaaaaaaaaaaaaaaaaaaaaaaaa =======================
 
+    eval_df = pd.DataFrame(evals_list)
     """
     No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, 
      mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse, mean_sharp_ratio, mean_profit
@@ -120,12 +143,15 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 run_param = exp_param
 run_param['eval_result_path'] = 'test_run.csv'
 
-fix_len_func_to_run = fix_length_funcs.keys()
-sim_func_to_run = ['dtw', 'euclidean']
+fix_len_func_to_run = ['time_join', 'pip']
+sim_func_to_run = ['pearson', 'euclidean', 'sax', 'co-integration', 'dtw']
 
 for sim_func_name in sim_func_to_run:
-    run_param['fix_len_func'] = sim_func_name
+    run_param['sim_func'] = sim_func_name
     for fix_func_name in fix_len_func_to_run:
         run_param['fix_len_func'] = fix_func_name
+
+
         print('\n=========Run ', sim_func_name, '+', fix_func_name, '=========')
         run_exp(**run_param)
+

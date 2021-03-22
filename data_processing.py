@@ -7,22 +7,14 @@ from financial_features import *
 from similarity_functions import *
 
 
-def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_file_path, similarity_func,
+def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_func,
                                fix_len_func=time_join, similarity_col=const_target_col):
-    if os.path.isfile(similarity_file_path):
-        print('Loading existing similarity result: ' + similarity_file_path)
-        similarities = pickle.load(open(similarity_file_path, 'rb'))
-    else:
-        print('Calc similarities: ' + similarity_file_path)
-        similarities = [
-            similarity_func(df_stocks[df_stocks[const_name_col] == stock_to_compare],
-                            df_stocks[df_stocks[const_name_col] == stock_name], fix_len_func,
-                            similarity_col)
-            for stock_name in stock_names
-        ]
-
-        print(' Saving new similarity result')
-        pickle.dump(similarities, open(similarity_file_path, 'wb+'))
+    similarities = [
+        similarity_func(df_stocks[df_stocks[const_name_col] == stock_to_compare],
+                        df_stocks[df_stocks[const_name_col] == stock_name], fix_len_func,
+                        similarity_col)
+        for stock_name in stock_names
+    ]
 
     return similarities
 
