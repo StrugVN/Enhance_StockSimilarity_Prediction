@@ -1,7 +1,7 @@
 from keras import callbacks
 from sklearn.ensemble import *
 from sklearn.model_selection import train_test_split
-from xgboost import XGBRegressor
+from xgboost import XGBRegressor, XGBClassifier
 from keras.models import Sequential, load_model
 from keras.layers import Dense, LSTM, Dropout
 from keras.optimizers import Adam
@@ -9,14 +9,14 @@ from keras.optimizers import Adam
 """ LSTM Configuration """
 
 
-def create_LSTM(input_shape, lr=0.01, output_shape=1):
+def create_LSTM(input_shape, lr=0.01, output_shape=1, loss='mse'):
     model = Sequential()
     model.add(LSTM(units=50, return_sequences=True, input_shape=input_shape))
     model.add(LSTM(units=50, return_sequences=False))
     model.add(Dropout(0.25))
     model.add(Dense(units=50))
     model.add(Dense(units=output_shape))
-    model.compile(optimizer=Adam(lr=lr), loss='mse')
+    model.compile(optimizer=Adam(lr=lr), loss=loss)
     return model
 
 
@@ -43,12 +43,32 @@ def trainRFR(train_X, train_Y, n_estimators=100):
     return model
 
 
+def trainRFC(train_X, train_Y, n_estimators=100):
+    model = RandomForestClassifier(n_estimators=n_estimators, random_state=0)
+
+    model.fit(train_X, train_Y)
+
+    return model
+
+
 def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
     if not es:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0,
                                           validation_fraction=0.2, n_iter_no_change=15)
+
+    model.fit(train_X, train_Y)
+
+    return model
+
+
+def trainGBC(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
+    if not es:
+        model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=0)
+    else:
+        model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=0,
+                                           validation_fraction=0.2, n_iter_no_change=15)
 
     model.fit(train_X, train_Y)
 
@@ -66,6 +86,21 @@ def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.01, n_estimators=100, es=T
     else:
         model.fit(train_X, train_Y,
                   early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="rmse", verbose=False)
+
+    return model
+
+
+def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=True):
+    model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
+    if es:
+        X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
+        eval_set = [(X_val, y_val)]
+
+        model.fit(X_train, y_train,
+                  early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=False)
+    else:
+        model.fit(train_X, train_Y,
+                  early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="logloss", verbose=False)
 
     return model
 

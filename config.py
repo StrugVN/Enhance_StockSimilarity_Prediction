@@ -17,7 +17,11 @@ fix_length_funcs = {#'padding': padding,
 fit_model_funcs = {'RandomForestRegressor': trainRFR,
                    'GradientBoostingRegressor': trainGBR,
                    'XGBRegressor': trainXGB,
-                   'LSTM': trainLSTM}
+                   'LSTM': trainLSTM,
+                   'XGBClassifier': trainXGBClassifier,
+                   'GradientBoostingClassifier': trainGBC,
+                   'RandomForestClassifier': trainRFC
+                   }
 
 """
 stock = 'GOOGL'
@@ -35,12 +39,12 @@ selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 base_param = {
     'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
     'target_col': 'Close_norm',
-    'sim_func': '',
-    'fix_len_func': '',
+    'sim_func': 'dtw',
+    'fix_len_func': 'time_join',
     'k': 5,
     'next_t': 1,
-    'selected_features': ['Close_norm'],
+    'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
     'window_len': 0,
-    'model_name': '',
-    'eval_result_path': 'test.csv',
+    'model_name': 'RandomForestClassifier',
+    'eval_result_path': 'test.csv'
 }

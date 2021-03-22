@@ -1,6 +1,7 @@
 from Const import *
 import pandas as pd
 import numpy as np
+import types
 
 
 def read_data(path, date_format='%Y-%m-%d'):
@@ -26,6 +27,7 @@ def inverse_scaling(target_col, col_data, scaler_cols, scaler):
 
 
 def get_y_bin(x, y, window_len, target_col):
+    y = y.reshape(y.shape[0], 1)
     y_bin = []
     if window_len == 0:
         y_bin.append(np.sign(y[0] - x[target_col][0]))
@@ -37,8 +39,12 @@ def get_y_bin(x, y, window_len, target_col):
         y_bin.append(np.sign(y[i] - y[i - 1]))
 
     for i in y_bin:
-        if i[0] == 0:
-            i[0] = 1
+        try:
+            if i[0] == 0:
+                i[0] = 1
+        except:
+            print("Error")
+            raise
 
     return y_bin
 
