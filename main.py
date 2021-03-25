@@ -117,7 +117,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
     eval_df = pd.DataFrame(evals_list)
     """
     No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, 
-     mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse, mean_sharp_ratio, mean_profit
+     mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse, mean_sharp_ratio, mean_profit, std_profit
     """
     text_selected_ft = str(selected_features).replace(',', ';')
 
@@ -128,20 +128,22 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
     else:
         mean_mse, std_mse = 'NaN', 'NaN'
 
-    mean_sharp_ratio, mean_profit = np.round((np.mean(eval_df['sharp_ratio']),
-                                              np.mean(eval_df['long_short_profit'])), 3)
+    mean_sharp_ratio, mean_profit, std_profit = np.round((np.mean(eval_df['sharp_ratio']),
+                                                          np.mean(eval_df['long_short_profit']),
+                                                          np.std(eval_df['long_short_profit'])), 3)
 
     if not os.path.isfile(eval_result_path):
         with open(eval_result_path, "w") as file:
             file.write("No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, "
                        "model, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, "
-                       "mean_profit\n")
+                       "mean_profit, std_profit\n")
             file.close()
 
     with open(eval_result_path, "a") as file:
-        file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}\n".format(
-            len(selected_features), text_selected_ft, sim_func, fix_len_func, k, window_len, next_t, model_name,
-            mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse, mean_sharp_ratio, mean_profit))
+        file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}\n"
+                   .format(len(selected_features), text_selected_ft, sim_func, fix_len_func, k, window_len, next_t,
+                           model_name, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
+                           mean_sharp_ratio, mean_profit, std_profit))
         file.close()
 
 
@@ -168,20 +170,30 @@ def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 fe
                 run_exp(**run_param)
 
 
+def model_test1():
+    test = base_param
+    test['window_len'] = 10
+    test['eval_result_path'] = 'Model_test.csv'
+    test['selected_features'] = ['Close_norm']
+    test['next_t'] = 1
+
+    selected_params = [['dtw', 'time_join', 5], ['euclidean', 'time_join', 5],
+                       ['dtw', 'time_join', 15], ['euclidean', 'time_join', 15],
+                       ['co-integration', 'pip', 25], ['euclidean', 'pip', 25]]
+
+    for params in selected_params:
+        test['sim_func'], test['fix_len_func'], test['k'] = params
+        for m in fit_model_funcs.keys():
+            test['model_name'] = m
+            print(
+                '====== Run {} with {}, {}, {} ========='.format(m, test['sim_func'], test['fix_len_func'], test['k']))
+            run_exp(**test)
+
+
 # sim_func_test1()
-test = base_param
-test['window_len'] = 10
-test['eval_result_path'] = 'Model_test.csv'
-test['selected_features'] = ['Close_norm']
-test['next_t'] = 1
+x_param = base_param
 
-selected_params = [['dtw', 'time_join', 5], ['euclidean', 'time_join', 5],
-                 ['dtw', 'time_join', 15], ['euclidean', 'time_join', 15],
-                 ['co-integration', 'pip', 25], ['euclidean', 'pip', 25]]
-
-for params in selected_params:
-    test['sim_func'] , test['fix_len_func'], test['k'] = params
-    for m in fit_model_funcs.keys():
-        test['model_name'] = m
-        print('====== Run {} with {}, {}, {} ========='.format(m, test['sim_func'] , test['fix_len_func'], test['k']))
-        run_exp(**test)
+for model_ in fit_model_funcs:
+    x_param['model_name'] = model_
+    print('================== Running {} ================'.format(model_))
+    run_exp(**x_param)
