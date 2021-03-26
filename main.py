@@ -190,10 +190,26 @@ def model_test1():
             run_exp(**test)
 
 
+def paper_param_test():
+    test = base_param
+    test['target_col'] = 'Close_norm'
+    test['window_len'] = 10
+    test['sim_func'] = 'co-integration'
+    test['fix_len_func'] = 'time_join'
+    test['k'] = 50
+    test['selected_features'] = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
+    test['model_name'] = 'GradientBoostingRegressor'
+    # paper co su dung them SAX(?)
+
+    test['eval_result_path'] = 'paper_param.csv'
+    run_exp(**test)
+
+
 # sim_func_test1()
-x_param = base_param
+paper_param_test()
+"""x_param = base_param
 
 for model_ in fit_model_funcs:
     x_param['model_name'] = model_
     print('================== Running {} ================'.format(model_))
-    run_exp(**x_param)
+    run_exp(**x_param)"""

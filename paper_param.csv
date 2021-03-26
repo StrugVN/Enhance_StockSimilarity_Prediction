@@ -1,0 +1,2 @@
+No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, mean_profit, std_profit
+4, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'], co-integration, time_join, 50, 10, 1, GradientBoostingRegressor, 0.5066, 0.0254, 0.4496, 0.0248, 19.548, 33.501, 0.857, 33.564, 57.0

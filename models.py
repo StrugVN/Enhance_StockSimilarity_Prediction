@@ -51,9 +51,10 @@ def trainRFC(train_X, train_Y, n_estimators=100):
     return model
 
 
-def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
+def trainGBR(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
     if not es:
-        model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
+        model = GradientBoostingRegressor(learning_rate=lr, random_state=0)
+        #model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0,
                                           validation_fraction=0.2, n_iter_no_change=15)
@@ -63,7 +64,7 @@ def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
     return model
 
 
-def trainGBC(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
+def trainGBC(train_X, train_Y, n_estimators=100, lr=0.01, es=False):
     if not es:
         model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
