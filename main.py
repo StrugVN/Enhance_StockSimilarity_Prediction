@@ -8,16 +8,16 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_s
 
 
 def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_features,
-            window_len, model_name, eval_result_path):
+            window_len, model_name, eval_result_path, n_fold):
     is_classifier = ('Classifier' in model_name)
 
     df = read_data('data/' + data_name + '.csv')
 
-    feature_df, scaler, scaler_cols = cal_financial_features(df, StandardScaler())  # get feature all stock
+
 
     """
     target_stock_dates = df[df[const_name_col] == stock][const_time_col]
-    threshold = int(len(target_stock_dates)/5)
+    threshold = int(len(target_stock_dates)/n_fold)
 
     folds_df = []
     for i in range(n_fold-1):
@@ -29,89 +29,106 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
     evals_list = []
     for stock in stock_list:
-        print('     -------- {0} --------'.format(stock))
+        print('     -------- {0}, {1} folds --------'.format(stock, n_fold))
 
-        stock_df = feature_df[feature_df[const_name_col] == stock]
-        all_stock_df = feature_df[feature_df[const_time_col].isin(stock_df[const_time_col])]  # time join
+        # create fold
+        target_stock_dates = df[df[const_name_col] == stock][const_time_col]
+        threshold = int(len(target_stock_dates) / (n_fold + 1))
 
-        stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
+        folds_df = []
+        _folds_time = [len(target_stock_dates)]
+        for i in range(1, n_fold):
+            fold_time = target_stock_dates[:(i + 1) * threshold - 1]
+            _folds_time.append((i + 1) * threshold - 1)
+            fold_df_ = df[df[const_time_col].isin(fold_time)]
+            folds_df.append(fold_df_)
+        folds_df.append(df[df[const_time_col].isin(target_stock_dates)])
 
-        # sim
-        sim_path = 'similarities_data/5_years_' + stock + '_' + \
-                   target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
-        if os.path.isfile(sim_path):
-            print('Loading existing similarity result: ' + sim_path)
-            _sim_data = pickle.load(open(sim_path, 'rb'))
-            all_stock_name, similarities = _sim_data
-        else:
-            print('Calc similarities: ' + sim_path)
-            all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
+        for _df in folds_df:
+            # get feature all stock
+            feature_df, scaler, scaler_cols = cal_financial_features(_df, StandardScaler())
 
-            similarities = cal_other_stock_similarity(
-                feature_df, stock, all_stock_name,
-                similarity_func=similarity_funcs[sim_func],
-                fix_len_func=fix_length_funcs[fix_len_func],
-                similarity_col=target_col
-            )
+            stock_df = feature_df[feature_df[const_name_col] == stock]
+            all_stock_df = feature_df[feature_df[const_time_col].isin(stock_df[const_time_col])]
 
-            print(' Saving new similarity result')
-            pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
+            stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
-        # top k stocks
-        top_k_stocks = get_top_k(all_stock_name, similarities, k)
-        # normalize similarity
-        top_stock_norm = normalize_similarity(top_k_stocks, stock)
-
-        # split dataset
-        train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
-        # Prepare X, Y
-        train_X, train_Y = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
-                                                   target_col, top_stock_norm, weighted_sampling=True)
-
-        bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
-
-        test_X, test_Y = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
-                                                 target_col, top_stock_norm, is_test=True)
-
-        bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
-        inverted_test_Y = inverse_scaling(target_col, test_Y.iloc[:, 0].to_numpy(), scaler_cols, scaler)
-
-        if model_name not in fit_model_funcs.keys():
-            raise ValueError(model_name + ' is not available')
-
-        if not is_classifier:
-            model = fit_model_funcs[model_name](train_X, train_Y)
-
-            if 'LSTM' in model_name:
-                pred_Y = model.predict(test_X.to_numpy().reshape(-1, 1, test_X.shape[1]))
+            # sim
+            sim_path = 'similarities_data/5_years_' + stock + '_' + \
+                       target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
+            if os.path.isfile(sim_path):
+                print('Loading existing similarity result: ' + sim_path)
+                _sim_data = pickle.load(open(sim_path, 'rb'))
+                all_stock_name, similarities = _sim_data
             else:
+                print('Calc similarities: ' + sim_path)
+                all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
+
+                similarities = cal_other_stock_similarity(
+                    feature_df, stock, all_stock_name,
+                    similarity_func=similarity_funcs[sim_func],
+                    fix_len_func=fix_length_funcs[fix_len_func],
+                    similarity_col=target_col
+                )
+
+                print(' Saving new similarity result')
+                pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
+
+            # top k stocks
+            top_k_stocks = get_top_k(all_stock_name, similarities, k)
+            # normalize similarity
+            top_stock_norm = normalize_similarity(top_k_stocks, stock)
+
+            # split dataset
+            train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
+            # Prepare X, Y
+            train_X, train_Y = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
+                                                       target_col, top_stock_norm, weighted_sampling=True)
+
+            bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
+
+            test_X, test_Y = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
+                                                     target_col, top_stock_norm, is_test=True)
+
+            bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
+            inverted_test_Y = inverse_scaling(target_col, test_Y.iloc[:, 0].to_numpy(), scaler_cols, scaler)
+
+            if model_name not in fit_model_funcs.keys():
+                raise ValueError(model_name + ' is not available')
+
+            if not is_classifier:
+                model = fit_model_funcs[model_name](train_X, train_Y)
+
+                if 'LSTM' in model_name:
+                    pred_Y = model.predict(test_X.to_numpy().reshape(-1, 1, test_X.shape[1]))
+                else:
+                    pred_Y = model.predict(test_X)
+            else:
+                train_Y_ = np.array(bin_train_Y)
+
+                model = fit_model_funcs[model_name](train_X, train_Y_)
+
                 pred_Y = model.predict(test_X)
-        else:
-            train_Y_ = np.array(bin_train_Y)
 
-            model = fit_model_funcs[model_name](train_X, train_Y_)
+            # Error cal
+            evals = dict()
+            if not is_classifier:
+                inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
+                evals['rmse'] = np.sqrt(mean_squared_error(inverted_test_Y, inverted_pred_Y))
 
-            pred_Y = model.predict(test_X)
+                bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
+            else:
+                bin_test_Y = np.array(bin_test_Y)
+                bin_pred_Y = pred_Y
 
-        # Error cal
-        evals = dict()
-        if not is_classifier:
-            inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
-            evals['rmse'] = np.sqrt(mean_squared_error(inverted_test_Y, inverted_pred_Y))
+            evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
+            evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
+            # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
-            bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
-        else:
-            bin_test_Y = np.array(bin_test_Y)
-            bin_pred_Y = pred_Y
-
-        evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
-        evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
-        evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
-
-        evals["long_short_profit"], profits = long_short_profit_evaluation(inverted_test_Y.tolist(), bin_pred_Y)
-        evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
-        print(evals)
-        evals_list.append(evals)
+            evals["long_short_profit"], profits = long_short_profit_evaluation(inverted_test_Y.tolist(), bin_pred_Y)
+            evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
+            print(evals)
+            evals_list.append(evals)
 
     # Save evaluation
     eval_df = pd.DataFrame(evals_list)
@@ -191,9 +208,14 @@ def model_test1():
 
 
 # sim_func_test1()
+"""
 x_param = base_param
 
 for model_ in fit_model_funcs:
     x_param['model_name'] = model_
     print('================== Running {} ================'.format(model_))
     run_exp(**x_param)
+"""
+
+
+run_exp(**base_param)

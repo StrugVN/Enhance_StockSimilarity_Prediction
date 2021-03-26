@@ -23,15 +23,22 @@ def create_LSTM(input_shape, lr=0.01, output_shape=1, loss='mse'):
 LSTM_train_only_config = {'batch_size': 32,
                           'verbose': 0,
                           'epochs': 100,
-                          'callbacks': callbacks.EarlyStopping(monitor="loss", mode="min", patience=15,
-                                                               restore_best_weights=True, verbose=2)}
+                          # 'callbacks': callbacks.EarlyStopping(monitor="loss", mode="min", patience=15,
+                          #                                      restore_best_weights=True, verbose=2),
+                          'callbacks': callbacks.ModelCheckpoint('LSTM_cp.hdf5', monitor='loss', verbose=0,
+                                                                 save_best_only=True, save_weights_only=True,
+                                                                 mode='min')
+                          }
 
 LSTM_with_val_config = {'batch_size': 32,
                         'verbose': 0,
                         'epochs': 100,
                         'validation_split': 0.2,
-                        'callbacks': callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=15,
-                                                             restore_best_weights=True, verbose=2)}
+                        # 'callbacks': callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=15,
+                        #                                     restore_best_weights=True, verbose=2),
+                        'callbacks': callbacks.ModelCheckpoint('LSTM_cp.hdf5', monitor='val_loss', verbose=0,
+                                                               save_best_only=True, save_weights_only=True, mode='min')
+                        }
 """ ---------------------------------------------------------------------------------------------------- """
 
 
@@ -51,7 +58,7 @@ def trainRFC(train_X, train_Y, n_estimators=100):
     return model
 
 
-def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
+def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=False):
     if not es:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
@@ -63,7 +70,7 @@ def trainGBR(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
     return model
 
 
-def trainGBC(train_X, train_Y, n_estimators=100, lr=0.01, es=True):
+def trainGBC(train_X, train_Y, n_estimators=100, lr=0.01, es=False):
     if not es:
         model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
@@ -115,5 +122,7 @@ def trainLSTM(train_X, train_Y, config=None):
     reshaped_Y_p = train_Y.to_numpy().reshape(-1, 1, 1)
 
     model.fit(reshaped_X_p, reshaped_Y_p, **config)
+
+    model.load_weights('LSTM_cp.hdf5')
 
     return model

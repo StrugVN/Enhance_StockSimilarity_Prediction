@@ -37,7 +37,7 @@ selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 """
 
 base_param = {
-    'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
+    'stock_list': ['JPM'],
     'target_col': 'Close_norm',
     'sim_func': 'dtw',
     'fix_len_func': 'time_join',
@@ -46,5 +46,6 @@ base_param = {
     'selected_features': ['Close_norm'],
     'window_len': 7,
     'model_name': 'LSTM',
+    'n_fold': 5,
     'eval_result_path': 'test.csv'
 }

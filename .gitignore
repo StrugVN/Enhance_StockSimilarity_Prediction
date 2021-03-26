@@ -3,3 +3,12 @@
 *.pyc
 *.pyc
 *.pyc
+*.pyc
+util/__pycache__/SAX_FILE.cpython-38.pyc
+util/__pycache__/fastpip.cpython-38.pyc
+__pycache__/similarity_functions.cpython-38.pyc
+__pycache__/length_fixing.cpython-38.pyc
+__pycache__/financial_features.cpython-38.pyc
+__pycache__/data_processing.cpython-38.pyc
+__pycache__/Const.cpython-38.pyc
+*.hdf5

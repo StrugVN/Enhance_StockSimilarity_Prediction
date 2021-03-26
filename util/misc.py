@@ -88,4 +88,11 @@ def long_short_profit_evaluation(curr_price, predicted_price):
 
         profits.append(position)
 
+    #
+    # profit = position
+
     return profit, profits
+
+
+if __name__ == '__main__':
+    print(long_short_profit_evaluation([5, 15, 25], [-1, 1, 1]))
