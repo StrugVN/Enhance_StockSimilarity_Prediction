@@ -48,6 +48,6 @@ base_param = {
     'selected_features': ['Close_norm'],
     'window_len': 7,
     'model_name': 'LSTM',
-    'n_fold': 1,
+    'n_fold': 5,
     'eval_result_path': 'test.csv'
 }

@@ -1,5 +1,5 @@
 import time
-
+import os
 from data_processing import *
 from util.misc import *
 from config import *
@@ -169,13 +169,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 feature
     run_param = base_param
-    run_param['eval_result_path'] = 'Sim_func_test.csv'
+    run_param['eval_result_path'] = 'Sim_func_test_5folds.csv'
     run_param['window_len'] = 10
     run_param['model_name'] = 'LSTM'
     run_param['selected_features'] = ['Close_norm']
     run_param['next_t'] = 1
 
-    k = [15, 25]
+    k = [15, 25, 50]
 
     for _k in k:
         run_param['k'] = _k
@@ -183,7 +183,9 @@ def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 fe
             run_param['sim_func'] = sim_f_name
             for fix_f_name in fix_length_funcs:
                 run_param['fix_len_func'] = fix_f_name
-                print('Run {0}, {1}, {2}'.format(_k, sim_f_name, fix_f_name))
+                if sim_f_name == 'dtw' and fix_f_name == 'delay_time_join':
+                    continue
+                print('============== Run {0}, {1}, {2} ====================='.format(_k, sim_f_name, fix_f_name))
                 run_exp(**run_param)
 
 
@@ -222,19 +224,21 @@ def paper_param_test():
     run_exp(**test)
 
 
-# sim_func_test1()
-"""
-x_param = base_param
-paper_param_test()
-"""
-x_param = base_param
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+sim_func_test1()
+
+
+
+
+"""
+x_param = base_param
 for sim_func_ in similarity_funcs:
     x_param['sim_func'] = sim_func_
     for fix_func_ in fix_length_funcs:
         x_param['fix_len_func'] = fix_func_
         print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
         run_exp(**x_param)
-"""
+
 run_exp(**base_param)
 """

@@ -163,7 +163,7 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
                 sim_stock_X = sim_stock_X[msk]
                 sim_stock_Y = sim_stock_Y[msk]
 
-            X_df = pd.concat([X_df, sim_stock_X])
-            Y_df = pd.concat([Y_df, sim_stock_Y])
+            X_df = pd.concat([sim_stock_X, X_df])
+            Y_df = pd.concat([sim_stock_Y, Y_df])
 
     return X_df, Y_df
