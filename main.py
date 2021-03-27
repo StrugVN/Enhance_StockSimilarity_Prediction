@@ -229,10 +229,12 @@ paper_param_test()
 """
 x_param = base_param
 
-for model_ in fit_model_funcs:
-    x_param['model_name'] = model_
-    print('================== Running {} ================'.format(model_))
-    run_exp(**x_param)
+for sim_func_ in similarity_funcs:
+    x_param['sim_func'] = sim_func_
+    for fix_func_ in fix_length_funcs:
+        x_param['fix_len_func'] = fix_func_
+        print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
+        run_exp(**x_param)
 """
 run_exp(**base_param)
 """

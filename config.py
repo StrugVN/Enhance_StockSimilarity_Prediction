@@ -3,16 +3,18 @@ from models import *
 
 # target_col = 'Close_norm'
 
-similarity_funcs = {'dtw': apply_dtw,
+similarity_funcs = {'euclidean': apply_euclidean,
                     'pearson': apply_pearson,
-                    'euclidean': apply_euclidean,
                     'sax': compare_sax,
-                    'co-integration': cointegration}
+                    'co-integration': cointegration,
+                    'dtw': apply_dtw
+                    }
 
-fix_length_funcs = {#'padding': padding,
+fix_length_funcs = {'padding': padding,
                     'time_join': time_join,
-                    #'delay_time_join': delay_time_join,
-                    'pip': pip_fix}
+                    'delay_time_join': delay_time_join,
+                    'pip': pip_fix
+                    }
 
 fit_model_funcs = {'RandomForestRegressor': trainRFR,
                    'GradientBoostingRegressor': trainGBR,
@@ -37,7 +39,7 @@ selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 """
 
 base_param = {
-    'stock_list': ['JPM'],
+    'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
     'target_col': 'Close_norm',
     'sim_func': 'dtw',
     'fix_len_func': 'time_join',
@@ -46,6 +48,6 @@ base_param = {
     'selected_features': ['Close_norm'],
     'window_len': 7,
     'model_name': 'LSTM',
-    'n_fold': 5,
+    'n_fold': 1,
     'eval_result_path': 'test.csv'
 }
