@@ -126,8 +126,7 @@ def prepare_time_point(data, selected_features, next_t, target_col, tranform_fun
     Price_df = pd.DataFrame(Price, index=Y_df.index)
     Proc_df = pd.DataFrame(Proc, index=Y_df.index)
 
-    if tranform_func is not None:
-
+    #if tranform_func is not None:
 
     return X_df, Y_df, Price_df, Proc_df, y[next_t - 1]
 

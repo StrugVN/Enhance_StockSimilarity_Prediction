@@ -53,7 +53,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
             # sim
             sim_path = 'similarities_data/5_years_' + stock + '_' + \
-                       'Close_norm' + '_' + sim_func + '_' + fix_len_func + '.pkl'
+                       target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
             if os.path.isfile(sim_path):
                 print('Loading existing similarity result: ' + sim_path)
                 _sim_data = pickle.load(open(sim_path, 'rb'))
@@ -66,7 +66,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     feature_df, stock, all_stock_name,
                     similarity_func=similarity_funcs[sim_func],
                     fix_len_func=fix_length_funcs[fix_len_func],
-                    similarity_col='Close_norm'
+                    similarity_col=target_col
                 )
 
                 print(' Saving new similarity result')
@@ -227,17 +227,30 @@ def model_test1():
 
 def paper_param_test():
     test = base_param
-    test['target_col'] = 'Close_norm'
-    test['window_len'] = 10
-    test['sim_func'] = 'co-integration'
-    test['fix_len_func'] = 'time_join'
-    test['k'] = 50
-    test['selected_features'] = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
-    test['model_name'] = 'GradientBoostingRegressor'
+    test['target_col'] = 'Close_proc'
+    test['window_len'] = 0
+    test['selected_features'] = ['Close_proc']
+    test['n_fold'] = 5
     # paper co su dung them SAX(?)
 
     test['eval_result_path'] = 'paper_param.csv'
-    run_exp(**test)
+    for k_ in [10]: # [10, 25, 50]
+        test['k'] = k_
+        print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
+        for sim_func_ in similarity_funcs:
+            test['sim_func'] = sim_func_
+            for fix_func_ in fix_length_funcs:
+                test['fix_len_func'] = fix_func_
+                print('================== Running {0}, {1} =================='.format(sim_func_, fix_func_))
+                for t_ in [1, 3, 7]:
+                    test['next_t'] = t_
+                    for model_ in ['RandomForestRegressor', 'RandomForestClassifier',
+                                   'GradientBoostingRegressor', 'GradientBoostingClassifier']:
+                        test['model_name'] = model_
+                        print('*** Model {0} ***'.format(model_))
+                        run_exp(**test)
+
+        print('--------------------------- FINISHED K = {} ---------------------------'.format(k_))
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
