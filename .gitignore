@@ -12,3 +12,4 @@ __pycache__/financial_features.cpython-38.pyc
 __pycache__/data_processing.cpython-38.pyc
 __pycache__/Const.cpython-38.pyc
 *.hdf5
+*.pyc

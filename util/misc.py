@@ -29,7 +29,7 @@ def inverse_scaling(target_col, col_data, scaler_cols, scaler):
 def get_y_bin(x, y, window_len, target_col):
     y = y.reshape(y.shape[0], 1)
     y_bin = []
-    if window_len == 0:
+    if window_len <= 1:
         y_bin.append(np.sign(y[0] - x[target_col][0]))
     else:
         col = (target_col, window_len - 1)
@@ -39,12 +39,8 @@ def get_y_bin(x, y, window_len, target_col):
         y_bin.append(np.sign(y[i] - y[i - 1]))
 
     for i in y_bin:
-        try:
-            if i[0] == 0:
-                i[0] = 1
-        except:
-            print("Error")
-            raise
+        if i[0] == 0:
+            i[0] = 1
 
     return y_bin
 

@@ -89,37 +89,71 @@ def split_train_test_set(data, stock, stock_names, ratio):
     return train_df, test_df
 
 
-def prepare_time_point(data, selected_features, next_t, target_col):
+def prepare_time_point(data, selected_features, next_t, target_col, tranform_func=None):
+    if 'Close_proc' in selected_features:
+        data = data.iloc[1:]
+
     X_df = data[selected_features].iloc[:-next_t].copy()
 
     Y = []
     y = np.array(data[target_col].tolist())
+    Price = []
+    price = np.array(data['Close'].tolist())
+    Proc = []
+    proc = np.array(data['Close_proc'].tolist())
 
     for i in range(0, len(data[target_col]) - next_t):
         y_ti = i + next_t
-        next_y = y[y_ti].tolist()
 
-        to_dict_y = {}
-        to_dict_y[next_t] = next_y
+        next_y = y[y_ti].tolist()
+        to_dict_y = {next_t: next_y}
         Y.append(to_dict_y)
 
-    Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - next_t])
+        # price
+        next_p = price[y_ti].tolist()
+        P_period = {str(next_t): next_p}
+        Price.append(P_period)
 
-    return X_df, Y_df
+        # bin_proc
+        next_b = np.sign(proc[y_ti].tolist())
+        if next_b == 0:
+            B_period = {str(next_t): 1}
+        else:
+            B_period = {str(next_t): next_b}
+        Proc.append(B_period)
+
+    Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - next_t])
+    Price_df = pd.DataFrame(Price, index=Y_df.index)
+    Proc_df = pd.DataFrame(Proc, index=Y_df.index)
+
+    if tranform_func is not None:
+
+
+    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1]
 
 
 def prepare_time_window(data, selected_features, w_len, next_t, target_col):
+    if 'Close_proc' in selected_features:
+        data = data.iloc[1:]
     X = []
     Y = []
     y = np.array(data[target_col].tolist())
+    Price = []
+    price = np.array(data['Close'].tolist())
+    Proc = []
+    proc = np.array(data['Close_proc'].tolist())
 
     for i in range(0, len(data[target_col]) - w_len + 1 - next_t):
         y_ti = i + w_len - 1 + next_t
         # Y
         next_y = y[y_ti].tolist()
-        Y_period = {}
-        Y_period[str(next_t)] = next_y
+        Y_period = {str(next_t): next_y}
         Y.append(Y_period)
+
+        # price
+        next_p = price[y_ti].tolist()
+        P_period = {str(next_t): next_p}
+        Price.append(P_period)
 
         # X
         X_period = data[i:i + w_len]
@@ -131,39 +165,57 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col):
         X_period_dict[const_time_col] = period_time
         X.append(X_period_dict)
 
+        # bin_proc
+        next_b = np.sign(proc[y_ti].tolist())
+        if next_b == 0:
+            B_period = {str(next_t): 1}
+        else:
+            B_period = {str(next_t): next_b}
+        Proc.append(B_period)
+
     X_df = pd.DataFrame(X).set_index(const_time_col)
     Y_df = pd.DataFrame(Y, index=X_df.index)
+    Price_df = pd.DataFrame(Price, index=X_df.index)
+    Proc_df = pd.DataFrame(Proc, index=X_df.index)
 
-    return X_df, Y_df
+    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1]
 
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,
                             top_stock, weighted_sampling=False, is_test=False):
     if w_len > 1:
-        X_df, Y_df = prepare_time_window(data[data[const_name_col] == comparing_stock],
-                                         selected_features, w_len, next_t, target_col)
+        X_df, Y_df, Prices_df, Proc_df, t_0 = prepare_time_window(data[data[const_name_col] == comparing_stock],
+                                                                  selected_features, w_len, next_t, target_col)
     else:
-        X_df, Y_df = prepare_time_point(data[data[const_name_col] == comparing_stock],
-                                        selected_features, next_t, target_col)
+        X_df, Y_df, Prices_df, Proc_df, t_0 = prepare_time_point(data[data[const_name_col] == comparing_stock],
+                                                                 selected_features, next_t, target_col)
     if not is_test and top_stock is not None:
         for stock_name in top_stock.keys():
             stock_df = data[data[const_name_col] == stock_name]
             if stock_df.empty or stock_df.shape[0] < w_len + next_t + 1:
                 continue
             if w_len > 1:
-                sim_stock_X, sim_stock_Y = prepare_time_window(stock_df,
-                                                               selected_features, w_len, next_t, target_col)
+                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _ = prepare_time_window(stock_df,
+                                                                                                    selected_features,
+                                                                                                    w_len, next_t,
+                                                                                                    target_col)
             else:
-                sim_stock_X, sim_stock_Y = prepare_time_point(stock_df,
-                                                              selected_features, next_t, target_col)
+                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _ = prepare_time_point(stock_df,
+                                                                                                   selected_features,
+                                                                                                   next_t, target_col)
 
             if weighted_sampling:
                 np.random.seed(0)
                 msk = (np.random.rand(len(sim_stock_X)) < top_stock[stock_name])
                 sim_stock_X = sim_stock_X[msk]
                 sim_stock_Y = sim_stock_Y[msk]
+                sim_stock_Prices = sim_stock_Prices[msk]
+                sim_stock_Proc = sim_stock_Proc[msk]
 
             X_df = pd.concat([sim_stock_X, X_df])
             Y_df = pd.concat([sim_stock_Y, Y_df])
+            Prices_df = pd.concat([sim_stock_Prices, Prices_df])
+            Proc_df = pd.concat([sim_stock_Proc, Proc_df])
 
-    return X_df, Y_df
+    # return X_df, Y_df
+    return X_df, Y_df, Prices_df[str(next_t)], Proc_df[str(next_t)].to_numpy(), t_0

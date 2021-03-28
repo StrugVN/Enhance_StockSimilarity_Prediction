@@ -13,8 +13,6 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
     df = read_data('data/' + data_name + '.csv')
 
-
-
     """
     target_stock_dates = df[df[const_name_col] == stock][const_time_col]
     threshold = int(len(target_stock_dates)/n_fold)
@@ -55,7 +53,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
             # sim
             sim_path = 'similarities_data/5_years_' + stock + '_' + \
-                       target_col + '_' + sim_func + '_' + fix_len_func + '.pkl'
+                       'Close_norm' + '_' + sim_func + '_' + fix_len_func + '.pkl'
             if os.path.isfile(sim_path):
                 print('Loading existing similarity result: ' + sim_path)
                 _sim_data = pickle.load(open(sim_path, 'rb'))
@@ -68,7 +66,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     feature_df, stock, all_stock_name,
                     similarity_func=similarity_funcs[sim_func],
                     fix_len_func=fix_length_funcs[fix_len_func],
-                    similarity_col=target_col
+                    similarity_col='Close_norm'
                 )
 
                 print(' Saving new similarity result')
@@ -80,18 +78,30 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             top_stock_norm = normalize_similarity(top_k_stocks, stock)
 
             # split dataset
-            train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.7)
+            train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.8)
             # Prepare X, Y
-            train_X, train_Y = prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
-                                                       target_col, top_stock_norm, weighted_sampling=True)
+            train_X, train_Y, train_price_Y, bin_train_Y, _ = prepare_train_test_data(train_df, selected_features,
+                                                                                      stock,
+                                                                                      window_len, next_t,
+                                                                                      target_col, top_stock_norm,
+                                                                                      weighted_sampling=True)
 
-            bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
+            # if 'proc' not in target_col:
+            #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
+            # else:
+            #    bin_train_Y = np.sign(train_Y)
 
-            test_X, test_Y = prepare_train_test_data(test_df, selected_features, stock, window_len, next_t,
-                                                     target_col, top_stock_norm, is_test=True)
+            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price = prepare_train_test_data(test_df,
+                                                                                              selected_features, stock,
+                                                                                              window_len, next_t,
+                                                                                              target_col,
+                                                                                              top_stock_norm,
+                                                                                              is_test=True)
 
-            bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
-            inverted_test_Y = inverse_scaling(target_col, test_Y.iloc[:, 0].to_numpy(), scaler_cols, scaler)
+            # if 'proc' not in target_col:
+            #    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
+            # else:
+            #    bin_test_Y = np.sign(test_Y)
 
             if model_name not in fit_model_funcs.keys():
                 raise ValueError(model_name + ' is not available')
@@ -113,19 +123,25 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             # Error cal
             evals = dict()
             if not is_classifier:
-                inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
-                evals['rmse'] = np.sqrt(mean_squared_error(inverted_test_Y, inverted_pred_Y))
+                if 'proc' not in target_col:
+                    inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
+                    evals['rmse'] = np.sqrt(mean_squared_error(test_price_Y, inverted_pred_Y))
+                else:
+                    evals['rmse'] = np.sqrt(mean_squared_error(test_Y, pred_Y))
+                # bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
+                bin_pred_Y = [np.sign(pred_Y[0] - test_t0_price)]
+                for i in range(1, len(pred_Y)):
+                    bin_pred_Y.append(np.sign(pred_Y[i] - pred_Y[i-1]))
+                bin_pred_Y = np.array([1 if x == 0 else x for x in bin_pred_Y])
 
-                bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
             else:
-                bin_test_Y = np.array(bin_test_Y)
                 bin_pred_Y = pred_Y
 
             evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
             evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
             # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
-            evals["long_short_profit"], profits = long_short_profit_evaluation(inverted_test_Y.tolist(), bin_pred_Y)
+            evals["long_short_profit"], profits = long_short_profit_evaluation(test_price_Y.tolist(), bin_pred_Y)
             evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
             print(evals)
             evals_list.append(evals)
@@ -175,7 +191,7 @@ def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 fe
     run_param['selected_features'] = ['Close_norm']
     run_param['next_t'] = 1
 
-    k = [15, 25, 50]
+    k = [5, 15, 25]
 
     for _k in k:
         run_param['k'] = _k
@@ -226,9 +242,7 @@ def paper_param_test():
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-sim_func_test1()
-
-
+# sim_func_test1()
 
 
 """
@@ -239,6 +253,7 @@ for sim_func_ in similarity_funcs:
         x_param['fix_len_func'] = fix_func_
         print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
         run_exp(**x_param)
-
-run_exp(**base_param)
 """
+run_exp(**base_param)
+base_param['model_name'] = 'RandomForestClassifier'
+run_exp(**base_param)
