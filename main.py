@@ -1,14 +1,15 @@
 import time
 import os
+from datetime import datetime
+
 from data_processing import *
 from util.misc import *
 from config import *
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_score, mean_squared_error
 
 
 def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_features,
-            window_len, model_name, eval_result_path, n_fold):
+            window_len, model_name, eval_result_path, n_fold, similarity_col):
     is_classifier = ('Classifier' in model_name)
 
     df = read_data('data/' + data_name + '.csv')
@@ -44,17 +45,20 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
         for _df in folds_df:
             # get feature all stock
-            feature_df, scaler, scaler_cols = cal_financial_features(_df, StandardScaler())
+            # feature_df, scaler, scaler_cols = cal_financial_features(_df, StandardScaler())
 
-            stock_df = feature_df[feature_df[const_name_col] == stock]
-            all_stock_df = feature_df[feature_df[const_time_col].isin(stock_df[const_time_col])]
+            stock_df = _df[_df[const_name_col] == stock]
+            all_stock_df = _df[_df[const_time_col].isin(stock_df[const_time_col])]
 
             stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
             # sim
-            sim_path = 'similarities_data/5_years_' + stock + '_' + \
-                       'Close_norm' + '_' + sim_func + '_' + fix_len_func + '.pkl'
-            if os.path.isfile(sim_path):
+            start_d = str(stock_df[const_time_col][0]).replace(' 00:00:00', '')
+            end_d = str(stock_df[const_time_col][-1]).replace(' 00:00:00', '')
+            force = False
+            sim_path = 'similarities_data/5_years_' + stock + '_' + similarity_col + '_' + sim_func + '_' + fix_len_func \
+                       + '_fold_' + start_d + '_' + end_d + '.pkl'
+            if os.path.isfile(sim_path) and not force:
                 print('Loading existing similarity result: ' + sim_path)
                 _sim_data = pickle.load(open(sim_path, 'rb'))
                 all_stock_name, similarities = _sim_data
@@ -63,10 +67,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
 
                 similarities = cal_other_stock_similarity(
-                    feature_df, stock, all_stock_name,
+                    _df, stock, all_stock_name,
                     similarity_func=similarity_funcs[sim_func],
                     fix_len_func=fix_length_funcs[fix_len_func],
-                    similarity_col='Close_norm'
+                    similarity_col=similarity_col
                 )
 
                 print(' Saving new similarity result')
@@ -78,25 +82,22 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             top_stock_norm = normalize_similarity(top_k_stocks, stock)
 
             # split dataset
-            train_df, test_df = split_train_test_set(feature_df, stock, all_stock_name, 0.8)
+            train_df, test_df = split_train_test_set(_df, stock, all_stock_name, 0.8)
             # Prepare X, Y
-            train_X, train_Y, train_price_Y, bin_train_Y, _ = prepare_train_test_data(train_df, selected_features,
-                                                                                      stock,
-                                                                                      window_len, next_t,
-                                                                                      target_col, top_stock_norm,
-                                                                                      weighted_sampling=True)
+            train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols = \
+                prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
+                                        target_col, top_stock_norm, weighted_sampling=True,
+                                        norm_func=StandardScaler())
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
             # else:
             #    bin_train_Y = np.sign(train_Y)
 
-            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price = prepare_train_test_data(test_df,
-                                                                                              selected_features, stock,
-                                                                                              window_len, next_t,
-                                                                                              target_col,
-                                                                                              top_stock_norm,
-                                                                                              is_test=True)
+            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _ = \
+                prepare_train_test_data(test_df,
+                                        selected_features, stock, window_len, next_t, target_col, top_stock_norm,
+                                        is_test=True, norm_func=scaler)
 
             # if 'proc' not in target_col:
             #    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
@@ -131,7 +132,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 # bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
                 bin_pred_Y = [np.sign(pred_Y[0] - test_t0_price)]
                 for i in range(1, len(pred_Y)):
-                    bin_pred_Y.append(np.sign(pred_Y[i] - pred_Y[i-1]))
+                    bin_pred_Y.append(np.sign(pred_Y[i] - test_Y.iloc[:, 0][i - 1]))
                 bin_pred_Y = np.array([1 if x == 0 else x for x in bin_pred_Y])
 
             else:
@@ -240,8 +241,6 @@ def paper_param_test():
     run_exp(**test)
 
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 # sim_func_test1()
 
 
@@ -254,6 +253,7 @@ for sim_func_ in similarity_funcs:
         print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
         run_exp(**x_param)
 """
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 run_exp(**base_param)
 base_param['model_name'] = 'RandomForestClassifier'
 run_exp(**base_param)
