@@ -4,15 +4,15 @@ from models import *
 # target_col = 'Close_norm'
 
 similarity_funcs = {'euclidean': apply_euclidean,
-                    'pearson': apply_pearson,
+                    #'pearson': apply_pearson,
                     'sax': compare_sax,
                     'co-integration': cointegration,
-                    'dtw': apply_dtw
+                    #'dtw': apply_dtw
                     }
 
-fix_length_funcs = {'padding': padding,
+fix_length_funcs = {#'padding': padding,
                     'time_join': time_join,
-                    'delay_time_join': delay_time_join,
+                    #'delay_time_join': delay_time_join,
                     'pip': pip_fix
                     }
 
