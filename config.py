@@ -1,3 +1,5 @@
+from sklearn.preprocessing import StandardScaler
+
 from similarity_functions import *
 from models import *
 
@@ -40,15 +42,17 @@ selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm']
 
 base_param = {
     'stock_list': ['JPM'],
-    'target_col': 'Close_norm',
+    'target_col': 'Close_proc',
     'similarity_col': 'Close_norm',
     'sim_func': 'co-integration',
     'fix_len_func': 'time_join',
     'k': 5,
     'next_t': 1,
-    'selected_features': ['Close_norm'],
-    'window_len': 7,
-    'model_name': 'RandomForestRegressor',
+    'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm'],
+    'window_len': 0,
+    'model_name': 'LSTM',
     'n_fold': 5,
-    'eval_result_path': 'test.csv'
+    'eval_result_path': 'test.csv',
+    'norm_func': StandardScaler(),
+    'trans_func': None
 }

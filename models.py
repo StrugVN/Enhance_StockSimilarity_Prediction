@@ -1,3 +1,5 @@
+import os
+
 from keras import callbacks
 from sklearn.ensemble import *
 from sklearn.model_selection import train_test_split
@@ -123,6 +125,8 @@ def trainLSTM(train_X, train_Y, config=None):
 
     model.fit(reshaped_X_p, reshaped_Y_p, **config)
 
-    model.load_weights('LSTM_cp.hdf5')
+    if os.path.exists("LSTM_cp.hdf5"):
+        model.load_weights('LSTM_cp.hdf5')
+        os.remove("LSTM_cp.hdf5")
 
     return model

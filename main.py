@@ -9,39 +9,40 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_s
 
 
 def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_features,
-            window_len, model_name, eval_result_path, n_fold, similarity_col):
+            window_len, model_name, eval_result_path, n_fold, similarity_col, norm_func, trans_func):
     is_classifier = ('Classifier' in model_name)
 
     df = read_data('data/' + data_name + '.csv')
-
-    """
-    target_stock_dates = df[df[const_name_col] == stock][const_time_col]
-    threshold = int(len(target_stock_dates)/n_fold)
-
-    folds_df = []
-    for i in range(n_fold-1):
-        fold_time = target_stock_dates[:(i+1)*threshold - 1]
-        fold_df_ = df[df[const_time_col].isin(fold_time)]
-        folds_df.append(fold_df_)
-    folds_df.append(df[df[const_time_col].isin(target_stock_dates)])
-    """
 
     evals_list = []
     for stock in stock_list:
         print('     -------- {0}, {1} folds --------'.format(stock, n_fold))
 
-        # create fold
+        # Create fold
         target_stock_dates = df[df[const_name_col] == stock][const_time_col]
-        threshold = int(len(target_stock_dates) / (n_fold + 1))
-
         folds_df = []
-        _folds_time = [len(target_stock_dates)]
+        _folds_time = []  # for debugging
+        # Large fold
+        """
+        threshold = int(len(target_stock_dates) / (n_fold + 1))
         for i in range(1, n_fold):
             fold_time = target_stock_dates[:(i + 1) * threshold - 1]
             _folds_time.append((i + 1) * threshold - 1)
             fold_df_ = df[df[const_time_col].isin(fold_time)]
             folds_df.append(fold_df_)
         folds_df.append(df[df[const_time_col].isin(target_stock_dates)])
+        """
+
+        # Small fold
+        threshold = int(len(target_stock_dates) / n_fold)
+        for i in range(n_fold - 1):
+            fold_time = target_stock_dates[i*threshold: (i + 1) * threshold - 1]
+            _folds_time.append((i*threshold, (i + 1) * threshold - 1))
+            fold_df_ = df[df[const_time_col].isin(fold_time)]
+            folds_df.append(fold_df_)
+
+        folds_df.append(df[df[const_time_col].isin(target_stock_dates[(n_fold - 1) * threshold:])])
+        _folds_time.append(((n_fold-1)*threshold, 'end'))
 
         for _df in folds_df:
             # get feature all stock
@@ -87,7 +88,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols = \
                 prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                         target_col, top_stock_norm, weighted_sampling=True,
-                                        norm_func=StandardScaler())
+                                        norm_func=norm_func, trans_func=trans_func)
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
@@ -268,5 +269,5 @@ for sim_func_ in similarity_funcs:
 """
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 run_exp(**base_param)
-base_param['model_name'] = 'RandomForestClassifier'
+base_param['model_name'] = 'GradientBoostingClassifier'
 run_exp(**base_param)
