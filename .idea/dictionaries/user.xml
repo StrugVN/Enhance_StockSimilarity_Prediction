@@ -4,6 +4,8 @@
       <w>lstm</w>
       <w>pred</w>
       <w>proc</w>
+      <w>regressor</w>
+      <w>scaler</w>
     </words>
   </dictionary>
 </component>

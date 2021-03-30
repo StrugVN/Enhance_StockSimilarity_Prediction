@@ -36,13 +36,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         # Small fold
         threshold = int(len(target_stock_dates) / n_fold)
         for i in range(n_fold - 1):
-            fold_time = target_stock_dates[i*threshold: (i + 1) * threshold - 1]
-            _folds_time.append((i*threshold, (i + 1) * threshold - 1))
+            fold_time = target_stock_dates[i * threshold: (i + 1) * threshold - 1]
+            _folds_time.append((i * threshold, (i + 1) * threshold - 1))
             fold_df_ = df[df[const_time_col].isin(fold_time)]
             folds_df.append(fold_df_)
 
         folds_df.append(df[df[const_time_col].isin(target_stock_dates[(n_fold - 1) * threshold:])])
-        _folds_time.append(((n_fold-1)*threshold, 'end'))
+        _folds_time.append(((n_fold - 1) * threshold, 'end'))
 
         for _df in folds_df:
             # get feature all stock
@@ -85,7 +85,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             # split dataset
             train_df, test_df = split_train_test_set(_df, stock, all_stock_name, 0.8)
             # Prepare X, Y
-            train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols = \
+            train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols, transformer = \
                 prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                         target_col, top_stock_norm, weighted_sampling=True,
                                         norm_func=norm_func, trans_func=trans_func)
@@ -95,10 +95,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             # else:
             #    bin_train_Y = np.sign(train_Y)
 
-            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _ = \
+            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _, _ = \
                 prepare_train_test_data(test_df,
                                         selected_features, stock, window_len, next_t, target_col, top_stock_norm,
-                                        is_test=True, norm_func=scaler)
+                                        is_test=True, norm_func=scaler, trans_func=transformer)
 
             # if 'proc' not in target_col:
             #    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
@@ -167,18 +167,26 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                                                           np.mean(eval_df['long_short_profit']),
                                                           np.std(eval_df['long_short_profit'])), 3)
 
+    if trans_func is None:
+        trans_func_name = 'None'
+    else:
+        trans_func_name = trans_func.__class__.__name__
+
     if not os.path.isfile(eval_result_path):
         with open(eval_result_path, "w") as file:
-            file.write("No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, "
-                       "model, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, "
-                       "mean_profit, std_profit\n")
+            file.write("No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, "
+                       "next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, "
+                       "mean_f1, std_f1, mean_rmse, std_rmse, "
+                       "mean_sharp_ratio, mean_profit\n")
             file.close()
 
     with open(eval_result_path, "a") as file:
-        file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}\n"
-                   .format(len(selected_features), text_selected_ft, sim_func, fix_len_func, k, window_len, next_t,
-                           model_name, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
-                           mean_sharp_ratio, mean_profit, std_profit))
+        file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, "
+                   "{18}\n "
+                   .format(len(selected_features), text_selected_ft, trans_func_name, sim_func,
+                           fix_len_func, k, window_len, next_t, model_name, target_col, similarity_col, mean_accuracy,
+                           std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
+                           mean_sharp_ratio, mean_profit))
         file.close()
 
 
@@ -236,7 +244,7 @@ def paper_param_test():
     # paper co su dung them SAX(?)
 
     test['eval_result_path'] = 'paper_param.csv'
-    for k_ in [10]: # [10, 25, 50]
+    for k_ in [10]:  # [10, 25, 50]
         test['k'] = k_
         print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
         for sim_func_ in similarity_funcs:
@@ -267,7 +275,17 @@ for sim_func_ in similarity_funcs:
         print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
         run_exp(**x_param)
 """
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-run_exp(**base_param)
-base_param['model_name'] = 'GradientBoostingClassifier'
-run_exp(**base_param)
+s = time.time()
+for f in trans_funcs:
+    base_param['trans_func'] = f
+    base_param['model_name'] = 'GradientBoostingRegressor'
+    run_exp(**base_param)
+
+for f in trans_funcs:
+    base_param['trans_func'] = f
+    base_param['model_name'] = 'GradientBoostingClassifier'
+    run_exp(**base_param)
+
+print('Elapsed: ', (time.time() - s))

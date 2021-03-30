@@ -2,6 +2,7 @@ from copy import copy
 import os
 import pickle
 
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 from financial_features import *
@@ -62,7 +63,7 @@ def cal_financial_features(data, norm_func=None, trans_func=None, re_fit=True):
 
     if norm_func is not None:  # Normalize
         scaler = copy(norm_func)
-        features = ['rsi', 'MACD', 'Open_Close_diff', 'High_Low_diff']
+        features = ['rsi', 'MACD']
 
         df = data.copy()
         df[features] = feature_df[features]
@@ -73,6 +74,8 @@ def cal_financial_features(data, norm_func=None, trans_func=None, re_fit=True):
         data_norm_df = pd.DataFrame(data_norm, columns=[s + '_norm' for s in numeric_cols + features])
         data_norm_df[const_time_col] = df.index
         data_norm_df = data_norm_df.set_index(const_time_col)
+        data_norm_df['Open_Close_diff_norm'] = data_norm_df['Open_norm'] - data_norm_df['Close_norm']
+        data_norm_df['High_Low_diff_norm'] = data_norm_df['High_norm'] - data_norm_df['Low_norm']
 
         feature_df = pd.concat([feature_df, data_norm_df], axis=1)
 
@@ -140,7 +143,26 @@ def prepare_time_point(data, selected_features, next_t, target_col,
     Price_df = pd.DataFrame(Price, index=Y_df.index)
     Proc_df = pd.DataFrame(Proc, index=Y_df.index)
 
-    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col
+    if trans_func is not None:
+        transformer = copy(trans_func)
+        if re_fit:
+            transformer.fit(X_df)
+        X_transformed = transformer.transform(X_df)
+
+        cols = [i for i in range(X_transformed.shape[1])]
+        if transformer.__class__.__name__ == PCA().__class__.__name__:
+            cols = ['pca_{}'.format(i) for i in cols]
+        elif transformer.__class__.__name__ == SAX().__class__.__name__:
+            cols = X_df.columns
+
+        X_transformed_df = pd.DataFrame(X_transformed, columns=cols,
+                                        index=X_df.index)
+
+        X_df = X_transformed_df
+
+        return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, transformer
+
+    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, None
 
 
 def prepare_time_window(data, selected_features, w_len, next_t, target_col,
@@ -191,34 +213,63 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
     Price_df = pd.DataFrame(Price, index=X_df.index)
     Proc_df = pd.DataFrame(Proc, index=X_df.index)
 
-    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col
+    if trans_func is not None:
+        transformer = copy(trans_func)
+        if re_fit:
+            transformer.fit(X_df)
+        X_transformed = transformer.transform(X_df)
+
+        cols = [i for i in range(X_transformed.shape[1])]
+        if transformer.__class__.__name__ == PCA().__class__.__name__:
+            cols = ['pca_{}'.format(i) for i in cols]
+        elif transformer.__class__.__name__ == SAX().__class__.__name__:
+            cols = X_df.columns
+
+        X_transformed_df = pd.DataFrame(X_transformed, columns=cols,
+                                        index=X_df.index)
+
+        X_df = X_transformed_df
+
+        return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, transformer
+
+    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, None
 
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,
                             top_stock, weighted_sampling=False, is_test=False,
                             norm_func=None, trans_func=None):
     if w_len > 1:
-        X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols = prepare_time_window(
+        X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols, transformer = prepare_time_window(
             data[data[const_name_col] == comparing_stock],
-            selected_features, w_len, next_t, target_col, norm_func, re_fit=not is_test)
+            selected_features, w_len, next_t, target_col, norm_func, trans_func, re_fit=not is_test)
     else:
-        X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols = prepare_time_point(
+        X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols, transformer = prepare_time_point(
             data[data[const_name_col] == comparing_stock],
-            selected_features, next_t, target_col, norm_func, re_fit=not is_test)
+            selected_features, next_t, target_col, norm_func, trans_func, re_fit=not is_test)
 
     if not is_test and top_stock is not None:
+        _scaler, _transformer = None, None
+        if norm_func is not None and norm_func.__class__.__name__ == StandardScaler().__class__.__name__:
+            _scaler = StandardScaler()
+
+        if trans_func is not None:
+            if trans_func.__class__.__name__ == PCA().__class__.__name__:
+                _transformer = PCA(n_components=3, random_state=0)
+            elif trans_func.__class__.__name__ == SAX().__class__.__name__:
+                _transformer = SAX()
+
         for stock_name in top_stock.keys():
             stock_df = data[data[const_name_col] == stock_name]
             if stock_df.empty or stock_df.shape[0] < w_len + next_t + 1:
                 continue
             if w_len > 1:
-                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _ = \
+                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _, _ = \
                     prepare_time_window(stock_df, selected_features, w_len, next_t,
-                                        target_col, norm_func)
+                                        target_col, _scaler, _transformer)
             else:
-                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _ = \
+                sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _, _ = \
                     prepare_time_point(stock_df, selected_features, next_t,
-                                       target_col, norm_func)
+                                       target_col, _scaler, _transformer)
 
             if weighted_sampling:
                 np.random.seed(0)
@@ -233,4 +284,4 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
             Prices_df = pd.concat([sim_stock_Prices, Prices_df])
             Proc_df = pd.concat([sim_stock_Proc, Proc_df])
 
-    return X_df, Y_df, Prices_df[str(next_t)], Proc_df[str(next_t)].to_numpy(), t_0, scaler, scaler_cols
+    return X_df, Y_df, Prices_df[str(next_t)], Proc_df[str(next_t)].to_numpy(), t_0, scaler, scaler_cols, transformer
