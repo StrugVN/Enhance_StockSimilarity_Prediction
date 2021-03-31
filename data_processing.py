@@ -122,22 +122,18 @@ def prepare_time_point(data, selected_features, next_t, target_col,
     for i in range(0, len(data[target_col]) - next_t):
         y_ti = i + next_t
 
-        next_y = y[y_ti].tolist()
-        to_dict_y = {next_t: next_y}
-        Y.append(to_dict_y)
+        Y.append({next_t: y[y_ti].tolist()})
 
         # price
-        next_p = price[y_ti].tolist()
-        P_period = {str(next_t): next_p}
-        Price.append(P_period)
+        Price.append({next_t: price[y_ti].tolist()})
 
         # bin_proc
         next_b = np.sign(proc[y_ti].tolist())
         if next_b == 0:
-            B_period = {str(next_t): 1}
+            Proc.append({next_t: 1})
         else:
-            B_period = {str(next_t): next_b}
-        Proc.append(B_period)
+            Proc.append({next_t: next_b})
+
 
     Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - next_t])
     Price_df = pd.DataFrame(Price, index=Y_df.index)
@@ -185,11 +181,6 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
         Y_period = {str(next_t): next_y}
         Y.append(Y_period)
 
-        # price
-        next_p = price[y_ti].tolist()
-        P_period = {str(next_t): next_p}
-        Price.append(P_period)
-
         # X
         X_period = data[i:i + w_len]
         X_period.insert(0, 'i', range(w_len))  # 1 đoạn window_len
@@ -200,13 +191,15 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
         X_period_dict[const_time_col] = period_time
         X.append(X_period_dict)
 
+        # price
+        Price.append({next_t: price[y_ti].tolist()})
+
         # bin_proc
         next_b = np.sign(proc[y_ti].tolist())
         if next_b == 0:
-            B_period = {str(next_t): 1}
+            Proc.append({next_t: 1})
         else:
-            B_period = {str(next_t): next_b}
-        Proc.append(B_period)
+            Proc.append({next_t: next_b})
 
     X_df = pd.DataFrame(X).set_index(const_time_col)
     Y_df = pd.DataFrame(Y, index=X_df.index)
@@ -284,4 +277,4 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
             Prices_df = pd.concat([sim_stock_Prices, Prices_df])
             Proc_df = pd.concat([sim_stock_Proc, Proc_df])
 
-    return X_df, Y_df, Prices_df[str(next_t)], Proc_df[str(next_t)].to_numpy(), t_0, scaler, scaler_cols, transformer
+    return X_df, Y_df, Prices_df[next_t], Proc_df[next_t].to_numpy(), t_0, scaler, scaler_cols, transformer
