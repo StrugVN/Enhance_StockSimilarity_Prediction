@@ -239,12 +239,13 @@ def paper_param_test():
     test = base_param
     test['target_col'] = 'Close_proc'
     test['window_len'] = 0
-    test['selected_features'] = ['Close_proc']
+    test['selected_features'] = ['Close_norm', 'Close_proc', 'Volume_norm', 'rsi_norm', 'MACD_norm',
+                                 'Open_Close_diff_norm', 'High_Low_diff_norm']
     test['n_fold'] = 5
     # paper co su dung them SAX(?)
 
     test['eval_result_path'] = 'paper_param.csv'
-    for k_ in [10]:  # [10, 25, 50]
+    for k_ in [10, 25, 50]:
         test['k'] = k_
         print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
         for sim_func_ in similarity_funcs:
