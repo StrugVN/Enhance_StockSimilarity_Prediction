@@ -37,9 +37,12 @@ def normalize_similarity(top_stocks, stock_to_compare):
     top_stock_w = {}
     sum_vals = 0
     for stock_k, v in top_stocks.items():
-        if stock_k != stock_to_compare and v != 0:
-            top_stock_w[stock_k] = np.abs(float(v) - max(stocks_val)) / (max(stocks_val) - min(stocks_val))
-            sum_vals += top_stock_w[stock_k]
+        if stock_k != stock_to_compare:
+            if v != 0:
+                top_stock_w[stock_k] = np.abs(float(v) - max(stocks_val)) / (max(stocks_val) - min(stocks_val))
+                sum_vals += top_stock_w[stock_k]
+            else:
+                top_stock_w[stock_k] = 0
 
     if sum_vals != 0:
         for stock_k, v in top_stock_w.items():
