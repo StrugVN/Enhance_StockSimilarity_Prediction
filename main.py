@@ -242,14 +242,14 @@ def model_test1():
 def paper_param_test():
     test = base_param
     test['target_col'] = 'Close_proc'
-    test['similarity_col'] = 'Close_proc'
+    test['similarity_col'] = 'Close_norm'
     #test['trans_func'] = SAX()
     test['window_len'] = 0
     test['selected_features'] = ['Close_proc']
     test['n_fold'] = 5
 
     test['eval_result_path'] = 'paper_param.csv'
-    for k_ in [50]:
+    for k_ in [15, 25, 50]:
         test['k'] = k_
         print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
         for sim_func_ in similarity_funcs:
@@ -257,7 +257,7 @@ def paper_param_test():
             for fix_func_ in fix_length_funcs:
                 test['fix_len_func'] = fix_func_
                 print('================== Running {0}, {1} =================='.format(sim_func_, fix_func_))
-                for t_ in [1]:
+                for t_ in [1, 3, 7]:
                     test['next_t'] = t_
                     for model_ in ['GradientBoostingRegressor']:
                         test['model_name'] = model_
