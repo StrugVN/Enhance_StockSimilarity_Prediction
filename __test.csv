@@ -1,5 +1,0 @@
-No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, mean_profit
-4, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'], dtw, time_join, 5, 0, 1, RandomForestRegressor, 0.484, 0.0093, 0.4816, 0.0087, 49.568, 38.192, -0.221, 31.06
-4, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'], dtw, time_join, 5, 0, 1, GradientBoostingRegressor, 0.512, 0.0133, 0.402, 0.0168, 81.407, 67.759, 1.585, 55.315
-4, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'], dtw, time_join, 5, 0, 1, XGBRegressor, 0.512, 0.016, 0.3985, 0.0159, 92.292, 82.754, 1.61, 56.545
-4, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'], dtw, time_join, 5, 0, 1, LSTM, 0.4907, 0.016, 0.4841, 0.0104, 32.849, 30.321, 1.372, 181.67

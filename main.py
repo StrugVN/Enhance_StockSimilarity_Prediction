@@ -268,7 +268,7 @@ def paper_param_test():
 
 
 # sim_func_test1()
-paper_param_test()
+# paper_param_test()
 
 """
 x_param = base_param
@@ -281,21 +281,22 @@ for sim_func_ in similarity_funcs:
 """
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
+"""
 s = time.time()
 
 x = base_param
-x['eval_result_path'] = 'test_.csv'
-x['trans_func'] = None
-for k in [10, 25]:
+x['eval_result_path'] = '_test.csv'
+x['trans_func'] = trans_funcs[2]
+for k in [25, 50]:
 
     x['k'] = k
     for sim_ in similarity_funcs:
         x['sim_func'] = sim_
-        for next_ in [1]:
+        for next_ in [1, 3, 7]:
             x['next_t'] = next_
 
             print('========= Running ', k, sim_, next_, ' ============')
             run_exp(**x)
             print('Elapsed: ', (time.time() - s))
             s = time.time()
+"""
