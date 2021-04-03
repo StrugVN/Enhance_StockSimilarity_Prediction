@@ -37,12 +37,13 @@ def normalize_similarity(top_stocks, stock_to_compare):
     top_stock_w = {}
     sum_vals = 0
     for stock_k, v in top_stocks.items():
-        if stock_k != stock_to_compare:
+        if stock_k != stock_to_compare and v != 0:
             top_stock_w[stock_k] = np.abs(float(v) - max(stocks_val)) / (max(stocks_val) - min(stocks_val))
             sum_vals += top_stock_w[stock_k]
 
-    for stock_k, v in top_stock_w.items():
-        top_stock_w[stock_k] = top_stock_w[stock_k] / sum_vals
+    if sum_vals != 0:
+        for stock_k, v in top_stock_w.items():
+            top_stock_w[stock_k] = top_stock_w[stock_k] / sum_vals
 
     return top_stock_w
 
@@ -134,7 +135,6 @@ def prepare_time_point(data, selected_features, next_t, target_col,
         else:
             Proc.append({next_t: next_b})
 
-
     Y_df = pd.DataFrame(Y, index=data.index.values[:len(data[target_col]) - next_t])
     Price_df = pd.DataFrame(Price, index=Y_df.index)
     Proc_df = pd.DataFrame(Proc, index=Y_df.index)
@@ -156,9 +156,9 @@ def prepare_time_point(data, selected_features, next_t, target_col,
 
         X_df = X_transformed_df
 
-        return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, transformer
+        return X_df, Y_df, Price_df, Proc_df, y[0], scaler, scaler_col, transformer
 
-    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, None
+    return X_df, Y_df, Price_df, Proc_df, y[0], scaler, scaler_col, None
 
 
 def prepare_time_window(data, selected_features, w_len, next_t, target_col,
@@ -192,7 +192,7 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
         X.append(X_period_dict)
 
         # price
-        Price.append({next_t: price[y_ti].tolist()})
+        Price.append({next_t: price[i + w_len].tolist()})
 
         # bin_proc
         next_b = np.sign(proc[y_ti].tolist())
@@ -223,9 +223,9 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
 
         X_df = X_transformed_df
 
-        return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, transformer
+        return X_df, Y_df, Price_df, Proc_df, y[w_len - 1], scaler, scaler_col, transformer
 
-    return X_df, Y_df, Price_df, Proc_df, y[next_t - 1], scaler, scaler_col, None
+    return X_df, Y_df, Price_df, Proc_df, y[w_len - 1], scaler, scaler_col, None
 
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,

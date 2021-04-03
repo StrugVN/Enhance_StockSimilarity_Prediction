@@ -47,7 +47,7 @@ LSTM_with_val_config = {'batch_size': 32,
 def trainRFR(train_X, train_Y, n_estimators=100):
     model = RandomForestRegressor(n_estimators=n_estimators, random_state=0)
 
-    model.fit(train_X, train_Y)
+    model.fit(train_X, train_Y.values.ravel())
 
     return model
 
@@ -67,7 +67,7 @@ def trainGBR(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0,
                                           validation_fraction=0.2, n_iter_no_change=15)
 
-    model.fit(train_X, train_Y)
+    model.fit(train_X, train_Y.values.ravel())
 
     return model
 

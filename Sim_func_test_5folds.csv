@@ -1,6 +1,0 @@
-No. of features, selected_features, sim_func, fix_len_func, k stock, window_len, next_t, model, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, mean_profit, std_profit
-1, ['Close_norm'], euclidean, padding, 15, 10, 1, LSTM, 0.4831, 0.0334, 0.4779, 0.0323, 55.325, 84.512, 0.211, -4.455, 72.007
-1, ['Close_norm'], euclidean, time_join, 15, 10, 1, LSTM, 0.498, 0.0399, 0.4951, 0.0401, 207.506, 303.096, -0.159, 7.501, 66.319
-1, ['Close_norm'], euclidean, delay_time_join, 15, 10, 1, LSTM, 0.4939, 0.0385, 0.4908, 0.0388, 181.427, 279.656, -0.142, -9.986, 68.52
-1, ['Close_norm'], euclidean, pip, 15, 10, 1, LSTM, 0.4939, 0.0385, 0.4908, 0.0388, 181.427, 279.656, -0.142, -9.986, 68.52
-1, ['Close_norm'], pearson, padding, 15, 10, 1, LSTM, 0.4939, 0.0385, 0.4908, 0.0388, 181.427, 279.656, -0.142, -9.986, 68.52

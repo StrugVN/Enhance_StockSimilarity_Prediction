@@ -60,11 +60,11 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             sim_path = 'similarities_data/5_years_' + stock + '_' + similarity_col + '_' + sim_func + '_' + fix_len_func \
                        + '_fold_' + start_d + '_' + end_d + '.pkl'
             if os.path.isfile(sim_path) and not force:
-                print('Loading existing similarity result: ' + sim_path)
+                # print(' Loading existing similarity result: ' + sim_path)
                 _sim_data = pickle.load(open(sim_path, 'rb'))
                 all_stock_name, similarities = _sim_data
             else:
-                print('Calc similarities: ' + sim_path)
+                print(' Calc similarities: ' + sim_path)
                 all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
 
                 similarities = cal_other_stock_similarity(
@@ -76,6 +76,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
                 print(' Saving new similarity result')
                 pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
+
+            _sim_df = pd.DataFrame(np.array([all_stock_name, similarities]).transpose(), columns=['Stock', 'Sim'])
 
             # top k stocks
             top_k_stocks = get_top_k(all_stock_name, similarities, k)
@@ -139,12 +141,14 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             else:
                 bin_pred_Y = pred_Y
 
+            evals["long_short_profit"], profits = long_short_profit_evaluation(test_price_Y.tolist(), bin_pred_Y)
+
+            evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
+
             evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
             evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
             # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
-            evals["long_short_profit"], profits = long_short_profit_evaluation(test_price_Y.tolist(), bin_pred_Y)
-            evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
             print(evals)
             evals_list.append(evals)
 
@@ -278,15 +282,21 @@ for sim_func_ in similarity_funcs:
 """
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 s = time.time()
-for f in trans_funcs:
-    base_param['trans_func'] = f
-    base_param['model_name'] = 'GradientBoostingRegressor'
-    run_exp(**base_param)
 
-for f in trans_funcs:
-    base_param['trans_func'] = f
-    base_param['model_name'] = 'GradientBoostingClassifier'
-    run_exp(**base_param)
+x = base_param
+x['eval_result_path'] = 'test_.csv'
+x['trans_func'] = None
+for k in [10, 25]:
 
-print('Elapsed: ', (time.time() - s))
+    x['k'] = k
+    for sim_ in similarity_funcs:
+        x['sim_func'] = sim_
+        for next_ in [1]:
+            x['next_t'] = next_
+
+            print('========= Running ', k, sim_, next_, ' ============')
+            run_exp(**x)
+            print('Elapsed: ', (time.time() - s))
+            s = time.time()

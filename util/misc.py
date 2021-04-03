@@ -84,8 +84,7 @@ def long_short_profit_evaluation(curr_price, predicted_price):
 
         profits.append(position)
 
-    #
-    # profit = position
+    #profit = position
 
     return profit, profits
 
