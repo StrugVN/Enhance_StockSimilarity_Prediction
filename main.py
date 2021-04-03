@@ -76,7 +76,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
                 print(' Saving new similarity result')
                 pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
-
+            #continue
             # top k stocks
             top_k_stocks = get_top_k(all_stock_name, similarities, k)
             # normalize similarity
@@ -147,7 +147,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
             print(evals)
             evals_list.append(evals)
-
+    #return
     # Save evaluation
     eval_df = pd.DataFrame(evals_list)
     """
@@ -238,14 +238,14 @@ def model_test1():
 def paper_param_test():
     test = base_param
     test['target_col'] = 'Close_proc'
+    test['similarity_col'] = 'Close_proc'
+    #test['trans_func'] = SAX()
     test['window_len'] = 0
-    test['selected_features'] = ['Close_norm', 'Close_proc', 'Volume_norm', 'rsi_norm', 'MACD_norm',
-                                 'Open_Close_diff_norm', 'High_Low_diff_norm']
+    test['selected_features'] = ['Close_proc']
     test['n_fold'] = 5
-    # paper co su dung them SAX(?)
 
     test['eval_result_path'] = 'paper_param.csv'
-    for k_ in [10, 25, 50]:
+    for k_ in [50]:
         test['k'] = k_
         print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
         for sim_func_ in similarity_funcs:
@@ -253,10 +253,9 @@ def paper_param_test():
             for fix_func_ in fix_length_funcs:
                 test['fix_len_func'] = fix_func_
                 print('================== Running {0}, {1} =================='.format(sim_func_, fix_func_))
-                for t_ in [1, 3, 7]:
+                for t_ in [1]:
                     test['next_t'] = t_
-                    for model_ in ['RandomForestRegressor', 'RandomForestClassifier',
-                                   'GradientBoostingRegressor', 'GradientBoostingClassifier']:
+                    for model_ in ['GradientBoostingRegressor']:
                         test['model_name'] = model_
                         print('*** Model {0} ***'.format(model_))
                         run_exp(**test)
@@ -265,7 +264,7 @@ def paper_param_test():
 
 
 # sim_func_test1()
-
+paper_param_test()
 
 """
 x_param = base_param
