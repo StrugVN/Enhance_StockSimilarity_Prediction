@@ -6,7 +6,7 @@ from models import *
 
 # target_col = 'Close_norm'
 
-similarity_funcs = {#'euclidean': apply_euclidean,
+similarity_funcs = {'euclidean': apply_euclidean,
                     #'pearson': apply_pearson,
                     'co-integration': cointegration,
                     'sax': compare_sax,
@@ -46,19 +46,18 @@ trans_funcs = [None, PCA(n_components=3, random_state=0), SAX()]
 # Phải có ít nhất 4 ft để dùng PCA
 
 base_param = {
-    'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
-    'target_col': 'Close_norm',
-    'similarity_col': 'Close_norm',
+    'stock_list': ["GOOGL"],
+    'target_col': 'Close_proc',
+    'similarity_col': 'Close_proc',
     'sim_func': 'co-integration',
     'fix_len_func': 'time_join',
     'k': 50,
     'next_t': 1,
-    'selected_features': ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-                          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-    'window_len': 0,
+    'selected_features': ['Close_proc'],
+    'window_len': 10,
     'model_name': 'GradientBoostingRegressor',
     'n_fold': 5,
-    'eval_result_path': 'test.csv',
+    'eval_result_path': '_test.csv',
     'norm_func': StandardScaler(),
-    'trans_func': None
+    'trans_func': SAX()
 }

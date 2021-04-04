@@ -130,13 +130,15 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 if 'proc' not in target_col:
                     inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
                     evals['rmse'] = np.sqrt(mean_squared_error(test_price_Y, inverted_pred_Y))
+
+                    bin_pred_Y = [np.sign(pred_Y[0] - test_t0_price)]
+                    for i in range(1, len(pred_Y)):
+                        bin_pred_Y.append(np.sign(pred_Y[i] - test_Y.iloc[:, 0][i - 1]))
+                    bin_pred_Y = np.array([1 if x == 0 else x for x in bin_pred_Y])
                 else:
                     evals['rmse'] = np.sqrt(mean_squared_error(test_Y, pred_Y))
-                # bin_pred_Y = get_y_bin(test_X, pred_Y, window_len, target_col)
-                bin_pred_Y = [np.sign(pred_Y[0] - test_t0_price)]
-                for i in range(1, len(pred_Y)):
-                    bin_pred_Y.append(np.sign(pred_Y[i] - test_Y.iloc[:, 0][i - 1]))
-                bin_pred_Y = np.array([1 if x == 0 else x for x in bin_pred_Y])
+
+                    bin_pred_Y = [x if x != 0 else 1 for x in np.sign(pred_Y)]
 
             else:
                 bin_pred_Y = pred_Y
@@ -151,7 +153,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
             print(evals)
             evals_list.append(evals)
-    #return
+    # return
     # Save evaluation
     eval_df = pd.DataFrame(evals_list)
     """
@@ -243,7 +245,7 @@ def paper_param_test():
     test = base_param
     test['target_col'] = 'Close_proc'
     test['similarity_col'] = 'Close_norm'
-    #test['trans_func'] = SAX()
+    # test['trans_func'] = SAX()
     test['window_len'] = 0
     test['selected_features'] = ['Close_proc']
     test['n_fold'] = 5
@@ -267,36 +269,66 @@ def paper_param_test():
         print('--------------------------- FINISHED K = {} ---------------------------'.format(k_))
 
 
-# sim_func_test1()
-# paper_param_test()
+def test_GBR_muti(save, ft, target_col, sim_col):
+    s = time.time()
 
-"""
-x_param = base_param
-for sim_func_ in similarity_funcs:
-    x_param['sim_func'] = sim_func_
-    for fix_func_ in fix_length_funcs:
-        x_param['fix_len_func'] = fix_func_
-        print('================== Running {0}, {1} ================'.format(sim_func_, fix_func_))
-        run_exp(**x_param)
-"""
+    x = base_param.copy()
+    x['eval_result_path'] = save
+    x['selected_features'] = ft
+    x['target_col'] = target_col
+    x['similarity_col'] = sim_col
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-"""
-s = time.time()
+    for trans_ in trans_funcs:
+        x['trans_func'] = trans_
+        for k in [50, 100]:
+            x['k'] = k
+            for sim_ in ['co-integration', 'sax']:
+                x['sim_func'] = sim_
+                for next_ in [1, 3, 7]:
+                    x['next_t'] = next_
 
-x = base_param
-x['eval_result_path'] = '_test.csv'
-x['trans_func'] = trans_funcs[2]
-for k in [25, 50]:
+                    print('========= Running ', k, sim_, next_, ' ============')
+                    run_exp(**x)
+                    print('Elapsed: ', (time.time() - s))
+                    s = time.time()
 
-    x['k'] = k
-    for sim_ in similarity_funcs:
-        x['sim_func'] = sim_
-        for next_ in [1, 3, 7]:
-            x['next_t'] = next_
 
-            print('========= Running ', k, sim_, next_, ' ============')
-            run_exp(**x)
-            print('Elapsed: ', (time.time() - s))
-            s = time.time()
-"""
+def test_GBR_uni(save, ft, target, sim_col, w_len):
+    s = time.time()
+
+    x = base_param.copy()
+    x['eval_result_path'] = save
+    x['selected_features'] = ft
+    x['target_col'] = target
+    x['similarity_col'] = sim_col
+    x['window_len'] = w_len
+
+    for trans_ in [SAX()]:
+        x['trans_func'] = trans_
+        for k in [50]:
+            x['k'] = k
+            for sim_ in ['co-integration']:
+                x['sim_func'] = sim_
+                for next_ in [1]:
+                    x['next_t'] = next_
+
+                    print('========= Running ', k, sim_, next_, ' ============')
+                    run_exp(**x)
+                    print('Elapsed: ', (time.time() - s))
+                    s = time.time()
+
+
+test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
+
+#test_GBR_muti('muti_close_close_notnorm.csv', ['Close_norm', 'Close_proc', 'rsi', 'MACD',
+#                                          'Open_Close_diff', 'High_Low_diff', 'Volume_norm'],
+#         'Close_norm', 'Close_norm')
+
+#test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+#                                          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+#        'Close_proc', 'Close_norm')
+
+#test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+#                                          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+#         'Close_proc', 'Close_proc')
+

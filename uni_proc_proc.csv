@@ -1,0 +1,4 @@
+No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, mean_profit
+1, ['Close_proc'], None, co-integration, time_join, 50, 10, 1, GradientBoostingRegressor, Close_proc, Close_proc, 0.5193, 0.0728, 0.4536, 0.0836, 0.011, 0.004, 0.102, 5.767
+ 1, ['Close_proc'], SAX, co-integration, time_join, 50, 10, 1, GradientBoostingRegressor, Close_proc, Close_proc, 0.5108, 0.0697, 0.3367, 0.0301, 0.011, 0.004, 0.194, 4.639
+ 
