@@ -39,14 +39,14 @@ selected_features = ['Close_norm']
 window_len = 0
 selected_features = ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
                           'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm']
-'stock_list': ['JPM', "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
+'stock_list': ["JPM", "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
 """
 
 trans_funcs = [None, PCA(n_components=3, random_state=0), SAX()]
 # Phải có ít nhất 4 ft để dùng PCA
 
 base_param = {
-    'stock_list': ["GOOGL"],
+    'stock_list': ["JPM", "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"],
     'target_col': 'Close_proc',
     'similarity_col': 'Close_proc',
     'sim_func': 'co-integration',
