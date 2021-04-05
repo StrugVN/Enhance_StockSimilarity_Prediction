@@ -284,7 +284,7 @@ def test_GBR_muti(save, ft, target_col, sim_col):
             x['k'] = k
             for sim_ in ['co-integration', 'sax']:
                 x['sim_func'] = sim_
-                for next_ in [1, 3, 7]:
+                for next_ in [1]:
                     x['next_t'] = next_
 
                     print('========= Running ', k, sim_, next_, ' ============')
@@ -303,9 +303,9 @@ def test_GBR_uni(save, ft, target, sim_col, w_len):
     x['similarity_col'] = sim_col
     x['window_len'] = w_len
 
-    for trans_ in [SAX()]:
+    for trans_ in trans_funcs:
         x['trans_func'] = trans_
-        for k in [50]:
+        for k in [50, 100]:
             x['k'] = k
             for sim_ in ['co-integration']:
                 x['sim_func'] = sim_
@@ -318,17 +318,16 @@ def test_GBR_uni(save, ft, target, sim_col, w_len):
                     s = time.time()
 
 
-test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
+# test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
 
-#test_GBR_muti('muti_close_close_notnorm.csv', ['Close_norm', 'Close_proc', 'rsi', 'MACD',
-#                                          'Open_Close_diff', 'High_Low_diff', 'Volume_norm'],
-#         'Close_norm', 'Close_norm')
+test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+                                     'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+              'Close_proc', 'Close_proc')
 
-#test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-#                                          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-#        'Close_proc', 'Close_norm')
+print('====================================')
+print('====================================')
+print('====================================')
 
-#test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-#                                          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-#         'Close_proc', 'Close_proc')
-
+test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+                                      'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+              'Close_proc', 'Close_norm')
