@@ -320,14 +320,17 @@ def test_GBR_uni(save, ft, target, sim_col, w_len):
 
 # test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
 
-test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-                                     'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-              'Close_proc', 'Close_proc')
+#test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+#                                     'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+#              'Close_proc', 'Close_proc')
 
-print('====================================')
-print('====================================')
-print('====================================')
+#print('====================================')
+#print('====================================')
+#print('====================================')
 
-test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-                                      'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-              'Close_proc', 'Close_norm')
+#test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+#                                      'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+#              'Close_proc', 'Close_norm')
+
+run_exp(**base_param)
+
