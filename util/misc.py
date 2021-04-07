@@ -1,6 +1,12 @@
 from Const import *
 import pandas as pd
 import numpy as np
+
+from pandas_datareader import data as pdr
+from datetime import date
+import yfinance as yf
+yf.pdr_override()
+
 import types
 
 
@@ -10,6 +16,31 @@ def read_data(path, date_format='%Y-%m-%d'):
     all_stocks = all_stocks.dropna(axis=0)
     all_stocks = all_stocks.set_index(const_time_col, drop=False)
     return all_stocks
+
+
+def get_sp500_curr_stock_symbols():
+    source = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
+    stock_df = source[0]
+    return stock_df['Symbol'].to_list()
+
+
+def save_stock_pulled(file_name, ticket_lists, start_date, end_date, interval='1h'):
+    """
+    The requested range [start_day, end_date] must be within:
+        - the last 730 days for '1h' interval.
+        - the last 60 days for '90m' interval
+    """
+    final_df = pd.DataFrame()
+    attr_list = ['Open', 'High', 'Low', 'Close', 'Volume']
+
+    for ticket in ticket_lists:
+        df_ = pdr.get_data_yahoo(ticket, start=start_date, end=end_date, interval=interval)[attr_list]
+        df_['Name'] = ticket
+        final_df = pd.concat([final_df, df_])
+
+    final_df.index = pd.to_datetime(final_df.index).strftime('%Y/%m/%dT%H:%M:%S')
+    final_df.to_csv('../data/' + file_name + '.csv', index_label='Date')
+    return
 
 
 def inverse_scaling(target_col, col_data, scaler_cols, scaler):
@@ -91,4 +122,6 @@ def long_short_profit_evaluation(curr_price, predicted_price):
 
 
 if __name__ == '__main__':
+    sp500 = get_sp500_curr_stock_symbols()
+    save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
     print(long_short_profit_evaluation([5, 15, 25], [-1, 1, 1]))
