@@ -51,14 +51,14 @@ def normalize_similarity(top_stocks, stock_to_compare):
     return top_stock_w
 
 
-def cal_financial_features(data, norm_func=None, trans_func=None, re_fit=True):
+def cal_financial_features(data, norm_func=None, next_t=1, re_fit=True):
     feature_df = data[[const_time_col, const_name_col, const_target_col]].copy()
 
     numeric_cols = data.select_dtypes(
         include=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns.tolist()
     # for c in numeric_cols:
     #    feature_df[c + '_proc'] = PROC(data[c])
-    feature_df['Close_proc'] = PROC(data['Close'])
+    feature_df['Close_proc'] = PROC(data['Close'], next_t)
 
     feature_df['rsi'] = rsiFunc(data['Close'])  # Relative strength index
     feature_df['MACD'] = computeMACD(data['Close'])[2]  # Moving Average Convergence/Divergence
@@ -111,8 +111,9 @@ def split_train_test_set(data, stock, stock_names, ratio):
 
 def prepare_time_point(data, selected_features, next_t, target_col,
                        norm_func=None, trans_func=None, re_fit=True):
-    data, scaler, scaler_col = cal_financial_features(data, norm_func, trans_func, re_fit)
-    data = data.iloc[1:]  # Điểm dữ liệu đầu tiên ko chứ thông tin proc
+    data, scaler, scaler_col = cal_financial_features(data, norm_func, next_t, re_fit)
+    if 'Close_proc' in selected_features:
+        data = data.iloc[next_t:]
 
     X_df = data[selected_features].iloc[:-next_t].copy()
 
@@ -122,6 +123,8 @@ def prepare_time_point(data, selected_features, next_t, target_col,
     price = np.array(data['Close'].tolist())
     Proc = []
     proc = np.array(data['Close_proc'].tolist())
+
+    t0_price = data['Close_norm'][0]
 
     for i in range(0, len(data[target_col]) - next_t):
         y_ti = i + next_t
@@ -159,15 +162,17 @@ def prepare_time_point(data, selected_features, next_t, target_col,
 
         X_df = X_transformed_df
 
-        return X_df, Y_df, Price_df, Proc_df, y[0], scaler, scaler_col, transformer
+        return X_df, Y_df, Price_df, Proc_df, t0_price, scaler, scaler_col, transformer
 
-    return X_df, Y_df, Price_df, Proc_df, y[0], scaler, scaler_col, None
+    return X_df, Y_df, Price_df, Proc_df, t0_price, scaler, scaler_col, None
 
 
 def prepare_time_window(data, selected_features, w_len, next_t, target_col,
                         norm_func=None, trans_func=None, re_fit=True):
-    data, scaler, scaler_col = cal_financial_features(data, norm_func, trans_func, re_fit)
-    data = data.iloc[1:]  # Điểm dữ liệu đầu tiên ko chứ thông tin proc
+    data, scaler, scaler_col = cal_financial_features(data, norm_func, next_t, re_fit)
+
+    if 'Close_proc' in selected_features:
+        data = data.iloc[next_t:]
 
     X = []
     Y = []
@@ -176,6 +181,8 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
     price = np.array(data['Close'].tolist())
     Proc = []
     proc = np.array(data['Close_proc'].tolist())
+
+    t0_price = data['Close_norm'][w_len - 1]
 
     for i in range(0, len(data[target_col]) - w_len + 1 - next_t):
         y_ti = i + w_len - 1 + next_t
@@ -226,9 +233,9 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
 
         X_df = X_transformed_df
 
-        return X_df, Y_df, Price_df, Proc_df, y[w_len - 1], scaler, scaler_col, transformer
+        return X_df, Y_df, Price_df, Proc_df, t0_price, scaler, scaler_col, transformer
 
-    return X_df, Y_df, Price_df, Proc_df, y[w_len - 1], scaler, scaler_col, None
+    return X_df, Y_df, Price_df, Proc_df, t0_price, scaler, scaler_col, None
 
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,

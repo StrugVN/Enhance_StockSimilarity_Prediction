@@ -82,6 +82,8 @@ def long_short_profit_evaluation(curr_price, predicted_price):
     last_buy = 0
     profits = []
     position = 0
+    start = curr_price[0]
+    count = 0
     for i in range(len(curr_price)):
         # go long
         if predicted_price[i] > 0:
@@ -95,6 +97,7 @@ def long_short_profit_evaluation(curr_price, predicted_price):
                 position = profit
                 last_buy = curr_price[i]
                 is_long = True
+                count += 1
             elif is_long:
                 position = profit + (curr_price[i] - last_buy)
 
@@ -110,18 +113,19 @@ def long_short_profit_evaluation(curr_price, predicted_price):
                 position = profit
                 last_buy = curr_price[i]
                 is_long = False
+                count += 1
             elif not is_long:
                 position = profit + (last_buy - curr_price[i])
 
         profits.append(position)
 
-    #if profit == 0:
-     #   profit = position
+    profit = position
+    count += 1
 
-    return profit, profits
+    return profit, profits, profit*100/start, count
 
 
 if __name__ == '__main__':
-    sp500 = get_sp500_curr_stock_symbols()
-    save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
-    print(long_short_profit_evaluation([5, 15, 25], [-1, 1, 1]))
+    # sp500 = get_sp500_curr_stock_symbols()
+    # save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
+    print(long_short_profit_evaluation([5, 15, 25, 35], [1, -1, -1, 1]))

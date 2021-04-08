@@ -1,0 +1,10 @@
+No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharpe_ratio, mean_profit, mean_profit_%, mean_orders_count
+1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_norm, Close_norm, 0.5452, 0.0274, 0.5218, 0.0386, 0.327, 0.199, 1.099, 96.838, 5.793, 14.6
+ 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_proc, Close_norm, 0.5029, 0.0461, 0.4549, 0.0658, 0.008, 0.003, 0.662, 100.828, 6.243, 4.8
+ 1, ['Close_proc'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_proc, Close_norm, 0.4932, 0.0537, 0.3651, 0.0423, 0.008, 0.003, 0.517, 11.557, 0.785, 5.6
+ 1, ['Close_proc'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_norm, Close_norm, 0.4877, 0.057, 0.3898, 0.094, 1.249, 0.435, 0.558, 62.814, 3.436, 2.4
+ 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_norm, Close_norm, 0.5241, 0.0296, 0.4688, 0.0538, 0.317, 0.2, 0.364, 60.997, 3.871, 12.4
+ 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_proc, Close_norm, 0.5187, 0.0474, 0.4796, 0.0541, 0.008, 0.003, 0.849, 36.882, 2.449, 11.6
+ 1, ['Close_proc'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_proc, Close_norm, 0.5175, 0.0455, 0.3794, 0.0708, 0.008, 0.003, 0.265, 16.534, 1.111, 7.6
+ 1, ['Close_proc'], None, co-integration, time_join, 0, 10, 1, LSTM, Close_norm, Close_norm, 0.477, 0.0341, 0.3984, 0.0698, 1.246, 0.406, 0.633, -56.243, -3.586, 5.2
+ 

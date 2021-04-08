@@ -84,7 +84,7 @@ def trainGBC(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
     return model
 
 
-def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.01, n_estimators=100, es=True):
+def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.01, n_estimators=100, es=False):
     model = XGBRegressor(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
@@ -93,13 +93,14 @@ def trainXGB(train_X, train_Y, obj='reg:linear', lr=0.01, n_estimators=100, es=T
         model.fit(X_train, y_train,
                   early_stopping_rounds=10, eval_metric="rmse", eval_set=eval_set, verbose=False)
     else:
-        model.fit(train_X, train_Y,
-                  early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="rmse", verbose=False)
+        # model.fit(train_X, train_Y,
+        #          early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="rmse", verbose=False)
+        model.fit(train_X, train_Y)
 
     return model
 
 
-def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=True):
+def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=False):
     model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
@@ -108,8 +109,9 @@ def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estim
         model.fit(X_train, y_train,
                   early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=False)
     else:
-        model.fit(train_X, train_Y,
-                  early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="logloss", verbose=False)
+        # model.fit(train_X, train_Y,
+        #          early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="logloss", verbose=False)
+        model.fit(train_X, train_Y)
 
     return model
 

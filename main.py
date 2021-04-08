@@ -45,7 +45,6 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         _folds_time.append(((n_fold - 1) * threshold, 'end'))
 
         for _df in folds_df:
-            # get feature all stock
             # feature_df, scaler, scaler_cols = cal_financial_features(_df, StandardScaler())
 
             stock_df = _df[_df[const_name_col] == stock]
@@ -54,38 +53,42 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
             # sim
-            start_d = str(stock_df[const_time_col][0]).replace(' 00:00:00', '')
-            end_d = str(stock_df[const_time_col][-1]).replace(' 00:00:00', '')
-            force = False
-            sim_path = 'similarities_data/5_years_' + stock + '_' + similarity_col + '_' + sim_func + '_' + fix_len_func \
-                       + '_fold_' + start_d + '_' + end_d + '.pkl'
-            if os.path.isfile(sim_path) and not force:
-                # print(' Loading existing similarity result: ' + sim_path)
-                _sim_data = pickle.load(open(sim_path, 'rb'))
-                all_stock_name, similarities = _sim_data
-            else:
-                print(' Calc similarities: ' + sim_path)
+            if k == 0:
+                top_stock_norm = None
                 all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
+            else:
+                start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
+                end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
+                force = False
+                sim_path = 'similarities_data/5_years_' + stock + '_' + similarity_col + '_' + sim_func + '_' + \
+                           fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
+                if os.path.isfile(sim_path) and not force:
+                    # print(' Loading existing similarity result: ' + sim_path)
+                    _sim_data = pickle.load(open(sim_path, 'rb'))
+                    all_stock_name, similarities = _sim_data
+                else:
+                    print(' Calc similarities: ' + sim_path)
+                    all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
 
-                similarities = cal_other_stock_similarity(
-                    _df, stock, all_stock_name,
-                    similarity_func=similarity_funcs[sim_func],
-                    fix_len_func=fix_length_funcs[fix_len_func],
-                    similarity_col=similarity_col
-                )
+                    similarities = cal_other_stock_similarity(
+                        _df, stock, all_stock_name,
+                        similarity_func=similarity_funcs[sim_func],
+                        fix_len_func=fix_length_funcs[fix_len_func],
+                        similarity_col=similarity_col
+                    )
 
-                print(' Saving new similarity result')
-                pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
+                    print(' Saving new similarity result')
+                    pickle.dump((all_stock_name, similarities), open(sim_path, 'wb+'))
 
-            _sim_df = pd.DataFrame(np.array([all_stock_name, similarities]).transpose(), columns=['Stock', 'Sim'])
+                # _sim_df = pd.DataFrame(np.array([all_stock_name, similarities]).transpose(), columns=['Stock', 'Sim'])
 
-            # top k stocks
-            top_k_stocks = get_top_k(all_stock_name, similarities, k)
-            # normalize similarity
-            top_stock_norm = normalize_similarity(top_k_stocks, stock)
+                # top k stocks
+                top_k_stocks = get_top_k(all_stock_name, similarities, k)
+                # normalize similarity
+                top_stock_norm = normalize_similarity(top_k_stocks, stock)
 
             # split dataset
-            train_df, test_df = split_train_test_set(_df, stock, all_stock_name, 0.8)
+            train_df, test_df = split_train_test_set(_df, stock, all_stock_name, 0.75)
             # Prepare X, Y
             train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols, transformer = \
                 prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
@@ -129,7 +132,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             if not is_classifier:
                 if 'proc' not in target_col:
                     inverted_pred_Y = inverse_scaling(target_col, pred_Y, scaler_cols, scaler)
-                    evals['rmse'] = np.sqrt(mean_squared_error(test_price_Y, inverted_pred_Y))
+                    evals['rmse'] = np.sqrt(mean_squared_error(test_Y, pred_Y))
 
                     bin_pred_Y = [np.sign(pred_Y[0] - test_t0_price)]
                     for i in range(1, len(pred_Y)):
@@ -143,17 +146,22 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             else:
                 bin_pred_Y = pred_Y
 
-            evals["long_short_profit"], profits = long_short_profit_evaluation(test_price_Y.tolist(), bin_pred_Y)
+            inverted_t0_price = inverse_scaling('Close_norm', [test_t0_price], scaler_cols, scaler).tolist()[0]
+            curr_price = test_price_Y.tolist()[:-1]
+            curr_price.insert(0, inverted_t0_price)
 
-            evals["sharp_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
+            evals["long_short_profit"], profits, evals["profit_%"], evals["order_count"] = \
+                long_short_profit_evaluation(curr_price, bin_pred_Y)
+
+            evals["sharpe_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
 
             evals['accuracy_score'] = accuracy_score(bin_test_Y, bin_pred_Y)
             evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
             # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
-            print(evals)
+            print({key: round(evals[key], 3) for key in evals})
             evals_list.append(evals)
-    # return
+
     # Save evaluation
     eval_df = pd.DataFrame(evals_list)
     """
@@ -169,9 +177,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
     else:
         mean_mse, std_mse = 'NaN', 'NaN'
 
-    mean_sharp_ratio, mean_profit, std_profit = np.round((np.mean(eval_df['sharp_ratio']),
-                                                          np.mean(eval_df['long_short_profit']),
-                                                          np.std(eval_df['long_short_profit'])), 3)
+    mean_sharp_ratio, mean_profit = np.round((np.mean(eval_df['sharpe_ratio']),
+                                              np.mean(eval_df['long_short_profit'])), 3)
+    mean_profit_pc, mean_order_count = np.round((np.mean(eval_df['profit_%']),
+                                                 np.mean(eval_df['order_count'])), 3)
 
     if trans_func is None:
         trans_func_name = 'None'
@@ -183,16 +192,16 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             file.write("No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, "
                        "next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, "
                        "mean_f1, std_f1, mean_rmse, std_rmse, "
-                       "mean_sharp_ratio, mean_profit\n")
+                       "mean_sharpe_ratio, mean_profit, mean_profit_%, mean_orders_count\n")
             file.close()
 
     with open(eval_result_path, "a") as file:
         file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, "
-                   "{18}\n "
+                   "{18}, {19}, {20}\n "
                    .format(len(selected_features), text_selected_ft, trans_func_name, sim_func,
                            fix_len_func, k, window_len, next_t, model_name, target_col, similarity_col, mean_accuracy,
                            std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
-                           mean_sharp_ratio, mean_profit))
+                           mean_sharp_ratio, mean_profit, mean_profit_pc, mean_order_count))
         file.close()
 
 
@@ -320,17 +329,22 @@ def test_GBR_uni(save, ft, target, sim_col, w_len):
 
 # test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
 
-#test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+# test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
 #                                     'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
 #              'Close_proc', 'Close_proc')
 
-#print('====================================')
-#print('====================================')
-#print('====================================')
+# print('====================================')
+# print('====================================')
+# print('====================================')
 
-#test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+# test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
 #                                      'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
 #              'Close_proc', 'Close_norm')
 
 run_exp(**base_param)
-
+base_param['target_col'] = 'Close_proc'
+run_exp(**base_param)
+base_param['selected_features'] = ['Close_proc']
+run_exp(**base_param)
+base_param['target_col'] = 'Close_norm'
+run_exp(**base_param)

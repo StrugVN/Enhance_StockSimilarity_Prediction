@@ -1,9 +1,10 @@
 import numpy as np
 
 
-def PROC(values):
-    changes = values.pct_change()
-    changes.iloc[0] = 0
+def PROC(values, next_t=1):
+    changes = values.pct_change(periods=next_t)
+    for i in range(next_t):
+        changes.iloc[i] = 0
     return changes
 
 
