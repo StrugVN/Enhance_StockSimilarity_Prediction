@@ -60,8 +60,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
                 end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
                 force = False
-                sim_path = 'similarities_data/5_years_' + stock + '_' + similarity_col + '_' + sim_func + '_' + \
-                           fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
+                sim_path = 'similarities_data/' + data_name + '/' + stock + '_' + similarity_col + '_' + \
+                           sim_func + '_' + fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
                 if os.path.isfile(sim_path) and not force:
                     # print(' Loading existing similarity result: ' + sim_path)
                     _sim_data = pickle.load(open(sim_path, 'rb'))

@@ -122,7 +122,7 @@ def long_short_profit_evaluation(curr_price, predicted_price):
     profit = position
     count += 1
 
-    return profit, profits, profit*100/start, count
+    return profit, profits, profit*100/start, count/len(curr_price)
 
 
 if __name__ == '__main__':

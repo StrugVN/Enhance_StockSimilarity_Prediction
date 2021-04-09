@@ -62,6 +62,7 @@ def cal_financial_features(data, norm_func=None, next_t=1, re_fit=True):
 
     feature_df['rsi'] = rsiFunc(data['Close'])  # Relative strength index
     feature_df['MACD'] = computeMACD(data['Close'])[2]  # Moving Average Convergence/Divergence
+    feature_df['MA'] = movingAverage(data['Close'])  # feature_df['MA'] = data['Close'].rolling(period).mean()
     feature_df['Open_Close_diff'] = data['Open'] - data['Close']
     feature_df['High_Low_diff'] = data['High'] - data['Low']
 

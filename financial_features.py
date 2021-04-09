@@ -37,10 +37,13 @@ def rsiFunc(prices, n=14):
     return rsi
 
 
-def movingAverage(values, window):
-    weights = np.repeat(1.0, window) / window
+def movingAverage(values, window=14):
+    weights = np.ones(window) / window
     smas = np.convolve(values, weights, 'valid')
-    return smas  # as a numpy array
+    # Prepend fillings
+    fill = np.empty((window - 1, ))
+    fill[:] = smas[0]
+    return np.insert(smas, 0, fill)  # as a numpy array
 
 
 def expMovingAverage(values, window):
@@ -62,3 +65,7 @@ def computeMACD(x, slow=26, fast=12):
     emaslow = expMovingAverage(x, slow)
     emafast = expMovingAverage(x, fast)
     return emaslow, emafast, emafast - emaslow
+
+
+if __name__ == '__main__':
+    print(movingAverage([1, 2, -3, 4, 9], 3))
