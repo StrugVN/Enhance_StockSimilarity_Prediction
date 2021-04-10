@@ -80,10 +80,10 @@ base_k0_test = {
          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [10],  # already did: 10
+    'window_len': [15],  # already did: 5, 10, 15
     'model_name': fit_model_name,
     'n_fold': [5],
     'eval_result_path': ['k0_test.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': [SAX()]  # already did: None, PCA()
+    'trans_func': trans_funcs
 }
