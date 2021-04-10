@@ -1,8 +1,9 @@
 from Const import *
 import pandas as pd
 import numpy as np
-
+import itertools
 from pandas_datareader import data as pdr
+from config import *
 from datetime import date
 import yfinance as yf
 yf.pdr_override()
@@ -119,10 +120,36 @@ def long_short_profit_evaluation(curr_price, predicted_price):
 
         profits.append(position)
 
+    # Close final position
     profit = position
     count += 1
 
     return profit, profits, profit*100/start, count/len(curr_price)
+
+
+def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, selected_features, next_t,
+                      window_len, model_name, trans_func, eval_result_path, stock_list, norm_func, n_fold):
+    base_dict = {
+        'stock_list': stock_list,  #
+        'target_col': target_col,  #
+        'similarity_col': similarity_col,  #
+        'sim_func': sim_func,  #
+        'fix_len_func': fix_len_func,  #
+        'k': k,  #
+        'next_t': next_t,  #
+        'selected_features': selected_features,  #
+        'window_len': window_len,  #
+        'model_name': model_name,  #
+        'n_fold': n_fold,  #
+        'eval_result_path': eval_result_path,  #
+        'norm_func': norm_func,  #
+        'trans_func': trans_func  #
+    }
+
+    keys, values = zip(*base_dict.items())
+    permutations_dicts = [dict(zip(keys, v)) for v in itertools.product(*values)]
+
+    return permutations_dicts
 
 
 if __name__ == '__main__':

@@ -192,7 +192,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             file.write("No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, "
                        "next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, "
                        "mean_f1, std_f1, mean_rmse, std_rmse, "
-                       "mean_sharpe_ratio, mean_profit, mean_profit_%, mean_orders_count\n")
+                       "mean_orders_count_per_hours, mean_sharpe_ratio, mean_profit_%, mean_profit\n")
             file.close()
 
     with open(eval_result_path, "a") as file:
@@ -201,150 +201,18 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                    .format(len(selected_features), text_selected_ft, trans_func_name, sim_func,
                            fix_len_func, k, window_len, next_t, model_name, target_col, similarity_col, mean_accuracy,
                            std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
-                           mean_sharp_ratio, mean_profit, mean_profit_pc, mean_order_count))
+                           mean_order_count, mean_sharp_ratio, mean_profit_pc, mean_profit))
         file.close()
 
 
-""" Experience """
-
-
-def sim_func_test1():  # Test các hàm tđ với k = [5 15 25], 10 ngày - 1 feature
-    run_param = base_param
-    run_param['eval_result_path'] = 'Sim_func_test_5folds.csv'
-    run_param['window_len'] = 10
-    run_param['model_name'] = 'LSTM'
-    run_param['selected_features'] = ['Close_norm']
-    run_param['next_t'] = 1
-
-    k = [5, 15, 25]
-
-    for _k in k:
-        run_param['k'] = _k
-        for sim_f_name in similarity_funcs:
-            run_param['sim_func'] = sim_f_name
-            for fix_f_name in fix_length_funcs:
-                run_param['fix_len_func'] = fix_f_name
-                if sim_f_name == 'dtw' and fix_f_name == 'delay_time_join':
-                    continue
-                print('============== Run {0}, {1}, {2} ====================='.format(_k, sim_f_name, fix_f_name))
-                run_exp(**run_param)
-
-
-def model_test1():
-    test = base_param
-    test['window_len'] = 10
-    test['eval_result_path'] = 'Model_test.csv'
-    test['selected_features'] = ['Close_norm']
-    test['next_t'] = 1
-
-    selected_params = [['dtw', 'time_join', 5], ['euclidean', 'time_join', 5],
-                       ['dtw', 'time_join', 15], ['euclidean', 'time_join', 15],
-                       ['co-integration', 'pip', 25], ['euclidean', 'pip', 25]]
-
-    for params in selected_params:
-        test['sim_func'], test['fix_len_func'], test['k'] = params
-        for m in fit_model_funcs.keys():
-            test['model_name'] = m
-            print(
-                '====== Run {} with {}, {}, {} ========='.format(m, test['sim_func'], test['fix_len_func'], test['k']))
-            run_exp(**test)
-
-
-def paper_param_test():
-    test = base_param
-    test['target_col'] = 'Close_proc'
-    test['similarity_col'] = 'Close_norm'
-    # test['trans_func'] = SAX()
-    test['window_len'] = 0
-    test['selected_features'] = ['Close_proc']
-    test['n_fold'] = 5
-
-    test['eval_result_path'] = 'paper_param.csv'
-    for k_ in [15, 25, 50]:
-        test['k'] = k_
-        print('--------------------------- TOP K = {0} ---------------------------'.format(k_))
-        for sim_func_ in similarity_funcs:
-            test['sim_func'] = sim_func_
-            for fix_func_ in fix_length_funcs:
-                test['fix_len_func'] = fix_func_
-                print('================== Running {0}, {1} =================='.format(sim_func_, fix_func_))
-                for t_ in [1, 3, 7]:
-                    test['next_t'] = t_
-                    for model_ in ['GradientBoostingRegressor']:
-                        test['model_name'] = model_
-                        print('*** Model {0} ***'.format(model_))
-                        run_exp(**test)
-
-        print('--------------------------- FINISHED K = {} ---------------------------'.format(k_))
-
-
-def test_GBR_muti(save, ft, target_col, sim_col):
-    s = time.time()
-
-    x = base_param.copy()
-    x['eval_result_path'] = save
-    x['selected_features'] = ft
-    x['target_col'] = target_col
-    x['similarity_col'] = sim_col
-
-    for trans_ in trans_funcs:
-        x['trans_func'] = trans_
-        for k in [50, 100]:
-            x['k'] = k
-            for sim_ in ['co-integration', 'sax']:
-                x['sim_func'] = sim_
-                for next_ in [1]:
-                    x['next_t'] = next_
-
-                    print('========= Running ', k, sim_, next_, ' ============')
-                    run_exp(**x)
-                    print('Elapsed: ', (time.time() - s))
-                    s = time.time()
-
-
-def test_GBR_uni(save, ft, target, sim_col, w_len):
-    s = time.time()
-
-    x = base_param.copy()
-    x['eval_result_path'] = save
-    x['selected_features'] = ft
-    x['target_col'] = target
-    x['similarity_col'] = sim_col
-    x['window_len'] = w_len
-
-    for trans_ in trans_funcs:
-        x['trans_func'] = trans_
-        for k in [50, 100]:
-            x['k'] = k
-            for sim_ in ['co-integration']:
-                x['sim_func'] = sim_
-                for next_ in [1]:
-                    x['next_t'] = next_
-
-                    print('========= Running ', k, sim_, next_, ' ============')
-                    run_exp(**x)
-                    print('Elapsed: ', (time.time() - s))
-                    s = time.time()
-
-
-# test_GBR_uni('uni_proc_proc.csv', ['Close_proc'], 'Close_proc', 'Close_proc', 10)
-
-# test_GBR_muti('muti_proc_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-#                                     'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-#              'Close_proc', 'Close_proc')
-
-# print('====================================')
-# print('====================================')
-# print('====================================')
-
-# test_GBR_muti('muti_close_proc.csv', ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-#                                      'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-#              'Close_proc', 'Close_norm')
-
-run_exp(**base_param)
-base_param['target_col'] = 'Close_proc'
-run_exp(**base_param)
-base_param['selected_features'] = ['Close_proc']
-run_exp(**base_param)
-base_param['target_col'] = 'Close_norm'
-run_exp(**base_param)
+# Iterate Experience
+exps = expand_test_param(**base_k0_test)
+print(' ============= Total: {} ============= '.format(len(exps)))
+for d in exps:
+    print('Running test param: ')
+    print(' >>>', d)
+    if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
+       or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
+        print('     Skipped')
+        continue
+    run_exp(**d)

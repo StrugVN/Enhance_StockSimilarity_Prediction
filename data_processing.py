@@ -68,7 +68,7 @@ def cal_financial_features(data, norm_func=None, next_t=1, re_fit=True):
 
     if norm_func is not None:  # Normalize
         scaler = copy(norm_func)
-        features = ['rsi', 'MACD']
+        features = ['rsi', 'MACD', 'MA']
 
         df = data.copy()
         df[features] = feature_df[features]

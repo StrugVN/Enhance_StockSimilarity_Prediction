@@ -12,12 +12,14 @@ similarity_funcs = {'euclidean': apply_euclidean,
                     'sax': compare_sax,
                     'dtw': apply_dtw
                     }
+similarity_name = ['euclidean', 'pearson', 'co-integration', 'sax', 'dtw']
 
 fix_length_funcs = {'padding': padding,
                     'time_join': time_join,
                     'delay_time_join': delay_time_join,
                     'pip': pip_fix
                     }
+fix_length_name = ['padding', 'time_join', 'delay_time_join', 'pip']
 
 fit_model_funcs = {'RandomForestRegressor': trainRFR,
                    'GradientBoostingRegressor': trainGBR,
@@ -27,6 +29,8 @@ fit_model_funcs = {'RandomForestRegressor': trainRFR,
                    'GradientBoostingClassifier': trainGBC,
                    'RandomForestClassifier': trainRFC
                    }
+fit_model_name = ['RandomForestRegressor', 'GradientBoostingRegressor', 'XGBRegressor', 'LSTM',
+                  'XGBClassifier', 'GradientBoostingClassifier', 'RandomForestClassifier']
 
 """
 stock = 'GOOGL'
@@ -60,4 +64,26 @@ base_param = {
     'eval_result_path': 'test.csv',
     'norm_func': StandardScaler(),
     'trans_func': None
+}
+
+base_k0_test = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm', 'Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': ['co-integration'],  # k=0 => no affect
+    'fix_len_func': ['time_join'],  # k=0 => no affect
+    'k': [0],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm'], ['Close_proc'],
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
+    ],
+    'window_len': [10],  # already did: 10
+    'model_name': fit_model_name,
+    'n_fold': [5],
+    'eval_result_path': ['k0_test.csv'],
+    'norm_func': [StandardScaler()],
+    'trans_func': [SAX()]  # already did: None, PCA()
 }
