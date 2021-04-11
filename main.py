@@ -159,7 +159,14 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             evals['f1_score'] = f1_score(bin_test_Y, bin_pred_Y, average='macro')
             # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
-            print({key: round(evals[key], 3) for key in evals})
+            if len(np.unique(bin_pred_Y)) < 2:
+                evals['folds result'] = 'X'
+            elif evals["long_short_profit"] > 0:
+                evals['folds result'] = '+'
+            else:
+                evals['folds result'] = '-'
+
+            print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
             evals_list.append(evals)
 
     # Save evaluation
@@ -182,6 +189,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
     mean_profit_pc, mean_order_count = np.round((np.mean(eval_df['profit_%']),
                                                  np.mean(eval_df['order_count'])), 3)
 
+    folds_result = ''.join(eval_df['folds result'])
+
     if trans_func is None:
         trans_func_name = 'None'
     else:
@@ -191,17 +200,17 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         with open(eval_result_path, "w") as file:
             file.write("No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, "
                        "next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, "
-                       "mean_f1, std_f1, mean_rmse, std_rmse, "
-                       "mean_orders_count_per_hours, mean_sharpe_ratio, mean_profit_%, mean_profit\n")
+                       "mean_f1, std_f1, mean_rmse, std_rmse,"
+                       "mean_orders_count_per_hours, folds_result, mean_sharpe_ratio, mean_profit_%, mean_profit\n")
             file.close()
 
     with open(eval_result_path, "a") as file:
         file.write("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, "
-                   "{18}, {19}, {20}\n "
+                   "{18}, {19}, {20}, {21}\n "
                    .format(len(selected_features), text_selected_ft, trans_func_name, sim_func,
                            fix_len_func, k, window_len, next_t, model_name, target_col, similarity_col, mean_accuracy,
                            std_accuracy, mean_f1, std_f1, mean_mse, std_mse,
-                           mean_order_count, mean_sharp_ratio, mean_profit_pc, mean_profit))
+                           mean_order_count, folds_result, mean_sharp_ratio, mean_profit_pc, mean_profit))
         file.close()
 
 
