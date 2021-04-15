@@ -1,0 +1,5 @@
+No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse,mean_orders_count_per_hours, folds_result, mean_sharpe_ratio, mean_profit_%, mean_profit
+3, ['Close_norm'; 'rsi_norm'; 'MA_norm'], None, euclidean, padding, 10, 5, 1, XGBClassifier, Close_norm, Close_norm, 0.5238, 0.057, 0.5023, 0.0573, NaN, NaN, 0.22, +-++-, 0.494, 4.013, 63.296
+ 3, ['Close_norm'; 'rsi_norm'; 'MA_norm'], None, euclidean, padding, 10, 10, 1, XGBClassifier, Close_norm, Close_norm, 0.532, 0.0414, 0.5102, 0.0432, NaN, NaN, 0.255, +++--, 0.711, 3.672, 52.598
+ 3, ['Close_norm'; 'rsi_norm'; 'MA_norm'], None, euclidean, padding, 25, 5, 1, XGBClassifier, Close_norm, Close_norm, 0.4912, 0.0315, 0.4723, 0.0416, NaN, NaN, 0.219, -++++, 1.383, 2.679, 46.672
+ 
