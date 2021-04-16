@@ -70,9 +70,9 @@ base_k0_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': fit_model_name,
+    'model_name': ['XGBClassifier'],
     'n_fold': [5],
-    'eval_result_path': ['k0_test.csv'],
+    'eval_result_path': ['__k0_test.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -170,13 +170,13 @@ XGBC_test = {
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [10, 25, 50],
+    'k': [10],  # 10, 25, 50 did
     'next_t': [1],
     'selected_features': [
         ['Close_proc'],
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [5, 10],
+    'window_len': [5],  # 5, 10, did
     'model_name': ['XGBClassifier'],
     'n_fold': [5],
     'eval_result_path': ['XGBClassifier_test.csv'],

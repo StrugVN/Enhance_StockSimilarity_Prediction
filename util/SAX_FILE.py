@@ -22,14 +22,14 @@ class SAX(BaseEstimator, TransformerMixin):
     such strings using a lookup table.
     """
 
-    def __init__(self, wordSize=8, alphabetSize=7, epsilon=1e-6):
+    def __init__(self, wordSize=8, alphabetSize=7, eps=1e-6):
 
         if alphabetSize < 3 or alphabetSize > 20:
             raise DictionarySizeIsNotSupported()
         self.aOffset = ord('a')
         self.wordSize = wordSize
         self.alphabetSize = alphabetSize
-        self.eps = epsilon
+        self.eps = eps
         self.breakpoints = {'3': [-0.43, 0.43],
                             '4': [-0.67, 0, 0.67],
                             '5': [-0.84, -0.25, 0.25, 0.84],

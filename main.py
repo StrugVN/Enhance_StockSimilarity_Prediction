@@ -219,7 +219,7 @@ exps = expand_test_param(**base_k0_test)
 print(' ============= Total: {} ============= '.format(len(exps)))
 for d in exps:
     print('Running test param: ')
-    print(' >>>', d)
+    print(d)
     if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
        or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
         print('     Skipped')
