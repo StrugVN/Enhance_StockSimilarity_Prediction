@@ -1,9 +1,0 @@
-No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, mean_sharp_ratio, mean_profit
-1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_norm, Close_norm, 0.4919, 0.0279, 0.4302, 0.0727, 0.549, 0.218, 1.084, 102.05
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_norm, Close_norm, 0.5066, 0.0478, 0.4076, 0.0809, 0.877, 0.784, 0.046, 17.64
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_norm, Close_norm, 0.4919, 0.0279, 0.4302, 0.0727, 0.549, 0.218, 1.084, 102.05
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_proc, Close_norm, 0.5026, 0.0319, 0.4824, 0.0281, 0.008, 0.003, 1.277, 17.504
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_proc, Close_norm, 0.5209, 0.0286, 0.484, 0.0625, 0.008, 0.003, 0.467, 104.54
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_norm, Close_norm, 0.4951, 0.0282, 0.3487, 0.0341, 0.748, 0.408, -0.072, 73.716
- 1, ['Close_norm'], None, co-integration, time_join, 0, 10, 1, GradientBoostingRegressor, Close_norm, Close_norm, 0.4919, 0.0279, 0.4302, 0.0727, 0.549, 0.218, 1.084, 102.05
- 
