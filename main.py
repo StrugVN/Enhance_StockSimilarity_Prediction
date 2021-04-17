@@ -215,13 +215,19 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 
 # Iterate Experience
-exps = expand_test_param(**base_k0_test)
+ts = time.time()
+exps = expand_test_param(**XGBC_test)
 print(' ============= Total: {} ============= '.format(len(exps)))
 for d in exps:
-    print('Running test param: ')
+    es = time.time()
+    print('\nRunning test param: ')
     print(d)
     if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
        or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
         print('     Skipped')
         continue
+
     run_exp(**d)
+
+    print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
+

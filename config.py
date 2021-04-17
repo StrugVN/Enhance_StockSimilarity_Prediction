@@ -72,7 +72,7 @@ base_k0_test = {
     'window_len': [5, 10, 15],  # 5, 10, 15
     'model_name': ['XGBClassifier'],
     'n_fold': [5],
-    'eval_result_path': ['__k0_test.csv'],
+    'eval_result_path': ['__k0_test2.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -142,7 +142,7 @@ RFC_test = {
     'trans_func': [None, PCA(n_components=3, random_state=0)]
 }
 
-RFR_test = {
+RFR_test_old = {
     'stock_list': [["GOOGL"]],
     'target_col': ['Close_norm', 'Close_proc'],
     'similarity_col': ['Close_norm'],
@@ -164,19 +164,83 @@ RFR_test = {
     'trans_func': trans_funcs
 }
 
+RFR_test_None = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm', 'Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': similarity_name,
+    'fix_len_func': fix_length_name,
+    'k': [10, 25, 50],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm'],
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
+    ],
+    'window_len': [5, 10],
+    'model_name': ['RandomForestRegressor'],
+    'n_fold': [5],
+    'eval_result_path': ['RandomForestRegressor_test_None.csv'],
+    'norm_func': [StandardScaler()],
+    'trans_func': [None]
+}
+
+RFR_test_PCA = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm', 'Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': similarity_name,
+    'fix_len_func': fix_length_name,
+    'k': [10, 25, 50],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm']
+    ],
+    'window_len': [5, 15],
+    'model_name': ['RandomForestRegressor'],
+    'n_fold': [5],
+    'eval_result_path': ['RandomForestRegressor_test.csv'],
+    'norm_func': [StandardScaler()],
+    'trans_func': [PCA(n_components=3, random_state=0)]
+}
+
+RFR_test_SAX = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': similarity_name,
+    'fix_len_func': fix_length_name,
+    'k': [10, 25, 50],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm'],
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
+    ],
+    'window_len': [5, 15],
+    'model_name': ['RandomForestRegressor'],
+    'n_fold': [5],
+    'eval_result_path': ['RandomForestRegressor_test.csv'],
+    'norm_func': [StandardScaler()],
+    'trans_func': [SAX()]
+}
+
 XGBC_test = {
     'stock_list': [["GOOGL"]],
     'target_col': ['Close_norm', 'Close_proc'],
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [10],  # 10, 25, 50 did
+    'k': [50],  # 10, 25, 50 did 50|
     'next_t': [1],
     'selected_features': [
         ['Close_proc'],
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [5],  # 5, 10, did
+    'window_len': [5, 10],
     'model_name': ['XGBClassifier'],
     'n_fold': [5],
     'eval_result_path': ['XGBClassifier_test.csv'],

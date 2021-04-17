@@ -111,7 +111,7 @@ def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estim
     else:
         # model.fit(train_X, train_Y,
         #          early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="logloss", verbose=False)
-        model.fit(train_X, train_Y)
+        model.fit(train_X, train_Y, eval_metric='logloss')
 
     return model
 
