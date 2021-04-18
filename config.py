@@ -234,7 +234,7 @@ XGBC_test = {
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [50],  # 10, 25, 50 did 50|
+    'k': [10],  # 10, 25, 50 did 50, 25,
     'next_t': [1],
     'selected_features': [
         ['Close_proc'],
@@ -243,7 +243,7 @@ XGBC_test = {
     'window_len': [5, 10],
     'model_name': ['XGBClassifier'],
     'n_fold': [5],
-    'eval_result_path': ['XGBClassifier_test.csv'],
+    'eval_result_path': ['XGBClassifier_k10.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': [None]
 }
