@@ -170,7 +170,7 @@ RFR_test_None = {
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [10, 25, 50],
+    'k': [25],  # to do 25 50 | 50, 25
     'next_t': [1],
     'selected_features': [
         ['Close_norm'],
@@ -181,7 +181,7 @@ RFR_test_None = {
     'window_len': [5, 10],
     'model_name': ['RandomForestRegressor'],
     'n_fold': [5],
-    'eval_result_path': ['RandomForestRegressor_test_None.csv'],
+    'eval_result_path': ['RandomForestRegressor_None_k25.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': [None]
 }

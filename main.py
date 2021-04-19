@@ -216,13 +216,12 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 # Iterate Experience
 ts = time.time()
-exps = expand_test_param(**XGBC_test)
+exps = expand_test_param(**RFR_test_None)
 count, exp_len = 1, len(exps)
 print(' ============= Total: {} ============= '.format(exp_len))
 for d in exps:
     es = time.time()
-    print('\nRunning test param: ')
-    print(f'{count}/{exp_len}')
+    print('\nRunning test param: {}'.format(count))
     print(d)
     count += 1
     if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
