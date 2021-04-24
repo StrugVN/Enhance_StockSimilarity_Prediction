@@ -1,0 +1,4 @@
+No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse,mean_orders_count_per_hours, folds_result, mean_sharpe_ratio, mean_profit_%, mean_profit
+1, ['Close_norm'], None, euclidean, padding, 25, 5, 1, RandomForestRegressor, Close_norm, Close_norm, 0.5235, 0.0895, 0.5174, 0.0866, 0.397, 0.21, 0.357, +-+++, 1.218, 7.296, 122.506
+ 1, ['Close_norm'], None, euclidean, padding, 25, 10, 1, RandomForestRegressor, Close_norm, Close_norm, 0.5132, 0.0468, 0.5059, 0.0428, 0.36, 0.193, 0.325, +-++-, 0.752, 3.844, 60.508
+ 

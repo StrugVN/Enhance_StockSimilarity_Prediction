@@ -13,10 +13,10 @@ from keras.optimizers import Adam
 
 def create_LSTM(input_shape, lr=0.01, output_shape=1, loss='mse'):
     model = Sequential()
-    model.add(LSTM(units=50, return_sequences=True, input_shape=input_shape))
-    model.add(LSTM(units=50, return_sequences=False))
+    model.add(LSTM(units=100, return_sequences=True, input_shape=input_shape))
+    model.add(LSTM(units=100, return_sequences=False))
     model.add(Dropout(0.25))
-    model.add(Dense(units=50))
+    model.add(Dense(units=100))
     model.add(Dense(units=output_shape))
     model.compile(optimizer=Adam(lr=lr), loss=loss)
     return model

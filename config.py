@@ -57,7 +57,8 @@ base_param = {
 
 base_k0_test = {
     'stock_list': [["GOOGL"]],
-    'target_col': ['Close_norm', 'Close_proc'],
+    'target_col': ['Close_norm',
+                   'Close_proc'],
     'similarity_col': ['Close_norm'],
     'sim_func': ['co-integration'],  # k=0 => no effect
     'fix_len_func': ['time_join'],  # k=0 => no effect
@@ -70,9 +71,9 @@ base_k0_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['XGBClassifier'],
+    'model_name': ['LSTM'],
     'n_fold': [5],
-    'eval_result_path': ['__k0_test2.csv'],
+    'eval_result_path': ['k0_lstm_100n_2.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }

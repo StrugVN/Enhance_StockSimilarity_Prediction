@@ -114,11 +114,17 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 raise ValueError(model_name + ' is not available')
 
             if not is_classifier:
-                model = fit_model_funcs[model_name](train_X, train_Y)
-
                 if 'LSTM' in model_name:
+                    # -- Test --
+                    #if 'proc' in target_col:
+                    #    train_Y['1'] = train_Y['1']*100
+                    #    test_Y['1'] = test_Y['1']*100
+                    # ----------
+                    model = fit_model_funcs[model_name](train_X, train_Y)
+
                     pred_Y = model.predict(test_X.to_numpy().reshape(-1, 1, test_X.shape[1]))
                 else:
+                    model = fit_model_funcs[model_name](train_X, train_Y)
                     pred_Y = model.predict(test_X)
             else:
                 train_Y_ = np.array(bin_train_Y)
@@ -216,7 +222,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 # Iterate Experience
 ts = time.time()
-exps = expand_test_param(**RFR_test_None)
+exps = expand_test_param(**base_k0_test)
 count, exp_len = 1, len(exps)
 print(' ============= Total: {} ============= '.format(exp_len))
 for d in exps:
