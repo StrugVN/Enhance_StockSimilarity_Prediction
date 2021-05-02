@@ -127,6 +127,40 @@ def long_short_profit_evaluation(curr_price, predicted_price):
     return profit, profits, profit*100/start, count/len(curr_price)
 
 
+def buy_low_sell_high(curr_price, predicted_price):
+    is_long = False
+    profit = 0
+    last_buy = 0
+    profits = []
+    position = 0
+    start = curr_price[0]
+    count = 0
+    for i in range(len(curr_price)):
+        # buy low
+        if predicted_price[i] > 0:
+            if is_long is False:
+                last_buy = curr_price[i]
+                is_long = True
+            elif is_long:
+                profit = profit + (curr_price[i] - last_buy)
+                position = profit
+
+        # sell high
+        if predicted_price[i] < 0:
+            if is_long:
+                profit = profit + (curr_price[i] - last_buy)
+                position = profit
+                is_long = False
+
+        profits.append(position)
+
+    # Close final position
+    profit = position
+    count += 1
+
+    return profit, profits, profit*100/start, count/len(curr_price)
+
+
 def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, selected_features, next_t,
                       window_len, model_name, trans_func, eval_result_path, stock_list, norm_func, n_fold):
     base_dict = {
@@ -155,4 +189,4 @@ def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, sel
 if __name__ == '__main__':
     # sp500 = get_sp500_curr_stock_symbols()
     # save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
-    print(long_short_profit_evaluation([5, 15, 25, 35], [1, -1, -1, 1]))
+    print(buy_low_sell_high([5, 15, 25, 35], [1, -1, 1, 1]))
