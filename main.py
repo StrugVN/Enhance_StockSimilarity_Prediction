@@ -171,7 +171,11 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             # evals['precision_score'] = precision_score(bin_test_Y, bin_pred_Y, average='macro')
 
             if len(np.unique(bin_pred_Y)) < 2:
-                evals['folds result'] = 'X'
+                if np.unique(bin_pred_Y)[0] > 0:
+                    s = 'U'
+                else:
+                    s = 'D'
+                evals['folds result'] = s
             elif evals["long_short_profit"] > 0:
                 evals['folds result'] = '+'
             else:
@@ -240,7 +244,7 @@ print(' ============= Total: {} ============= '.format(exp_len))
 for d in exps:
     es = time.time()
     print('\nRunning test param: {}'.format(count))
-    print(d)
+    print(d, '/', exp_len)
     count += 1
     if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
             or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):

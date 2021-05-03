@@ -142,8 +142,7 @@ def buy_low_sell_high(curr_price, predicted_price):
                 last_buy = curr_price[i]
                 is_long = True
             elif is_long:
-                profit = profit + (curr_price[i] - last_buy)
-                position = profit
+                position = profit + (curr_price[i] - last_buy)
 
         # sell high
         if predicted_price[i] < 0:
@@ -189,4 +188,4 @@ def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, sel
 if __name__ == '__main__':
     # sp500 = get_sp500_curr_stock_symbols()
     # save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
-    print(buy_low_sell_high([5, 15, 25, 35], [1, -1, 1, 1]))
+    print(buy_low_sell_high([5, 15, 15, 25, 35], [1, -1, -1, 1, 1]))

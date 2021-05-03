@@ -90,8 +90,8 @@ def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.01, n_estimators=100
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
         eval_set = [(X_val, y_val)]
 
-        model.fit(X_train, y_train,
-                  early_stopping_rounds=10, eval_metric="rmse", eval_set=eval_set, verbose=False)
+        model.fit(X_train, y_train, verbose=False)
+               #   early_stopping_rounds=10, eval_metric="rmse", eval_set=eval_set, verbose=False)
     else:
         # model.fit(train_X, train_Y,
         #          early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="rmse", verbose=False)
@@ -106,8 +106,8 @@ def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estim
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
         eval_set = [(X_val, y_val)]
 
-        model.fit(X_train, y_train,
-                  early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=False)
+        model.fit(X_train, y_train, verbose=False)
+                #  early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=False)
     else:
         # model.fit(train_X, train_Y,
         #          early_stopping_rounds=10, eval_set=[(train_X, train_Y)], eval_metric="logloss", verbose=False)
