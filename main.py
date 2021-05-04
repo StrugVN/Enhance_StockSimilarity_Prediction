@@ -43,7 +43,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
         folds_df.append(df[df[const_time_col].isin(target_stock_dates[(n_fold - 1) * threshold:])])
         _folds_time.append(((n_fold - 1) * threshold, 'end'))
-
+        f_count = 1
         for _df in folds_df:
             # feature_df, scaler, scaler_cols = cal_financial_features(_df, StandardScaler())
 
@@ -102,14 +102,18 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             else:
                 ft = str(selected_features).replace(',', ';')
 
-            train_path = 'train_test_data/train_set_{0}_simcol={1}_{2}_{3}_k={4}_ft={5}_w={6}_pred={7}_t={8}_trans={9}_' \
-                         'fold_={10}_{11}.pkl'.format(stock, similarity_col, sim_func, fix_len_func, k,
-                                                      ft, window_len, target_col, next_t, trans_name,
-                                                      start_d, end_d)
-            test_path = 'train_test_data/test_set_{0}_simcol={1}_{2}_{3}_k={4}_ft={5}_w={6}_pred={7}_t={8}_trans={9}_' \
-                         'fold_={10}_{11}.pkl'.format(stock, similarity_col, sim_func, fix_len_func, k,
-                                                      ft, window_len, target_col, next_t, trans_name,
-                                                      start_d, end_d)
+            if not os.path.exists('train_test_data/' + sim_func + '/' + fix_len_func):
+                os.makedirs('train_test_data/' + sim_func + '/' + fix_len_func)
+
+            train_path = 'train_test_data/' + sim_func + '/' + fix_len_func + \
+                         '/train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                         'fold={8}.pkl'.format(stock, similarity_col, k,
+                                               ft, window_len, target_col, next_t, trans_name, f_count)
+
+            test_path = 'train_test_data/' + sim_func + '/' + fix_len_func + \
+                        '/test_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                        'fold={8}.pkl'.format(stock, similarity_col, k,
+                                              ft, window_len, target_col, next_t, trans_name, f_count)
 
             if os.path.isfile(train_path):
                 _train_data = pickle.load(open(train_path, 'rb'))
@@ -122,7 +126,6 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 print('   Saving training data')
                 pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
                             open(train_path, 'wb+'))
-
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
@@ -141,9 +144,9 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                             open(test_path, 'wb+'))
 
             ############# DELETE THIS ###########
+            f_count += 1
             continue
             #####################################
-
 
             # if 'proc' not in target_col:
             #    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
@@ -223,6 +226,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
             print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
             evals_list.append(evals)
+            f_count += 1
 
     ############# DELETE THIS ###########
     return
@@ -244,14 +248,14 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         mean_mse, std_mse = 'NaN', 'NaN'
 
     mean_sharpe_ratio, mean_profit = np.round((np.mean(eval_df['sharpe_ratio']),
-                                              np.mean(eval_df['long_short_profit'])), 3)
+                                               np.mean(eval_df['long_short_profit'])), 3)
     mean_profit_pc, mean_order_count = np.round((np.mean(eval_df['profit_%']),
                                                  np.mean(eval_df['order_count'])), 3)
 
     mean_L_sharpe_ratio, mean_L_profit = np.round((np.mean(eval_df['L_sharpe_ratio']),
-                                                  np.mean(eval_df['BLSH_profit'])), 3)
+                                                   np.mean(eval_df['BLSH_profit'])), 3)
     mean_L_profit_pc, mean_L_order_count = np.round((np.mean(eval_df['L_profit_%']),
-                                                    np.mean(eval_df['L_order_count'])), 3)
+                                                     np.mean(eval_df['L_order_count'])), 3)
 
     folds_result = ''.join(eval_df['folds result'])
 
@@ -298,4 +302,5 @@ if __name__ == "__main__":
 
         run_exp(**d)
 
-        print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
+        print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm',
+              sep='')

@@ -58,7 +58,7 @@ base_param = {
 # Note: w_len -> trans -> k
 #
 test_create_data = {
-    'stock_list': [["JPM", "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"]],
+    'stock_list': [["GOOGL"]],
     'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
