@@ -53,12 +53,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
             # sim
+            start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
+            end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
             if k == 0:
                 top_stock_norm = None
                 all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
             else:
-                start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
-                end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
+
                 force = False
                 sim_path = 'similarities_data/' + data_name + '/' + stock + '_' + similarity_col + '_' + \
                            sim_func + '_' + fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
@@ -89,21 +90,52 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
             # split dataset
             train_df, test_df = split_train_test_set(_df, stock, all_stock_name, 0.75)
+
             # Prepare X, Y
-            train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols, transformer = \
-                prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
-                                        target_col, top_stock_norm, weighted_sampling=True,
-                                        norm_func=norm_func, trans_func=trans_func)
+            if trans_func is None:
+                trans_name = 'None'
+            else:
+                trans_name = trans_func.__class__.__name__
+            ft = str(selected_features).replace(',', ';')
+
+            train_path = 'train_test_data/train_set_{0}_simcol={1}_{2}_{3}_k={4}_ft={5}_w={6}_pred={7}_t={8}_trans={9}_' \
+                         'fold_={10}_{11}.pkl'.format(stock, similarity_col, sim_func, fix_len_func, k,
+                                                      ft, window_len, target_col, next_t, trans_name,
+                                                      start_d, end_d)
+            test_path = 'train_test_data/test_set_{0}_simcol={1}_{2}_{3}_k={4}_ft={5}_w={6}_pred={7}_t={8}_trans={9}_' \
+                         'fold_={10}_{11}.pkl'.format(stock, similarity_col, sim_func, fix_len_func, k,
+                                                      ft, window_len, target_col, next_t, trans_name,
+                                                      start_d, end_d)
+
+            if os.path.isfile(train_path):
+                _train_data = pickle.load(open(train_path, 'rb'))
+                train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer = _train_data
+            else:
+                train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols, transformer = \
+                    prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
+                                            target_col, top_stock_norm, weighted_sampling=True,
+                                            norm_func=norm_func, trans_func=trans_func)
+                print('   Saving training data')
+                pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
+                            open(train_path, 'wb+'))
+
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
             # else:
             #    bin_train_Y = np.sign(train_Y)
+            if os.path.isfile(test_path):
+                _test_data = pickle.load(open(test_path, 'rb'))
+                test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price = _test_data
+            else:
+                test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _, _ = \
+                    prepare_train_test_data(test_df,
+                                            selected_features, stock, window_len, next_t, target_col, top_stock_norm,
+                                            is_test=True, norm_func=scaler, trans_func=transformer)
+                print('   Saving test data')
+                pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
+                            open(test_path, 'wb+'))
 
-            test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _, _ = \
-                prepare_train_test_data(test_df,
-                                        selected_features, stock, window_len, next_t, target_col, top_stock_norm,
-                                        is_test=True, norm_func=scaler, trans_func=transformer)
 
             # if 'proc' not in target_col:
             #    bin_test_Y = get_y_bin(test_X, test_Y.to_numpy(), window_len, target_col)
@@ -238,13 +270,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 # Iterate Experience
 ts = time.time()
-exps = expand_test_param(**base_k0_test)
+exps = expand_test_param(**test_create_data)
 count, exp_len = 1, len(exps)
 print(' ============= Total: {} ============= '.format(exp_len))
 for d in exps:
     es = time.time()
-    print('\nRunning test param: {}'.format(count))
-    print(d, '/', exp_len)
+    print('\nRunning test param: {0}/{1}'.format(count, exp_len))
+    print(d)
     count += 1
     if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
             or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
