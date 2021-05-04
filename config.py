@@ -63,7 +63,7 @@ test_create_data = {
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
     'sim_func': ['co-integration'],
-    'fix_len_func': ['time_join'],
+    'fix_len_func': fix_length_name,  # ['time_join'],
     'k': [50],  # 10, 25, 50 |
     'next_t': [1],
     'selected_features': [
@@ -77,7 +77,7 @@ test_create_data = {
     'n_fold': [5],
     'eval_result_path': ['create_data_test.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': [PCA(n_components=3, random_state=0)]  # [None, PCA(n_components=3, random_state=0), SAX()] |
+    'trans_func': [None]  # [None, PCA(n_components=3, random_state=0), SAX()] |
 }
 
 base_k0_test = {
