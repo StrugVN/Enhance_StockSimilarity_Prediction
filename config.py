@@ -77,7 +77,7 @@ test_create_data = {
     'n_fold': [5],
     'eval_result_path': ['create_data_test.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': [None]  # [None, PCA(n_components=3, random_state=0), SAX()] |
+    'trans_func': [PCA(n_components=3, random_state=0)]  # [None, PCA(n_components=3, random_state=0), SAX()] |
 }
 
 base_k0_test = {

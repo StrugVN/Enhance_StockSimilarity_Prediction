@@ -96,7 +96,11 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 trans_name = 'None'
             else:
                 trans_name = trans_func.__class__.__name__
-            ft = str(selected_features).replace(',', ';')
+
+            if len(selected_features) > 5:
+                ft = len(selected_features)
+            else:
+                ft = str(selected_features).replace(',', ';')
 
             train_path = 'train_test_data/train_set_{0}_simcol={1}_{2}_{3}_k={4}_ft={5}_w={6}_pred={7}_t={8}_trans={9}_' \
                          'fold_={10}_{11}.pkl'.format(stock, similarity_col, sim_func, fix_len_func, k,
@@ -135,6 +139,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 print('   Saving test data')
                 pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
                             open(test_path, 'wb+'))
+
+            ############# DELETE THIS ###########
+            continue
+            #####################################
 
 
             # if 'proc' not in target_col:
@@ -216,6 +224,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
             evals_list.append(evals)
 
+    ############# DELETE THIS ###########
+    return
+    #####################################
+
     # Save evaluation
     eval_df = pd.DataFrame(evals_list)
     """
@@ -268,21 +280,22 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
         file.close()
 
 
-# Iterate Experience
-ts = time.time()
-exps = expand_test_param(**test_create_data)
-count, exp_len = 1, len(exps)
-print(' ============= Total: {} ============= '.format(exp_len))
-for d in exps:
-    es = time.time()
-    print('\nRunning test param: {0}/{1}'.format(count, exp_len))
-    print(d)
-    count += 1
-    if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
-            or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
-        print('     Skipped')
-        continue
+if __name__ == "__main__":
+    # Iterate Experience
+    ts = time.time()
+    exps = expand_test_param(**test_create_data)
+    count, exp_len = 1, len(exps)
+    print(' ============= Total: {} ============= '.format(exp_len))
+    for d in exps:
+        es = time.time()
+        print('\nRunning test param: {0}/{1}'.format(count, exp_len))
+        print(d)
+        count += 1
+        if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
+                or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
+            print('     Skipped')
+            continue
 
-    run_exp(**d)
+        run_exp(**d)
 
-    print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
+        print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')

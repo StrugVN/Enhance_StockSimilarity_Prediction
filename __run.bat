@@ -1,0 +1,9 @@
+start python _script_5_None.py
+start python _script_5_PCA.py
+start python _script_5_SAX.py
+start python _script_10_None.py
+start python _script_10_PCA.py
+start python _script_10_SAX.py
+start python _script_15_None.py
+start python _script_15_PCA.py
+start python _script_15_SAX.py
