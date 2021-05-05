@@ -2,6 +2,7 @@ from main import *
 
 test = test_create_data.copy()
 
+test['sim_func'] = ['dtw']
 test['window_len'] = [10]
 test['trans_func'] = [None]
 

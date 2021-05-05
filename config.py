@@ -62,8 +62,8 @@ test_create_data = {
     'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['co-integration'],
-    'fix_len_func': fix_length_name,  # ['time_join'],
+    'sim_func': ['dtw'],  # eu, sax, pearson | co-in
+    'fix_len_func': fix_length_name,
     'k': [50],  # 10, 25, 50 |
     'next_t': [1],
     'selected_features': [
