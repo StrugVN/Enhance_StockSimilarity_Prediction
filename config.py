@@ -103,6 +103,29 @@ base_k0_test = {
     'trans_func': trans_funcs
 }
 
+base_test = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm',
+                   'Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': similarity_name,
+    'fix_len_func': fix_length_name,
+    'k': [50],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm'], ['Close_proc'],
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
+    ],
+    'window_len': [5, 10, 15],  # 5, 10, 15
+    'model_name': [''],
+    'n_fold': [5],
+    'eval_result_path': [''],
+    'norm_func': [StandardScaler()],
+    'trans_func': trans_funcs
+}
+
 ####################
 
 GBC_test = {

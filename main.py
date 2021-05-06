@@ -144,8 +144,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                             open(test_path, 'wb+'))
 
             ############# DELETE THIS ###########
-            f_count += 1
-            continue
+            #f_count += 1
+            #continue
             #####################################
 
             # if 'proc' not in target_col:
@@ -229,7 +229,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             f_count += 1
 
     ############# DELETE THIS ###########
-    return
+    # return
     #####################################
 
     # Save evaluation
@@ -285,9 +285,16 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 
 if __name__ == "__main__":
+    test = base_test.copy()
+
+    test['k'] = [50]
+    test['model_name'] = ['XGBClassifier']
+    test['eval_result_path'] = ['XGBClassifier_k50.csv']
+
     # Iterate Experience
     ts = time.time()
-    exps = expand_test_param(**test_create_data)
+    exps = expand_test_param(**test)
+    exps = exps[960:]
     count, exp_len = 1, len(exps)
     print(' ============= Total: {} ============= '.format(exp_len))
     for d in exps:
