@@ -102,15 +102,15 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             else:
                 ft = str(selected_features).replace(',', ';')
 
-            if not os.path.exists('train_test_data/' + sim_func + '/' + fix_len_func):
+            if not os.path.exists('train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func):
                 os.makedirs('train_test_data/' + sim_func + '/' + fix_len_func)
 
-            train_path = 'train_test_data/' + sim_func + '/' + fix_len_func + \
+            train_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
                          '/train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
                          'fold={8}.pkl'.format(stock, similarity_col, k,
                                                ft, window_len, target_col, next_t, trans_name, f_count)
 
-            test_path = 'train_test_data/' + sim_func + '/' + fix_len_func + \
+            test_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
                         '/test_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
                         'fold={8}.pkl'.format(stock, similarity_col, k,
                                               ft, window_len, target_col, next_t, trans_name, f_count)
