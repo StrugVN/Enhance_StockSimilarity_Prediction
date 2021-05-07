@@ -2,7 +2,7 @@ from main import *
 
 test = test_create_data.copy()
 
-test['sim_func'] = ['dtw'] # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+test['sim_func'] = ['dtw']  # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
 test['window_len'] = [5, 10, 15]
 test['trans_func'] = [PCA(n_components=3, random_state=0)]
 
@@ -24,3 +24,5 @@ for d in exps:
     run_exp(**d)
 
     print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
+
+input()

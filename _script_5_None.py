@@ -26,3 +26,5 @@ for d in exps:
     run_exp(**d)
 
     print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
+
+input()

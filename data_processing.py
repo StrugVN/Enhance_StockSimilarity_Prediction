@@ -264,7 +264,10 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
 
         for stock_name in top_stock.keys():
             stock_df = data[data[const_name_col] == stock_name]
-            if stock_df.empty or stock_df.shape[0] < w_len + next_t + 1:
+            min_data_point = 1
+            if _transformer.__class__.__name__ == PCA().__class__.__name__:
+                min_data_point += 3
+            if stock_df.empty or stock_df.shape[0] < w_len + next_t + min_data_point:
                 continue
             if w_len > 1:
                 sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _, _ = \

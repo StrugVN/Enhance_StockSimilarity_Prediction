@@ -75,3 +75,4 @@ for _df in folds_df:
 
 eval_df = pd.DataFrame(evals_list)
 print(np.mean(eval_df))
+input()
