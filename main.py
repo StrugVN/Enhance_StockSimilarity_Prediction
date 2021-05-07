@@ -53,16 +53,26 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             stock_count = all_stock_df.groupby([const_name_col]).count()[const_time_col].reset_index()
 
             # sim
-            start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
-            end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
+
             if k == 0:
                 top_stock_norm = None
                 all_stock_name = stock_count[stock_count[const_time_col] > 30 + 7 + 5][const_name_col].tolist()
             else:
 
                 force = False
-                sim_path = 'similarities_data/' + data_name + '/' + stock + '_' + similarity_col + '_' + \
-                           sim_func + '_' + fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
+                if data_name == 'all_stocks_5yr':
+                    start_d = str(stock_df[const_time_col][0]).split(' ', 1)[0]
+                    end_d = str(stock_df[const_time_col][-1]).split(' ', 1)[0]
+
+                    sim_path = 'similarities_data/' + data_name + '/5_years_' + stock + '_' + similarity_col + '_' + \
+                               sim_func + '_' + fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
+                else:
+                    start_d = str(stock_df[const_time_col][0]).replace(':', '').replace(' ', '_')
+                    end_d = str(stock_df[const_time_col][-1]).replace(':', '').replace(' ', '_')
+
+                    sim_path = 'similarities_data/' + data_name + '/' + stock + '_' + similarity_col + '_' + \
+                               sim_func + '_' + fix_len_func + '_fold_' + start_d + '_' + end_d + '.pkl'
+
                 if os.path.isfile(sim_path) and not force:
                     # print(' Loading existing similarity result: ' + sim_path)
                     _sim_data = pickle.load(open(sim_path, 'rb'))
@@ -103,7 +113,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 ft = str(selected_features).replace(',', ';')
 
             if not os.path.exists('train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func):
-                os.makedirs('train_test_data/' + sim_func + '/' + fix_len_func)
+                os.makedirs('train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func)
 
             train_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
                          '/train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
@@ -123,9 +133,10 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                             target_col, top_stock_norm, weighted_sampling=True,
                                             norm_func=norm_func, trans_func=trans_func)
-                print('   Saving training data')
-                pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
-                            open(train_path, 'wb+'))
+                if k != 0:
+                    print('   Saving training data')
+                    pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
+                                open(train_path, 'wb+'))
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
@@ -139,13 +150,14 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     prepare_train_test_data(test_df,
                                             selected_features, stock, window_len, next_t, target_col, top_stock_norm,
                                             is_test=True, norm_func=scaler, trans_func=transformer)
-                print('   Saving test data')
-                pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
-                            open(test_path, 'wb+'))
+                if k != 0:
+                    print('   Saving test data')
+                    pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
+                                open(test_path, 'wb+'))
 
             ############# DELETE THIS ###########
-            #f_count += 1
-            #continue
+            f_count += 1
+            continue
             #####################################
 
             # if 'proc' not in target_col:
@@ -229,7 +241,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             f_count += 1
 
     ############# DELETE THIS ###########
-    # return
+    return
     #####################################
 
     # Save evaluation
@@ -294,7 +306,6 @@ if __name__ == "__main__":
     # Iterate Experience
     ts = time.time()
     exps = expand_test_param(**test)
-    exps = exps[960:]
     count, exp_len = 1, len(exps)
     print(' ============= Total: {} ============= '.format(exp_len))
     for d in exps:

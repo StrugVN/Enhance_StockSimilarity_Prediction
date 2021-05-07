@@ -55,14 +55,12 @@ base_param = {
 
 # "JPM", "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"
 
-# Note: w_len -> trans -> k
-#
 test_create_data = {
     'stock_list': [["GOOGL"]],
     'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['dtw'],  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    'sim_func': [],  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
     'fix_len_func': fix_length_name,  # 'padding', 'time_join', 'delay_time_join', 'pip'
     'k': [50],  # 10, 25, 50 |
     'next_t': [1],
@@ -72,12 +70,12 @@ test_create_data = {
          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [15],  # 5, 10, 15 |
+    'window_len': [],  # 5, 10, 15 |
     'model_name': ['GradientBoostingRegressor'],
     'n_fold': [5],
     'eval_result_path': ['create_data_test.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': [None]  # [None, PCA(n_components=3, random_state=0), SAX()] |
+    'trans_func': []  # [None, PCA(n_components=3, random_state=0), SAX()] |
 }
 
 base_k0_test = {
@@ -110,7 +108,7 @@ base_test = {
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [50],
+    'k': [10, 25, 50],
     'next_t': [1],
     'selected_features': [
         ['Close_norm'], ['Close_proc'],

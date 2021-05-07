@@ -1,3 +1,5 @@
+import pickle
+
 from Const import *
 import pandas as pd
 import numpy as np
@@ -6,6 +8,7 @@ from pandas_datareader import data as pdr
 from config import *
 from datetime import date
 import yfinance as yf
+
 yf.pdr_override()
 
 import types
@@ -124,7 +127,7 @@ def long_short_profit_evaluation(curr_price, predicted_price):
     profit = position
     count += 1
 
-    return profit, profits, profit*100/start, count/len(curr_price)
+    return profit, profits, profit * 100 / start, count / len(curr_price)
 
 
 def buy_low_sell_high(curr_price, predicted_price):
@@ -157,7 +160,7 @@ def buy_low_sell_high(curr_price, predicted_price):
     profit = position
     count += 1
 
-    return profit, profits, profit*100/start, count/len(curr_price)
+    return profit, profits, profit * 100 / start, count / len(curr_price)
 
 
 def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, selected_features, next_t,
@@ -186,6 +189,17 @@ def expand_test_param(target_col, similarity_col, sim_func, fix_len_func, k, sel
 
 
 if __name__ == '__main__':
+    # Yahoo api
     # sp500 = get_sp500_curr_stock_symbols()
     # save_stock_pulled('all_stocks_last_1yr', sp500, '2020-04-06', '2021-04-06')
+
+    # test trade strat
     print(buy_low_sell_high([5, 15, 15, 25, 35], [1, -1, -1, 1, 1]))
+
+    # misc | create data folder beforehand
+    #for sim_func in ['euclidean', 'pearson', 'co-integration', 'sax', 'dtw']:
+    #    for fix_len_func in ['padding', 'time_join', 'delay_time_join', 'pip']:
+    #        path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func
+    #       if not os.path.exists(path):
+    #           os.makedirs(path)
+    #           print('created: ', path)
