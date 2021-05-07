@@ -41,7 +41,7 @@ def movingAverage(values, window=14):
     weights = np.ones(window) / window
     smas = np.convolve(values, weights, 'valid')
     # Prepend fillings
-    fill = np.empty((window - 1, ))
+    fill = np.empty((window - 1,))
     fill[:] = smas[0]
     return np.insert(smas, 0, fill)  # as a numpy array
 
@@ -57,7 +57,7 @@ def expMovingAverage(values, window):
 def computeMACD(x, slow=26, fast=12):
     if slow >= len(x):
         slow = len(x) - 1
-        fast = abs(slow / 2) - 1
+        fast = int(abs(slow / 2)) - 1
 
     if fast <= 5:
         return 0, 0, np.zeros(len(x))

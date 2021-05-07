@@ -297,11 +297,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 
 if __name__ == "__main__":
-    test = base_test.copy()
+    test = test_create_data.copy()
 
-    test['k'] = [50]
-    test['model_name'] = ['XGBClassifier']
-    test['eval_result_path'] = ['XGBClassifier_k50.csv']
+    test['sim_func'] = ['dtw']  # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    test['window_len'] = [5]
+    test['trans_func'] = [None]
+
+    print('Running 5 - None')
 
     # Iterate Experience
     ts = time.time()
