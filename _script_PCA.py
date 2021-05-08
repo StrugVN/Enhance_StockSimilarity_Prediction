@@ -2,7 +2,7 @@ from main import *
 
 test = test_create_data.copy()
 
-test['sim_func'] = ['dtw']  # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+test['sim_func'] = ['co-integration', 'sax']  # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
 test['window_len'] = [5, 10, 15]
 test['trans_func'] = [PCA(n_components=3, random_state=0)]
 

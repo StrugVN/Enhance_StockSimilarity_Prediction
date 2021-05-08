@@ -2,7 +2,7 @@ from main import *
 
 test = test_create_data.copy()
 
-test['sim_func'] = ['dtw'] # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+test['sim_func'] = ['co-integration', 'sax'] # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
 test['window_len'] = [10]
 test['trans_func'] = [SAX()]
 
@@ -25,4 +25,3 @@ for d in exps:
 
     print('Elapsed: ', np.round(time.time() - es, 2), 's, total: ', np.round((time.time() - ts) / 60, 2), 'm', sep='')
 
-input()
