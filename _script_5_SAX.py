@@ -2,7 +2,7 @@ from main import *
 
 test = test_create_data.copy()
 
-test['sim_func'] = ['co-integration', 'sax'] # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+test['sim_func'] = ['euclidean', 'pearson'] # <-- 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
 test['window_len'] = [5]
 test['trans_func'] = [SAX()]
 
