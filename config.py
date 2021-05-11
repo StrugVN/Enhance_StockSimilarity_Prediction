@@ -108,7 +108,7 @@ base_test = {
     'similarity_col': ['Close_norm'],
     'sim_func': similarity_name,
     'fix_len_func': fix_length_name,
-    'k': [10, 25, 50],
+    'k': [],
     'next_t': [1],
     'selected_features': [
         ['Close_norm'], ['Close_proc'],
@@ -120,6 +120,49 @@ base_test = {
     'model_name': [''],
     'n_fold': [5],
     'eval_result_path': [''],
+    'norm_func': [StandardScaler()],
+    'trans_func': trans_funcs
+}
+
+best_5yr = {
+    'stock_list': [["JPM", "GOOGL", "DIS", "JNJ", "MMM", "KO", "GE"]],
+    'target_col': ['Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': ['co-integration'],
+    'fix_len_func': ['delay_time_join'],
+    'k': [10],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+    ],
+    'window_len': [10],  # 5, 10, 15
+    'model_name': ['XGBClassifier'],
+    'n_fold': [5],
+    'eval_result_path': ['5yr_best.csv'],
+    'norm_func': [StandardScaler()],
+    'trans_func': [SAX()]
+}
+
+XGB_tunning = {
+    'stock_list': [["GOOGL"]],
+    'target_col': [ # 'Close_norm',
+                   'Close_proc'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': similarity_name,
+    'fix_len_func': fix_length_name,
+    'k': [10, 25, 50],
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm'], ['Close_proc'],
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
+    ],
+    'window_len': [5, 10, 15],  # 5, 10, 15
+    'model_name': ['XGBClassifier'],
+    'n_fold': [5],
+    'eval_result_path': ['XGB_Classifier_tunning.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }

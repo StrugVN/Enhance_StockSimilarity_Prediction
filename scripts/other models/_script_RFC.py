@@ -6,7 +6,7 @@ test['k'] = [50]
 test['model_name'] = ['RandomForestClassifier']
 test['eval_result_path'] = ['RFClassifier_k50.csv']
 
-print('Running 50 RFClassifier_k50.csv')
+print('Running RFClassifier_k50.csv')
 
 # Iterate Experience
 ts = time.time()

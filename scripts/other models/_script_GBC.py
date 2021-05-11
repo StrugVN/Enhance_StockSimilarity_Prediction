@@ -6,7 +6,7 @@ test['k'] = [50]
 test['model_name'] = ['GradientBoostingClassifier']
 test['eval_result_path'] = ['GBClassifier_k50.csv']
 
-print('Running 50 GBClassifier_k50.csv')
+print('Running GBClassifier_k50.csv')
 
 # Iterate Experience
 ts = time.time()

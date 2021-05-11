@@ -6,7 +6,7 @@ test['k'] = [50]
 test['model_name'] = ['GradientBoostingRegressor']
 test['eval_result_path'] = ['GBRegressor_k50.csv']
 
-print('Running 50 BRegressor_k50.csv')
+print('Running BRegressor_k50.csv')
 
 # Iterate Experience
 ts = time.time()

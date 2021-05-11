@@ -68,11 +68,10 @@ for _df in folds_df:
 
     evals["sharpe_ratio"] = np.mean(profits) / (np.std([profits]) + 0.0001)
 
-    print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
+    # print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
 
     evals_list.append(evals)
     f_count += 1
 
 eval_df = pd.DataFrame(evals_list)
 print(np.mean(eval_df))
-input()

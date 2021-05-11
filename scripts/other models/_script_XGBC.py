@@ -6,7 +6,7 @@ test['k'] = [50]
 test['model_name'] = ['XGBClassifier']
 test['eval_result_path'] = ['XGBClassifier_k50.csv']
 
-print('Running 50 XGBClassifier_k50.csv')
+print('Running XGBClassifier_k50.csv')
 
 # Iterate Experience
 ts = time.time()
