@@ -1,12 +1,8 @@
 from main import *
 
-test = base_test.copy()
+test = recreate_data_SAX_proc.copy()
 
-test['k'] = [10, 25, 50]
-test['model_name'] = ['RandomForestRegressor']
-test['eval_result_path'] = ['5yrRFRegressor.csv']
-
-print('Running 5yrRFRegressor_k.csv')
+test['window_len'] = [10]
 
 # Iterate Experience
 ts = time.time()

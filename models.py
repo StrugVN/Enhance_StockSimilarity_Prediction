@@ -84,7 +84,7 @@ def trainGBC(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
     return model
 
 
-def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.01, n_estimators=100, es=False):
+def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.02, n_estimators=100, es=False):
     model = XGBRegressor(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
@@ -100,17 +100,8 @@ def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.01, n_estimators=100
     return model
 
 
-def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=False):
-    # model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
-    model = XGBClassifier(scale_pos_weight=1,
-                          learning_rate=lr,
-                          colsample_bytree=1,
-                          subsample=0.8,
-                          objective=obj,
-                          n_estimators=n_estimators,
-                          reg_alpha=0.3,
-                          max_depth=4,
-                          gamma=1)
+def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.02, n_estimators=100, es=False):
+    model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
         eval_set = [(X_val, y_val)]

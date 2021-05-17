@@ -2,11 +2,12 @@ from main import *
 
 test = base_test.copy()
 
-test['k'] = [50]
+test['k'] = [10, 25, 50]
 test['model_name'] = ['XGBRegressor']
-test['eval_result_path'] = ['XGBRegressor_k50.csv']
+test['eval_result_path'] = ['5yrXGBRegressor_k50.csv']
 
-print('Running XGBRegressor_k50.csv')
+print(data_name)
+print('Running 5yrXGBRegressor.csv')
 
 # Iterate Experience
 ts = time.time()

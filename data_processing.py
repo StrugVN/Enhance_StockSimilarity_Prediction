@@ -10,15 +10,15 @@ from financial_features import *
 from similarity_functions import *
 
 
-def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_func,
+def cal_other_stock_similarity(df_stocks, stock_to_compare, stock_names, similarity_func, proc_w,
                                fix_len_func=time_join, similarity_col=const_target_col):
     similarities = []
     stock_df = df_stocks[df_stocks[const_name_col] == stock_to_compare]
-    stock_df, _, _ = cal_financial_features(stock_df, StandardScaler())
+    stock_df, _, _ = cal_financial_features(stock_df, proc_w, StandardScaler())
 
     for stock_name in stock_names:
         other_stock_df = df_stocks[df_stocks[const_name_col] == stock_name]
-        other_stock_df, _, _ = cal_financial_features(other_stock_df, StandardScaler())
+        other_stock_df, _, _ = cal_financial_features(other_stock_df, proc_w, StandardScaler())
 
         similarities.append(similarity_func(stock_df, other_stock_df, fix_len_func, similarity_col))
 
@@ -51,14 +51,14 @@ def normalize_similarity(top_stocks, stock_to_compare):
     return top_stock_w
 
 
-def cal_financial_features(data, norm_func=None, next_t=1, re_fit=True):
+def cal_financial_features(data, proc_w, norm_func=None, next_t=1, re_fit=True):
     feature_df = data[[const_time_col, const_name_col, const_target_col]].copy()
 
     numeric_cols = data.select_dtypes(
         include=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns.tolist()
     # for c in numeric_cols:
     #    feature_df[c + '_proc'] = PROC(data[c])
-    feature_df['Close_proc'] = PROC(data['Close'], next_t)
+    feature_df['Close_proc'] = PROC(data['Close'], proc_w,  next_t)
 
     feature_df['rsi'] = rsiFunc(data['Close'])  # Relative strength index
     feature_df['MACD'] = computeMACD(data['Close'])[2]  # Moving Average Convergence/Divergence
@@ -110,9 +110,9 @@ def split_train_test_set(data, stock, stock_names, ratio):
     return train_df, test_df
 
 
-def prepare_time_point(data, selected_features, next_t, target_col,
+def prepare_time_point(data, selected_features, next_t, target_col, proc_w,
                        norm_func=None, trans_func=None, re_fit=True):
-    data, scaler, scaler_col = cal_financial_features(data, norm_func, next_t, re_fit)
+    data, scaler, scaler_col = cal_financial_features(data, proc_w, norm_func, next_t, re_fit)
     if 'Close_proc' in selected_features:
         data = data.iloc[next_t:]
 
@@ -168,9 +168,9 @@ def prepare_time_point(data, selected_features, next_t, target_col,
     return X_df, Y_df, Price_df, Proc_df, t0_price, scaler, scaler_col, None
 
 
-def prepare_time_window(data, selected_features, w_len, next_t, target_col,
+def prepare_time_window(data, selected_features, w_len, next_t, target_col, proc_w,
                         norm_func=None, trans_func=None, re_fit=True):
-    data, scaler, scaler_col = cal_financial_features(data, norm_func, next_t, re_fit)
+    data, scaler, scaler_col = cal_financial_features(data, proc_w, norm_func, next_t, re_fit)
 
     if 'Close_proc' in selected_features:
         data = data.iloc[next_t:]
@@ -240,16 +240,16 @@ def prepare_time_window(data, selected_features, w_len, next_t, target_col,
 
 
 def prepare_train_test_data(data, selected_features, comparing_stock, w_len, next_t, target_col,
-                            top_stock, weighted_sampling=False, is_test=False,
+                            top_stock, proc_w, weighted_sampling=False, is_test=False,
                             norm_func=None, trans_func=None):
     if w_len > 1:
         X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols, transformer = prepare_time_window(
             data[data[const_name_col] == comparing_stock],
-            selected_features, w_len, next_t, target_col, norm_func, trans_func, re_fit=not is_test)
+            selected_features, w_len, next_t, target_col, proc_w, norm_func, trans_func, re_fit=not is_test)
     else:
         X_df, Y_df, Prices_df, Proc_df, t_0, scaler, scaler_cols, transformer = prepare_time_point(
             data[data[const_name_col] == comparing_stock],
-            selected_features, next_t, target_col, norm_func, trans_func, re_fit=not is_test)
+            selected_features, next_t, target_col, proc_w, norm_func, trans_func, re_fit=not is_test)
 
     if not is_test and top_stock is not None:
         _scaler, _transformer = None, None
@@ -272,11 +272,11 @@ def prepare_train_test_data(data, selected_features, comparing_stock, w_len, nex
             if w_len > 1:
                 sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _, _ = \
                     prepare_time_window(stock_df, selected_features, w_len, next_t,
-                                        target_col, _scaler, _transformer)
+                                        target_col, proc_w, _scaler, _transformer)
             else:
                 sim_stock_X, sim_stock_Y, sim_stock_Prices, sim_stock_Proc, _, _, _, _ = \
                     prepare_time_point(stock_df, selected_features, next_t,
-                                       target_col, _scaler, _transformer)
+                                       target_col, proc_w, _scaler, _transformer)
 
             if weighted_sampling:
                 np.random.seed(0)

@@ -1,11 +1,11 @@
 import numpy as np
 
 
-def PROC(values, next_t=1):
+def PROC(values, proc_w, next_t=1):
     changes = values.pct_change(periods=next_t)
     for i in range(next_t):
         changes.iloc[i] = 0
-    return changes
+    return changes*proc_w
 
 
 # Relative strength index

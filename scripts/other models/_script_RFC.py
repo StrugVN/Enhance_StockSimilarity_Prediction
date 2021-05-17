@@ -2,11 +2,11 @@ from main import *
 
 test = base_test.copy()
 
-test['k'] = [50]
+test['k'] = [10, 25, 50]
 test['model_name'] = ['RandomForestClassifier']
-test['eval_result_path'] = ['RFClassifier_k50.csv']
+test['eval_result_path'] = ['5yrRFClassifier.csv']
 
-print('Running RFClassifier_k50.csv')
+print('Running 5yrRFClassifier.csv')
 
 # Iterate Experience
 ts = time.time()

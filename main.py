@@ -125,15 +125,24 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                         'fold={8}.pkl'.format(stock, similarity_col, k,
                                               ft, window_len, target_col, next_t, trans_name, f_count)
 
-            if os.path.isfile(train_path):
+            force = False
+            proc_w = 1
+            if trans_func.__class__.__name__ == SAX().__class__.__name__:
+                print('      fixing SAX and PROC')
+                proc_w = 20
+                force = True
+
+            if os.path.isfile(train_path) and not force:
                 _train_data = pickle.load(open(train_path, 'rb'))
                 train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer = _train_data
             else:
                 train_X, train_Y, train_price_Y, bin_train_Y, _, scaler, scaler_cols, transformer = \
                     prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
-                                            target_col, top_stock_norm, weighted_sampling=True,
+                                            target_col, top_stock_norm, proc_w, weighted_sampling=True,
                                             norm_func=norm_func, trans_func=trans_func)
                 if k != 0:
+                    if os.path.exists(train_path):
+                        os.remove(train_path)
                     print('   Saving training data')
                     pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
                                 open(train_path, 'wb+'))
@@ -142,16 +151,18 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
             # else:
             #    bin_train_Y = np.sign(train_Y)
-            if os.path.isfile(test_path):
+            if os.path.isfile(test_path) and not force:
                 _test_data = pickle.load(open(test_path, 'rb'))
                 test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price = _test_data
             else:
                 test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price, _, _, _ = \
                     prepare_train_test_data(test_df,
                                             selected_features, stock, window_len, next_t, target_col, top_stock_norm,
-                                            is_test=True, norm_func=scaler, trans_func=transformer)
+                                            proc_w, is_test=True, norm_func=scaler, trans_func=transformer)
                 if k != 0:
                     print('   Saving test data')
+                    if os.path.exists(test_path):
+                        os.remove(test_path)
                     pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
                                 open(test_path, 'wb+'))
 
@@ -299,9 +310,9 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 if __name__ == "__main__":
     # Iterate Experience
     ts = time.time()
-    exps = expand_test_param(**XGB_tunning)
+    exps = expand_test_param(**recreate_data_SAX_proc)
     count, exp_len = 1, len(exps)
-    print(' ============= Total: {} ============= '.format(exp_len))
+    print(' ============= Total: {0} - {1} ============= '.format(exp_len, data_name))
     for d in exps:
         es = time.time()
         print('\nRunning test param: {0}/{1}'.format(count, exp_len))

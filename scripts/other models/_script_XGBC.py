@@ -2,11 +2,12 @@ from main import *
 
 test = base_test.copy()
 
-test['k'] = [50]
+test['k'] = [10, 25, 50]
 test['model_name'] = ['XGBClassifier']
-test['eval_result_path'] = ['XGBClassifier_k50.csv']
+test['eval_result_path'] = ['5yrXGBClassifier_k50.csv']
 
-print('Running XGBClassifier_k50.csv')
+print(data_name)
+print('Running 5yrXGBClassifier.csv')
 
 # Iterate Experience
 ts = time.time()
