@@ -1,9 +1,12 @@
 from main import *
 
-test = recreate_data_SAX_proc.copy()
+test = base_test.copy()
 
-test['window_len'] = [15]
-test['sim_func'] = ['co-integration']
+test['k'] = [10, 25, 50]
+test['model_name'] = ['GradientBoostingClassifier']
+test['eval_result_path'] = ['5yrGBClassifier.csv']
+
+print('Running 5yrGBClassifier.csv')
 
 # Iterate Experience
 ts = time.time()

@@ -130,7 +130,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             if trans_func.__class__.__name__ == SAX().__class__.__name__:
                 print('      fixing SAX and PROC')
                 proc_w = 20
-                force = True
+                # force = True
 
             if os.path.isfile(train_path) and not force:
                 _train_data = pickle.load(open(train_path, 'rb'))
