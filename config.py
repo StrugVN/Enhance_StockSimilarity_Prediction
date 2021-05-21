@@ -80,20 +80,16 @@ test_create_data = {
 
 recreate_data_SAX_proc = {
     'stock_list': [["GOOGL"]],
-    'target_col': ['Close_norm',
-                   'Close_proc'],
+    'target_col': ['Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['co-integration'],  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    'sim_func': ['pearson'],  # 'euclidean', 'pearson', |'co-integration', 'sax', 'dtw'
     'fix_len_func': fix_length_name,  # 'padding', 'time_join', 'delay_time_join', 'pip'
     'k': [10, 25, 50],  # 10, 25, 50 |
     'next_t': [1],
     'selected_features': [
         ['Close_proc'],
-        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-        ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [],  # 5, 10, 15 |
+    'window_len': [5, 10, 15],  # 5, 10, 15 |
     'model_name': ['GradientBoostingRegressor'],
     'n_fold': [5],
     'eval_result_path': ['create_data_test.csv'],
