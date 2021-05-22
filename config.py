@@ -82,7 +82,7 @@ recreate_data_SAX_proc = {
     'stock_list': [["GOOGL"]],
     'target_col': ['Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['pearson'],  # 'euclidean', 'pearson', |'co-integration', 'sax', 'dtw'
+    'sim_func': ['euclidean', 'pearson', 'co-integration', 'sax', 'dtw'],  # 'euclidean', 'pearson', |'co-integration', 'sax', 'dtw'
     'fix_len_func': fix_length_name,  # 'padding', 'time_join', 'delay_time_join', 'pip'
     'k': [10, 25, 50],  # 10, 25, 50 |
     'next_t': [1],
