@@ -4,9 +4,9 @@ test = base_test.copy()
 
 test['k'] = [10, 25, 50]
 test['model_name'] = ['RandomForestRegressor']
-test['eval_result_path'] = ['5yrRFRegressor.csv']
+test['eval_result_path'] = ['RFRegressor.csv']
 
-print('Running 5yrRFRegressor.csv')
+print('Running RFRegressor.csv')
 
 # Iterate Experience
 ts = time.time()

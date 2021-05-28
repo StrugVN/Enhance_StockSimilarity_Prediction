@@ -128,9 +128,9 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             force = False
             proc_w = 1
             if trans_func.__class__.__name__ == SAX().__class__.__name__:
-                print('      fixing SAX and PROC')
+                #print('      fixing SAX and PROC')
                 proc_w = 20
-                force = True
+                #force = True
 
             if os.path.isfile(train_path) and not force:
                 _train_data = pickle.load(open(train_path, 'rb'))
@@ -167,8 +167,8 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                                 open(test_path, 'wb+'))
 
             ############# DELETE THIS ###########
-            f_count += 1
-            continue
+            #f_count += 1
+            #continue
             #####################################
 
             # if 'proc' not in target_col:
@@ -252,7 +252,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             f_count += 1
 
     ############# DELETE THIS ###########
-    return
+    #return
     #####################################
 
     # Save evaluation
@@ -310,7 +310,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 if __name__ == "__main__":
     # Iterate Experience
     ts = time.time()
-    exps = expand_test_param(**recreate_data_SAX_proc)
+    exps = expand_test_param(**model_tunning)
     count, exp_len = 1, len(exps)
     print(' ============= Total: {0} - {1} ============= '.format(exp_len, data_name))
     for d in exps:

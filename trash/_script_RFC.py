@@ -3,10 +3,10 @@ from main import *
 test = base_test.copy()
 
 test['k'] = [10, 25, 50]
-test['model_name'] = ['GradientBoostingClassifier']
-test['eval_result_path'] = ['5yrGBClassifier.csv']
+test['model_name'] = ['RandomForestClassifier']
+test['eval_result_path'] = ['RFClassifier.csv']
 
-print('Running 5yrGBClassifier.csv')
+print('Running RFClassifier.csv')
 
 # Iterate Experience
 ts = time.time()

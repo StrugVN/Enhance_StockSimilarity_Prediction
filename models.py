@@ -100,7 +100,7 @@ def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.02, n_estimators=100
     return model
 
 
-def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.02, n_estimators=100, es=False):
+def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=False):
     model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
@@ -130,5 +130,14 @@ def trainLSTM(train_X, train_Y, config=None):
     if os.path.exists("LSTM_cp.hdf5"):
         model.load_weights('LSTM_cp.hdf5')
         os.remove("LSTM_cp.hdf5")
+
+    return model
+
+
+def hyper_tunning(train_X, train_Y, n_estimators=100, lr=0.02):
+    print('\t\t\t test tuning GBR', n_estimators, lr)
+    model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
+
+    model.fit(train_X, train_Y.values.ravel())
 
     return model

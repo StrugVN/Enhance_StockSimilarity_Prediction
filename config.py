@@ -27,7 +27,8 @@ fit_model_funcs = {'RandomForestRegressor': trainRFR,
                    'LSTM': trainLSTM,
                    'XGBClassifier': trainXGBClassifier,
                    'GradientBoostingClassifier': trainGBC,
-                   'RandomForestClassifier': trainRFC
+                   'RandomForestClassifier': trainRFC,
+                   'tuning': hyper_tunning
                    }
 fit_model_name = ['RandomForestRegressor', 'GradientBoostingRegressor', 'XGBRegressor', 'LSTM',
                   'XGBClassifier', 'GradientBoostingClassifier', 'RandomForestClassifier']
@@ -162,13 +163,13 @@ paper_best = {
     'trans_func': [SAX()]
 }
 
-XGB_tunning = {
+model_tunning = {
     'stock_list': [["GOOGL"]],
-    'target_col': [ # 'Close_norm',
+    'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': similarity_name,
-    'fix_len_func': fix_length_name,
+    'sim_func': ['co-integration', 'sax'],
+    'fix_len_func': ['time_join'],
     'k': [10, 25, 50],
     'next_t': [1],
     'selected_features': [
@@ -178,9 +179,9 @@ XGB_tunning = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['XGBClassifier'],
+    'model_name': ['tuning'],
     'n_fold': [5],
-    'eval_result_path': ['XGB_Classifier_tunning.csv'],
+    'eval_result_path': ['5yr_GBR_tuning.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }

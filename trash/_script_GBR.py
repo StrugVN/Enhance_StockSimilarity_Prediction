@@ -1,8 +1,12 @@
 from main import *
 
-test = recreate_data_SAX_proc.copy()
+test = base_test.copy()
 
-test['window_len'] = [15]
+test['k'] = [10, 25, 50]
+test['model_name'] = ['GradientBoostingRegressor']
+test['eval_result_path'] = ['GBRegressor.csv']
+
+print('Running 5yrBRegressor.csv')
 
 # Iterate Experience
 ts = time.time()
