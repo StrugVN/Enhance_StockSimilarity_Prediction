@@ -1,7 +1,4 @@
 import time
-import os
-from datetime import datetime
-
 from data_processing import *
 from util.misc import *
 from config import *
@@ -11,7 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_s
 def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_features,
             window_len, model_name, eval_result_path, n_fold, similarity_col, norm_func, trans_func):
     is_classifier = ('Classifier' in model_name)
-
+    print('\t\t - ', data_name)
     df = read_data('data/' + data_name + '.csv')
 
     evals_list = []
@@ -115,22 +112,34 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             if not os.path.exists('train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func):
                 os.makedirs('train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func)
 
-            train_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
-                         '/train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
-                         'fold={8}.pkl'.format(stock, similarity_col, k,
-                                               ft, window_len, target_col, next_t, trans_name, f_count)
+            if k != 0:
+                train_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
+                             '/train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                             'fold={8}.pkl'.format(stock, similarity_col, k,
+                                                   ft, window_len, target_col, next_t, trans_name, f_count)
 
-            test_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
-                        '/test_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
-                        'fold={8}.pkl'.format(stock, similarity_col, k,
-                                              ft, window_len, target_col, next_t, trans_name, f_count)
+                test_path = 'train_test_data/' + data_name + '/' + sim_func + '/' + fix_len_func + \
+                            '/test_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                            'fold={8}.pkl'.format(stock, similarity_col, k,
+                                                  ft, window_len, target_col, next_t, trans_name, f_count)
+            else:
+                print('\t\tk=0 ', end='')
+                train_path = 'train_test_data/' + data_name + '/' + \
+                             'train_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                             'fold={8}.pkl'.format(stock, similarity_col, k,
+                                                   ft, window_len, target_col, next_t, trans_name, f_count)
+
+                test_path = 'train_test_data/' + data_name + '/' + \
+                            'test_{0}_simcol={1}_k={2}_ft={3}_w={4}_pred={5}_t={6}_trans={7}_' \
+                            'fold={8}.pkl'.format(stock, similarity_col, k,
+                                                  ft, window_len, target_col, next_t, trans_name, f_count)
 
             force = False
             proc_w = 1
             if trans_func.__class__.__name__ == SAX().__class__.__name__:
-                #print('      fixing SAX and PROC')
+                # print('      fixing SAX and PROC')
                 proc_w = 20
-                #force = True
+                # force = True
 
             if os.path.isfile(train_path) and not force:
                 _train_data = pickle.load(open(train_path, 'rb'))
@@ -140,12 +149,12 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     prepare_train_test_data(train_df, selected_features, stock, window_len, next_t,
                                             target_col, top_stock_norm, proc_w, weighted_sampling=True,
                                             norm_func=norm_func, trans_func=trans_func)
-                if k != 0:
-                    if os.path.exists(train_path):
-                        os.remove(train_path)
-                    print('   Saving training data')
-                    pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
-                                open(train_path, 'wb+'))
+
+                if os.path.exists(train_path):
+                    os.remove(train_path)
+                print('   Saving training data')
+                pickle.dump((train_X, train_Y, train_price_Y, bin_train_Y, scaler, scaler_cols, transformer),
+                            open(train_path, 'wb+'))
 
             # if 'proc' not in target_col:
             #     bin_train_Y = get_y_bin(train_X, train_Y.to_numpy(), window_len, target_col)
@@ -159,16 +168,16 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                     prepare_train_test_data(test_df,
                                             selected_features, stock, window_len, next_t, target_col, top_stock_norm,
                                             proc_w, is_test=True, norm_func=scaler, trans_func=transformer)
-                if k != 0:
-                    print('   Saving test data')
-                    if os.path.exists(test_path):
-                        os.remove(test_path)
-                    pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
-                                open(test_path, 'wb+'))
+
+                print('   Saving test data')
+                if os.path.exists(test_path):
+                    os.remove(test_path)
+                pickle.dump((test_X, test_Y, test_price_Y, bin_test_Y, test_t0_price),
+                            open(test_path, 'wb+'))
 
             ############# DELETE THIS ###########
-            #f_count += 1
-            #continue
+            # f_count += 1
+            # continue
             #####################################
 
             # if 'proc' not in target_col:
@@ -180,12 +189,13 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                 raise ValueError(model_name + ' is not available')
 
             if not is_classifier:
-                if 'LSTM' in model_name:
-                    # -- Test --
-                    # if 'proc' in target_col:
-                    #    train_Y['1'] = train_Y['1']*100
-                    #    test_Y['1'] = test_Y['1']*100
+                if 'LSTM' in model_name:  # or 'tuning' in model_name:
+                    # print('\tUsing tunning as LSTM!', end='')
+                    #if 'proc' in target_col:
+                    #    train_Y['1'] = train_Y['1'] * 100
+                    #    test_Y['1'] = test_Y['1'] * 100
                     # ----------
+
                     model = fit_model_funcs[model_name](train_X, train_Y)
 
                     pred_Y = model.predict(test_X.to_numpy().reshape(-1, 1, test_X.shape[1]))
@@ -247,12 +257,12 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
             else:
                 evals['folds result'] = '-'
 
-            print({key: round(evals[key], 3) if not isinstance(evals[key], str) else evals[key] for key in evals})
+            print('', round(evals["long_short_profit"], 3), round(evals["BLSH_profit"], 3), sep='\t')
             evals_list.append(evals)
             f_count += 1
 
     ############# DELETE THIS ###########
-    #return
+    # return
     #####################################
 
     # Save evaluation
@@ -281,6 +291,7 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
                                                      np.mean(eval_df['L_order_count'])), 3)
 
     folds_result = ''.join(eval_df['folds result'])
+    print(' mean MLS:', mean_profit, '| mean ML:', mean_L_profit, '| fr:', folds_result)
 
     if trans_func is None:
         trans_func_name = 'None'
@@ -308,9 +319,17 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 
 
 if __name__ == "__main__":
+    Const.const_LSTM_saved_weight = 'lstm_w.hdf5'
+
+    test = base_test.copy()
+
+    test['eval_result_path'] = ['LSTM_.csv']
+
+    data_name = 'all_stocks_last_1yr'
+
     # Iterate Experience
     ts = time.time()
-    exps = expand_test_param(**model_tunning)
+    exps = expand_test_param(**test)
     count, exp_len = 1, len(exps)
     print(' ============= Total: {0} - {1} ============= '.format(exp_len, data_name))
     for d in exps:
@@ -319,7 +338,8 @@ if __name__ == "__main__":
         print(d)
         count += 1
         if (d['selected_features'] == ['Close_proc'] and d['target_col'] == 'Close_norm') \
-                or (d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
+                or (
+                d['trans_func'].__class__.__name__ == PCA().__class__.__name__ and len(d['selected_features']) < 4):
             print('     Skipped')
             continue
 

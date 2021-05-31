@@ -1,4 +1,5 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from keras import callbacks
 from sklearn.ensemble import *
@@ -7,16 +8,24 @@ from xgboost import XGBRegressor, XGBClassifier
 from keras.models import Sequential, load_model
 from keras.layers import Dense, LSTM, Dropout
 from keras.optimizers import Adam
+import numpy as np
+import tensorflow as tf
+
+import Const
+
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 """ LSTM Configuration """
 
 
-def create_LSTM(input_shape, lr=0.01, output_shape=1, loss='mse'):
+def create_LSTM(input_shape, lr=0.02, output_shape=1, loss='mse'):
+    np.random.seed(0)
+    tf.random.set_seed(0)
     model = Sequential()
-    model.add(LSTM(units=100, return_sequences=True, input_shape=input_shape))
-    model.add(LSTM(units=100, return_sequences=False))
-    model.add(Dropout(0.25))
-    model.add(Dense(units=100))
+    model.add(LSTM(units=50, return_sequences=True, input_shape=input_shape))
+    model.add(LSTM(units=50, return_sequences=False))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=50))
     model.add(Dense(units=output_shape))
     model.compile(optimizer=Adam(lr=lr), loss=loss)
     return model
@@ -27,8 +36,8 @@ LSTM_train_only_config = {'batch_size': 32,
                           'epochs': 100,
                           # 'callbacks': callbacks.EarlyStopping(monitor="loss", mode="min", patience=15,
                           #                                      restore_best_weights=True, verbose=2),
-                          'callbacks': callbacks.ModelCheckpoint('LSTM_cp.hdf5', monitor='loss', verbose=0,
-                                                                 save_best_only=True, save_weights_only=True,
+                          'callbacks': callbacks.ModelCheckpoint(Const.const_LSTM_saved_weight, monitor='loss',
+                                                                 verbose=0, save_best_only=True, save_weights_only=True,
                                                                  mode='min')
                           }
 
@@ -38,8 +47,9 @@ LSTM_with_val_config = {'batch_size': 32,
                         'validation_split': 0.2,
                         # 'callbacks': callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=15,
                         #                                     restore_best_weights=True, verbose=2),
-                        'callbacks': callbacks.ModelCheckpoint('LSTM_cp.hdf5', monitor='val_loss', verbose=0,
-                                                               save_best_only=True, save_weights_only=True, mode='min')
+                        'callbacks': callbacks.ModelCheckpoint(Const.const_LSTM_saved_weight, monitor='val_loss',
+                                                               verbose=0, save_best_only=True, save_weights_only=True,
+                                                               mode='min')
                         }
 """ ---------------------------------------------------------------------------------------------------- """
 
@@ -116,9 +126,17 @@ def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estim
     return model
 
 
-def trainLSTM(train_X, train_Y, config=None):
-    if config is None:
-        config = LSTM_with_val_config
+def trainLSTM(train_X, train_Y):
+    config = {'batch_size': 32,
+              'verbose': 0,
+              'epochs': 100,
+              'validation_split': 0.2,
+              # 'callbacks': callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=15,
+              #                                     restore_best_weights=True, verbose=2),
+              'callbacks': callbacks.ModelCheckpoint(Const.const_LSTM_saved_weight, monitor='val_loss',
+                                                     verbose=0, save_best_only=True, save_weights_only=True,
+                                                     mode='min')
+              }
 
     model = create_LSTM((1, train_X.shape[1]))
 
@@ -127,17 +145,13 @@ def trainLSTM(train_X, train_Y, config=None):
 
     model.fit(reshaped_X_p, reshaped_Y_p, **config)
 
-    if os.path.exists("LSTM_cp.hdf5"):
-        model.load_weights('LSTM_cp.hdf5')
-        os.remove("LSTM_cp.hdf5")
+    print('     reload best weight from', Const.const_LSTM_saved_weight)
+    if os.path.exists(Const.const_LSTM_saved_weight):
+        model.load_weights(Const.const_LSTM_saved_weight)
+        os.remove(Const.const_LSTM_saved_weight)
 
     return model
 
 
-def hyper_tunning(train_X, train_Y, n_estimators=100, lr=0.02):
-    print('\t\t\t test tuning GBR', n_estimators, lr)
-    model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
-
-    model.fit(train_X, train_Y.values.ravel())
-
-    return model
+def hyper_tunning(train_X, train_Y):
+    raise ValueError()

@@ -114,9 +114,9 @@ base_k0_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': fit_model_name,
+    'model_name': ['LSTM'],
     'n_fold': [5],
-    'eval_result_path': ['k0_test.csv'],
+    'eval_result_path': ['5yr_lstm_test.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -126,9 +126,9 @@ base_test = {
     'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': similarity_name,
-    'fix_len_func': fix_length_name,
-    'k': [],
+    'sim_func': ['co-integration'],  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    'fix_len_func': ['time_join'],  # 'padding', 'time_join', 'delay_time_join', 'pip'
+    'k': [10, 25, 50],
     'next_t': [1],
     'selected_features': [
         ['Close_norm'], ['Close_proc'],
@@ -137,9 +137,9 @@ base_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': [''],
+    'model_name': ['LSTM'],
     'n_fold': [5],
-    'eval_result_path': [''],
+    'eval_result_path': ['5yrLSTM_test_.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -173,15 +173,15 @@ model_tunning = {
     'k': [10, 25, 50],
     'next_t': [1],
     'selected_features': [
-        ['Close_norm'], ['Close_proc'],
+        #['Close_norm'], ['Close_proc'],
         ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-        ['Close_norm', 'rsi_norm', 'MA_norm']
+        #['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
     'model_name': ['tuning'],
     'n_fold': [5],
-    'eval_result_path': ['5yr_GBR_tuning.csv'],
+    'eval_result_path': ['5yr_LSTM_tuning_procw_20.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': trans_funcs
+    'trans_func': [None] #trans_funcs
 }
