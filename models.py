@@ -129,7 +129,7 @@ def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.02, n_estim
 
 
 def trainLSTM(train_X, train_Y):
-    config = {'batch_size': 32,
+    config = {'batch_size': 16,
               'verbose': 0,
               'epochs': 100,
               'validation_split': 0.2,
