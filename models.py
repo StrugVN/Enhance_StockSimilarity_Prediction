@@ -70,7 +70,7 @@ def trainRFC(train_X, train_Y, n_estimators=100):
     return model
 
 
-def trainGBR(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
+def trainGBR(train_X, train_Y, n_estimators=700, lr=0.02, es=False):
     if not es:
         model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=0)
     else:
@@ -93,8 +93,10 @@ def trainGBC(train_X, train_Y, n_estimators=100, lr=0.02, es=False):
 
     return model
 
-
-def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.02, n_estimators=100, es=False):
+# 4am 100 0.02
+#
+#
+def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.02, n_estimators=300, es=False):
     model = XGBRegressor(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)
@@ -110,7 +112,7 @@ def trainXGB(train_X, train_Y, obj='reg:squarederror', lr=0.02, n_estimators=100
     return model
 
 
-def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.01, n_estimators=100, es=False):
+def trainXGBClassifier(train_X, train_Y, obj='binary:logistic', lr=0.02, n_estimators=300, es=False):
     model = XGBClassifier(objective=obj, learning_rate=lr, n_estimators=n_estimators, random_state=0)
     if es:
         X_train, X_val, y_train, y_val = train_test_split(train_X, train_Y, test_size=0.2, random_state=0)

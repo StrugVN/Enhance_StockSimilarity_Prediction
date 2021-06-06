@@ -9,7 +9,7 @@ main.data_name = 'all_stocks_last_1yr'
 test = base_test.copy()
 
 test['sim_func'] = ['co-integration']  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
-test['fix_len_func'] = ['time_join']  # 'padding', 'time_join', 'delay_time_join', 'pip'
+test['fix_len_func'] = ['padding']  # 'padding', 'time_join', 'delay_time_join', 'pip'
 test['eval_result_path'] = ['LSTM_module1.csv']
 
 ts = time.time()

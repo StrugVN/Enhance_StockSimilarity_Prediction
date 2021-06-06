@@ -114,9 +114,9 @@ base_k0_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['LSTM'],
+    'model_name': ['GradientBoostingRegressor'],
     'n_fold': [5],
-    'eval_result_path': ['5yr_lstm_test.csv'],
+    'eval_result_path': ['5yr_XGBC_k=0.csv'],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -165,23 +165,23 @@ paper_best = {
 
 model_tunning = {
     'stock_list': [["GOOGL"]],
-    'target_col': ['Close_norm',
+    'target_col': [#'Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['co-integration', 'sax'],
+    'sim_func': ['co-integration'],
     'fix_len_func': ['time_join'],
-    'k': [10, 25, 50],
+    'k': [25],
     'next_t': [1],
     'selected_features': [
         #['Close_norm'], ['Close_proc'],
-        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
-         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
-        #['Close_norm', 'rsi_norm', 'MA_norm']
+        #['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+        # 'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+        ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['tuning'],
+    'window_len': [5],  # 5, 10, 15
+    'model_name': ['LSTM'],
     'n_fold': [5],
-    'eval_result_path': ['5yr_LSTM_tuning_procw_20.csv'],
+    'eval_result_path': ['___.csv'],
     'norm_func': [StandardScaler()],
-    'trans_func': [None] #trans_funcs
+    'trans_func': [SAX()] #trans_funcs
 }
