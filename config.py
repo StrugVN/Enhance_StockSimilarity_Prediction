@@ -114,9 +114,9 @@ base_k0_test = {
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
     'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['GradientBoostingRegressor'],
+    'model_name': fit_model_name,
     'n_fold': [5],
-    'eval_result_path': ['5yr_XGBC_k=0.csv'],
+    'eval_result_path': [],
     'norm_func': [StandardScaler()],
     'trans_func': trans_funcs
 }
@@ -126,22 +126,22 @@ base_test = {
     'target_col': ['Close_norm',
                    'Close_proc'],
     'similarity_col': ['Close_norm'],
-    'sim_func': ['co-integration'],  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
-    'fix_len_func': ['time_join'],  # 'padding', 'time_join', 'delay_time_join', 'pip'
-    'k': [10, 25, 50],
+    'sim_func': ['euclidean', 'pearson', 'co-integration', 'sax', 'dtw'], #  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    'fix_len_func': ['padding', 'time_join', 'delay_time_join', 'pip'], # # 'padding', 'time_join', 'delay_time_join', 'pip'
+    'k': [10, 25, 50], #
     'next_t': [1],
-    'selected_features': [
+    'selected_features': [ #
         ['Close_norm'], ['Close_proc'],
         ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
          'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
         ['Close_norm', 'rsi_norm', 'MA_norm']
     ],
-    'window_len': [5, 10, 15],  # 5, 10, 15
-    'model_name': ['LSTM'],
+    'window_len': [5, 10, 15],  #
+    'model_name': ['XGBRegressor'], #
     'n_fold': [5],
-    'eval_result_path': ['5yrLSTM_test_.csv'],
-    'norm_func': [StandardScaler()],
-    'trans_func': trans_funcs
+    'eval_result_path': ['_XGBC_.csv'],
+    'norm_func': [StandardScaler()], #
+    'trans_func': trans_funcs #
 }
 
 paper_best = {
@@ -149,8 +149,8 @@ paper_best = {
     'target_col': ['Close_proc'],
     'similarity_col': ['Close_norm'],
     'sim_func': ['co-integration'],
-    'fix_len_func': fix_length_name,
-    'k': [50],
+    'fix_len_func': fix_length_name, #
+    'k': [50], #
     'next_t': [1],
     'selected_features': [
         ['Close_proc'],
