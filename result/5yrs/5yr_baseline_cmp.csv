@@ -1,0 +1,9 @@
+﻿ model, mean_accuracy, std_accuracy, mean_f1, std_f1
+Baseline,0.55,0.05,0.495,0.096
+ GradientBoostingRegressor,0.5539,0.0176,0.4829,0.0745
+ GradientBoostingClassifier,0.5979,0.0712,0.5593,0.0912
+ RandomForestClassifier,0.5739,0.0389,0.5331,0.0607
+ RandomForestRegressor,0.5577,0.0589,0.5108,0.0795
+ LSTM,0.554,0.0572,0.4945,0.0898
+ XGBClassifier,0.5539,0.055,0.5382,0.0635
+ XGBRegressor,0.555,0.0676,0.5168,0.0952

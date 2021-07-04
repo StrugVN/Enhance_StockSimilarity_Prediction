@@ -321,15 +321,15 @@ def run_exp(stock_list, target_col, sim_func, fix_len_func, k, next_t, selected_
 if __name__ == "__main__":
     # Const.const_LSTM_saved_weight = 'lstm_w.hdf5'
 
-    test = base_k0_test.copy()
+    #test = base_k0_test.copy()
 
-    test['eval_result_path'] = ['k=0.csv']
+    #test['eval_result_path'] = ['k=0.csv']
 
-    data_name = 'all_stocks_last_1yr'
+    #data_name = 'all_stocks_last_1yr'
 
     # Iterate Experience
     ts = time.time()
-    exps = expand_test_param(**test)
+    exps = expand_test_param(**test_)
     count, exp_len = 1, len(exps)
     print(' ============= Total: {0} - {1} ============= '.format(exp_len, data_name))
     for d in exps:

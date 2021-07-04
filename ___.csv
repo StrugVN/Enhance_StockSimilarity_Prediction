@@ -1,3 +1,0 @@
-No. of features, selected_features, transformer, sim_func, fix_len_func, k stock, window_len, next_t, model, target_col, sim_col, mean_accuracy, std_accuracy, mean_f1, std_f1, mean_rmse, std_rmse, folds_result, mean_orders_count_per_hours, mean_sharpe_ratio, mean_profit_%, mean_profit, mean_L_orders_count_per_hours, mean_L_sharpe_ratio, mean_L_profit_%, mean_L_profit
-7, ['Close_norm'; 'Close_proc'; 'rsi_norm'; 'MACD_norm'; 'Open_Close_diff_norm'; 'High_Low_diff_norm'; 'Volume_norm'], None, sax, time_join, 10, 10, 1, LSTM, Close_proc, Close_norm, 0.4879, 0.0219, 0.4547, 0.0583, 0.008, 0.003, ----+, 0.175, 0.148, -1.672, -24.16, 0.013, 0.774, 2.893, 50.341
- 

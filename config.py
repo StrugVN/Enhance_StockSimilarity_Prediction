@@ -185,3 +185,23 @@ model_tunning = {
     'norm_func': [StandardScaler()],
     'trans_func': [SAX()] #trans_funcs
 }
+
+test_ = {
+    'stock_list': [["GOOGL"]],
+    'target_col': ['Close_norm'],
+    'similarity_col': ['Close_norm'],
+    'sim_func': ['co-integration'], #  # 'euclidean', 'pearson', 'co-integration', 'sax', 'dtw'
+    'fix_len_func': ['delay_time_join'], # # 'padding', 'time_join', 'delay_time_join', 'pip'
+    'k': [10], #
+    'next_t': [1],
+    'selected_features': [
+        ['Close_norm', 'Close_proc', 'rsi_norm', 'MACD_norm',
+         'Open_Close_diff_norm', 'High_Low_diff_norm', 'Volume_norm'],
+    ],
+    'window_len': [10],  #
+    'model_name': ['XGBClassifier'], #
+    'n_fold': [5],
+    'eval_result_path': ['_test_.csv'],
+    'norm_func': [StandardScaler()], #
+    'trans_func': [SAX()] #
+}

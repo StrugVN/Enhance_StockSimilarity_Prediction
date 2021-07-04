@@ -1,0 +1,1385 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20202.20.0721.1350                               -->
+<workbook original-version='18.1' source-build='2020.2.4 (20202.20.0721.1350)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption='1yr_compare' inline='true' name='federated.041o2gz1t65eto12ue5iu0f97v6v' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='1yr_compare' name='textscan.09pehiw1kr7nlk110uacj02w35t3'>
+            <connection class='textscan' directory='D:/Enhance_StockSimilarity_Prediction/result/1yr' filename='1yr_compare.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.09pehiw1kr7nlk110uacj02w35t3' name='1yr_compare.csv' table='[1yr_compare#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='model' ordinal='0' />
+            <column datatype='real' name='k0_LS_profit' ordinal='1' />
+            <column datatype='real' name='k0_L_profit' ordinal='2' />
+            <column datatype='real' name='LS_profit' ordinal='3' />
+            <column datatype='real' name='L_profit' ordinal='4' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.09pehiw1kr7nlk110uacj02w35t3' name='1yr_compare.csv' table='[1yr_compare#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='model' ordinal='0' />
+            <column datatype='real' name='k0_LS_profit' ordinal='1' />
+            <column datatype='real' name='k0_L_profit' ordinal='2' />
+            <column datatype='real' name='LS_profit' ordinal='3' />
+            <column datatype='real' name='L_profit' ordinal='4' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>model</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[model]</local-name>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias>model</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>k0_LS_profit</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[k0_LS_profit]</local-name>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias>k0_LS_profit</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>k0_L_profit</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[k0_L_profit]</local-name>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias>k0_L_profit</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>LS_profit</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[LS_profit]</local-name>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias>LS_profit</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>L_profit</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[L_profit]</local-name>
+            <parent-name>[1yr_compare.csv]</parent-name>
+            <remote-alias>L_profit</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='string' name='[:Measure Names]' role='dimension' type='nominal'>
+        <aliases>
+          <alias key='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;' value='không áp dụng' />
+          <alias key='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;' value='Không áp dụng' />
+          <alias key='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;' value='có áp dụng' />
+          <alias key='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;' value='Có áp dụng' />
+        </aliases>
+      </column>
+      <column caption='LS profit' datatype='real' name='[LS_profit]' role='measure' type='quantitative' />
+      <column caption='L profit' datatype='real' name='[L_profit]' role='measure' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='1yr_compare.csv' datatype='table' name='[__tableau_internal_object_id__].[1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4]' role='measure' type='quantitative' />
+      <column caption='k0 LS profit' datatype='real' name='[k0_LS_profit]' role='measure' type='quantitative' />
+      <column caption='k0 L profit' datatype='real' name='[k0_L_profit]' role='measure' type='quantitative' />
+      <column caption='Model' datatype='string' name='[model]' role='dimension' type='nominal' />
+      <column-instance column='[LS_profit]' derivation='Sum' name='[sum:LS_profit:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[L_profit]' derivation='Sum' name='[sum:L_profit:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[k0_LS_profit]' derivation='Sum' name='[sum:k0_LS_profit:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[k0_L_profit]' derivation='Sum' name='[sum:k0_L_profit:qk]' pivot='key' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</bucket>
+            </map>
+            <map to='#da323f'>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</bucket>
+            </map>
+            <map to='#da323f'>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Viet Nam&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='1yr_compare.csv' id='1yr_compare.csv_2F36F234527C4786948A65B3461EC9C4'>
+            <properties context=''>
+              <relation connection='textscan.09pehiw1kr7nlk110uacj02w35t3' name='1yr_compare.csv' table='[1yr_compare#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+                  <column datatype='string' name='model' ordinal='0' />
+                  <column datatype='real' name='k0_LS_profit' ordinal='1' />
+                  <column datatype='real' name='k0_L_profit' ordinal='2' />
+                  <column datatype='real' name='LS_profit' ordinal='3' />
+                  <column datatype='real' name='L_profit' ordinal='4' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='1yr_compare' name='federated.041o2gz1t65eto12ue5iu0f97v6v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.041o2gz1t65eto12ue5iu0f97v6v'>
+            <column caption='LS profit' datatype='real' name='[LS_profit]' role='measure' type='quantitative' />
+            <column caption='k0 LS profit' datatype='real' name='[k0_LS_profit]' role='measure' type='quantitative' />
+            <column caption='Model' datatype='string' name='[model]' role='dimension' type='nominal' />
+            <column-instance column='[model]' derivation='None' name='[none:model:nk]' pivot='key' type='nominal' />
+            <column-instance column='[LS_profit]' derivation='Sum' name='[sum:LS_profit:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[k0_LS_profit]' derivation='Sum' name='[sum:k0_LS_profit:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <manual-sort column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</bucket>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <slices>
+            <column>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]' scope='rows' value='Giá' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='width' field='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' value='80' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</rows>
+        <cols>([federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk] / [federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names])</cols>
+        <mark-labels>
+          <mark-label id='0' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>174.03700000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='1' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>130.03299999999999</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='2' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>162.03800000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='3' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>110.408</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='4' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;LSTM&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>92.043000000000006</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='5' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;LSTM&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>72.685000000000002</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='6' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>179.11600000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='7' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>109.726</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='8' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>164.85599999999999</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='9' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>113.63500000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='10' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>171.989</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='11' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>104.926</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='12' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:LS_profit:qk]&quot;</value>
+                <value>211.899</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='13' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_LS_profit:qk]&quot;</value>
+                <value>127.532</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+        </mark-labels>
+      </table>
+      <simple-id uuid='{DE771226-1F7E-4550-AD75-609BACD566DE}' />
+    </worksheet>
+    <worksheet name='Sheet 2'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='1yr_compare' name='federated.041o2gz1t65eto12ue5iu0f97v6v' />
+          </datasources>
+          <datasource-dependencies datasource='federated.041o2gz1t65eto12ue5iu0f97v6v'>
+            <column caption='L profit' datatype='real' name='[L_profit]' role='measure' type='quantitative' />
+            <column caption='k0 L profit' datatype='real' name='[k0_L_profit]' role='measure' type='quantitative' />
+            <column caption='Model' datatype='string' name='[model]' role='dimension' type='nominal' />
+            <column-instance column='[model]' derivation='None' name='[none:model:nk]' pivot='key' type='nominal' />
+            <column-instance column='[L_profit]' derivation='Sum' name='[sum:L_profit:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[k0_L_profit]' derivation='Sum' name='[sum:k0_L_profit:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <manual-sort column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</bucket>
+              <bucket>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <slices>
+            <column>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]' scope='rows' value='Giá' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='width' field='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' value='80' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</rows>
+        <cols>([federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk] / [federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names])</cols>
+        <mark-labels>
+          <mark-label id='0' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>149.30099999999999</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='1' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>127.29900000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='2' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>146.54900000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='3' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;GradientBoostingRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>112.527</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='4' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;LSTM&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>111.55200000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='5' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;LSTM&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>97.777000000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='6' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>151.97900000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='7' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>117.28400000000001</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='8' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>147.958</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='9' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;RandomForestRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>114.14</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='10' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>148.41499999999999</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='11' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBClassifier&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>109.786</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='12' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:L_profit:qk]&quot;</value>
+                <value>170.447</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+          <mark-label id='13' label-state='on'>
+            <tuple-reference>
+              <tuple-descriptor>
+                <pane-descriptor>
+                  <x-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  </x-fields>
+                  <y-fields>
+                    <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                  </y-fields>
+                </pane-descriptor>
+                <columns>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+                  <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[Multiple Values]</field>
+                </columns>
+              </tuple-descriptor>
+              <tuple>
+                <value>&quot;XGBRegressor&quot;</value>
+                <value>&quot;[federated.041o2gz1t65eto12ue5iu0f97v6v].[sum:k0_L_profit:qk]&quot;</value>
+                <value>125.2</value>
+              </tuple>
+            </tuple-reference>
+          </mark-label>
+        </mark-labels>
+      </table>
+      <simple-id uuid='{756DAB94-5D57-492C-9CA2-CE7CBB79D7E2}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{6141982E-D3B9-492F-9851-32B221873868}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Sheet 2'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[:Measure Names]</field>
+            <field>[federated.041o2gz1t65eto12ue5iu0f97v6v].[none:model:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{70994F36-1312-40B2-BB68-977520B91E80}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='Sheet 1' width='192'>
+      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
+      niSOytjHwXFqO/I9ZjuRoJjbYmVlg0ypBEB+a507swv7/KjEYGVhkfo+P6qRJGnP4TC/tc6N
+      mzfZzJQoZRLEUwUA9EaFxSfrL4yR2Hy1Q28z1EKBTCnP0vIKicRXscwGM7e/YLvY/KeilUyC
+      9e3ivrF3azN1lS9vf8H9+WVMvcHC4vLOa7e6tIiqf/NHJY18gu3Ka0vaw2YiQSa+yupSjNJX
+      tyXWFplfijV976r5bWKb2X3j7tFmNJi9e4u7cwuYpsHCwuJO7PWVZcovus5USpAoHuxERvnk
+      k08+OdAzX4FqtYrL5dpz28bSQ1ZSVUZ6/Nyfu0+hakKjRD5XwGWTuDM3T6lmkN9c5tHSKoGe
+      QWrZBKvJJG6vi5kb90iX60RCAfY7/VtdXefC5cu45Dpz84toWOkJelldfEy2qiOpeebnH2Ha
+      /bitGvfu3iORKaOYGm6pQiKV497cIsVag2pmg5nHTwgEI9itSlNt9WKOL+7cZeDMFJvLs6ys
+      buL1OYlvZbDYHCSW53gSS2K3wsz9GWqSg26Pjcfzj9EVG7nEEx4vxugK92C3NP9UzCXj2END
+      jEd7WFl4QDpXorunj3p+i9X1BC6Pi9kvZ0lmy0QiQWKLczx6/BjFakOzdpFOxthYeczSWgKX
+      w8LM/fvk6wrhbu++792j+7coSB56lBpfLj+hoVmo5rYo1TSKdY2l+XkcDgv3789S1mRCfhcL
+      8/PUsVLajvF4cQV3dwinrfnpTjm7jeEMMXVmgPXleba2c3RFBtDLaZ6sruNwu3g0O8fGdp6+
+      3jCJJ494+HAW7B402UVma4PN2BKLT2K43E5mvrxHpmIQCX79/Wa3tiM/Aji8AfxOiWrdYHz6
+      Em5rg1wJLowFWI9lGLnwNnapjCZ5GQg4qOuQSqWoFTOsJ7YJD05iNSq87HqzbOpU6xrpZJJw
+      dIJGJYepa6SyeRYXl1B1iUuXzlNIpynn8/QMnaU34CGfz1POpymVigxOfQunolPVZEb6/KiN
+      l42qMDQyQD6Xpys0wMWREEtPkkxceYtidgtnV4ixQT+JZIFz5ydRaxUMtUCmoLK0+ATT5mEy
+      GiJXqe07it1upVgsoaplilWFiaEukpkq6XSKejXNyvoWgYGzuFFpoFOuW7g4OYpeK1Cs1dlK
+      ZbB7A5yJhslspTlz7hyN2v5jAvjDfVgaFRrYuPj2u8jaNqrRRciroLvCTI8GiW3kmLp0kXq1
+      CI0iqVyN5cVlGoqT6TMD5IqlfcewWq2UyyVUtUq2aHB5IsT6Vpl8JkWtkuPJWoKuyAh+WUfF
+      IF81uTJ9FkMtUajW2Uqlsbi6mBrrJRNPEp26iFFvru3IDRAI9zA5OYEpKfhdLkKhXoYH/Cwk
+      dSanhvDbJMKhfkrbC9ycW8eiQDgcxh8ZJtrj4cn8LF2RKMpLvvyPjp9h+cEslu5eaukY4b4h
+      kC2EA91cuDCNrpaYebDCyJko3mCY0lYMi9NHX7ebh4kKkUgfIZdEOBRCKyb511vzWPb5VAaw
+      eTwMDJwh5LYSCIWx+8Ocmx5n4+EsgyPjhEJhPF1hevwWfvebzzEVG7LdR9Dv5vz5ScqZTdaL
+      On1+z77juLp7cel5VuJ5Bvs8rGVguMdJKBTCFx5iJOJldeEBzvAANmR6uh08STfoHzpDfO4m
+      kb5+wqEw3q4AwYCH//O7z6jz8vPwcG8/U5OjmE4vLkkiFBqipxtqkpfhbit2b5jBHie//1+/
+      QpPtYPESDng4f36KWn6b5a0Sg+HAvmPYPQH81jqLsRQjgwEexhucHXDjD4TpCvYzNhBg48kj
+      LMFeHEj0hTzMJ6oMRIfJLN4hEO4jHArj9AQIR/z86fe/oqw3381P7CpQtVzEkKy4XI6dJUrT
+      NNB1sFgO71tN01AU5RvLaKZpoGn6no4itUqZhinhcbl2TrsOo01vqJSqdTweD4r89fgtWw0x
+      DTTj6VLq8zQadSwW645uQ2tQKldxeTx7Hn9QfbpWp1Su4X4u3tFoa2CxWL7WpmuUSmWcbi9W
+      y4u1Hd3a02vidHu/cZskybRqtaz5j+llrNa9L67D5cbRmmEBUKx2uqz2V57TayPJNDtYWa22
+      PduyxYqv68Xtig6CYrHR1WX7xu1Ho22vDlmx4Ovq2jfciVg31OplNl+yUvAmsxFbb0vZlJNA
+      PrVFsfrmFkM79iNAcnWBpXiSYG8ftRUDychTrxXYylQZnRhhfXkFxRXk7UsTxz3V18ZolLj1
+      xQyq7KDeaBBwO8g1VBKxOC5/BIdWIJks8dbffJv9z/pPJssPv2QlnmV4bJiCZEWTdRJrMexd
+      PfjkKvF4novf+zf4T/A1jGM/AuQqdaanzqKgUSwU2d5Oo9h9XJoYo1BM0zd8FsV4MzNM9VIK
+      7+A5Qj4nlVKRbDpFWTUYP3cJj0WlYfHQ53e/dEXrpFIzFCZGoxgNlXQqRanWYPjsBbocoGIn
+      GvKhn/BD37EbYCTaTzyZJxIZhsoGgaFRIr0RnF1d9AdDXP/DbylqJ/cTZD8s/iEctTi+YA+D
+      /X4SBZNobwSv20GkP0o1ucj1x+t889vAm8FAJEhJk4hGh7D57UT7++juchPp60fLrfMv95ew
+      t6FAWSv5/6X3bqy7fQ0+AAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='192' name='Sheet 2' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAdTUlEQVR4nO3dSWwcZ97f8W9V9b6z2U2yuYoiRVKbZY2skbzM67Ex7wvYnskgAwOTw5zm
+      kMwlQYAcAwQ+JYcckltyS5AEyCFAlnfwzhjvvDLsmbEleSRb4i7uezfZ+75UV1UOkjjSmKQo
+      spukWM8HMKxuNZ96/lT/uqqfrn+XZBiGgSCYlHzcExCE4yQCIJiaCIBgaiIAwkswSCfiqDoU
+      simK1fpzf1sqFNGfPrJepVBRj36KL0kEQHgJKv/nv/5nJpbSfPm3/4UvprYoZNMUy1XKpSKf
+      /e1vyapVkqkMWuIR//Bg/bgn/EKW456A8Gpp6R4huz6Kxe6jll7i1wtZLPUqQ4MtJLMFbv3f
+      /8H42BIfffgjwHfc030hsQcQXorF7qa0NEnL4EVki416OU9dUqjVatQ0A6cnwNU3f0BXwIEs
+      HfdsX0wSnwMIZtbUPUCtVmvm8MfqNNcGp7u+Z2tragDy+Xwzhz9Wp7k2ON31PVtb098DGIZO
+      cjNKIpNnx4MtQ6da23u5zNA1omsrbCYzh5uLrrEZXadQrlEul1/wYINcOr7nUp6u1VhfXaW4
+      y2OMepWatvdm1EqBlZUVcsXKi6a/12RJJzZZj8Y56Ue01WoVALVSZHVtg2Ihx8rKCuuxONlM
+      hrpuUCsXKJSPZg+kfPLJJ580a/ByuUwpGSVekbApMg6bhWKxSK1SolipY7cqJGNrbKSLqNUq
+      NsUgW6hgVSCTSqNTZ2pyDqfdQSyxRTKWIBwJk0yksDmclHJpqhqgVUnniqSW5knLViq5NDab
+      lXQqjWxzUClkyVdUMtFlioYNm9XK2soSDquFUlVDQSWVLWKzSCRTGayyylayyMTEQ+xWJ1aX
+      g0I6hWSxUa9WqKg6Wl1ldWEem9uHLCvIhkq5qlLMZdGwIOk1NpcmycpeykUV1AI1XcJQK6Sz
+      eeqlAvOraxjZPGW3i9jKBq0BD+lsAYfdSiqVRLbaKeczVFSd+UeTWJ1eMukkFgkyuQIOu4Ns
+      OoFqSGysrmEjT6LiwVLPo6KAViWZzmGzKhSLJQBS6SxOh5VEIonFZieXTmIoNiqFLFUNJAyK
+      xSK6ruNyuRr+nFheWSHY0sLU2EPsLheSbGNtZR5PSxurs6NIriDRmTHSukJbi7/h24fHz8un
+      tTV9GTRZUOntCvBgeo28S0PydVGOPeLRaobXL4+gY6DLDpKpNHOjd1hPG7x+dRAMqG1ZKZdK
+      aLpOciuKxRlieW4ayeJgc2OZiuHColWAMgXNQ7u1hqHWKSdTVAoZarrO5maamqFSLJYJBdwM
+      D3eDoRMD5ibuM59QGe4JkqrZ6A9amNrIc+NyL+m8gtXuwqjXiK/Nc//+GO0DQ1iKFQZfu4yE
+      jm5xYtVKrMcqVFKr9A4MM/7N11QdIfpbXdipoah5kukyX45+gzPYRXfYjmJVcCg+ypUKukNh
+      fWWNoDfIo+lJrIrCyhrY7B60jU0ym2uE+i9QLpdQ6xqpVJJEdB3DaqGcTZGp6lQrW8iVNKm0
+      zuBQkE9/dwdvuIfeoBVDr5FNeohXHThKayyuRhm+eJWltTXeeO0C3z4YZfj8BTKZNHVVx+3Q
+      cAa68busTX1e9Pb18Gh2kb6RNoLBFlpbAlTDbRQSG+hWN/YjWp9s+ma6wl4eTMwhyRJObyv9
+      3e2odYOOsA8DSCVTGEgoioKvJcTAwBkcLg99Z/rwuX1YpRrlWh1ZltGrVRSblUQ8gc3tp17O
+      UtVlQq0hKpkEntYAya0MiqJgcXg409+H02qlnM9SKFdp9zu5ffcua/HHj6npMuGgF28gRLWQ
+      RnIGsNQL5MsaNqebzs4IXqcNq91Oe2cPnW2tdPScIeR3AzJupcZSNIksyYQjvbQ4LNi9QbxO
+      K4ZWJZUrIssyitVGW3s7fb0RvIFWensi+Hw+asUcmiEhY1CtVrHKkMqV8LhdZFMJZKuTcKiF
+      RDJNwOMkky+iKArelhA9XR0oskwunaCqarRG+hg404OuabS3d9DX3YFer5LO5JGsdgYGB/H7
+      /HT3n6O1NUDAppEu6bT67KSzRdRyHtWQcPpCnO3paNrzoZpLcP+bUeLJNAYGlaqKLMsggWJx
+      QjWPJxhCkY8mAU1dBk0mk7S2tjZr+P2pVxkbn0Byt3LpXF/Dhj0JtdVKGcYmZmntOsuZzu/O
+      ZWVukni+zsXLl3FYXm5R/iTU1yzP1tbUAGxsbOBwOJo1/LEqFAp4PJ7jnkbTnOb6nq2tqe8B
+      7HY7LS0tzdzEsTEM49TWBqe7vmdra/qbYEl6BT4PP6DTXBuc7vqe1ibOBRJM7UB7gGImzrcz
+      67z9xiVGv71HviQzNBxhbnaZ9jPnGeg6nW+ehNPnQAFwB8JEWp98nGyAIUmkc2XeuPkWC7Mz
+      6HoLuq6j6zqqevKbIg7iNNcGp7u+Z2s7UADqapVSqUSpVEa3OAk7qlQ1ja3NKJrkQJbl7f+s
+      1uZ+oHJcTnNtcLrre7a2A70HqJbyWCwK6UKNvs4Q9o5eLp8bRC1XGRzobehkBaGZDnYI5A9x
+      3h/avh188v/+gbONmJMgHBmxCiSYmgiAYGoiAIKpiQAIpiYCIJiaCIBgaiIAgqmJAAimJgIg
+      mJoIgGBqIgCCqYkACKZ2oAAYukYuXwBArZTYSqQxdI1EPIGq6S/4aUE4OQ4UgHI+w+TMAoZe
+      Z2JyklKlSmxlnngyzszCyb8ogiA8daDToV3+VsKBLIZWJ5/PUi6reMKtDJ8bYXFuZrsbzCxd
+      RafRaa7v0B1hucQ609PT6IqN1oCfTLaEy2bhT3e+JNR1TnSEnQKnub5naztQAHyhLj76qOvJ
+      re7t+wfOiIYY4dUiVoEEUzPFRfIMw+Drr7/G7/czPDzMnTt3aG9vZ2pqCrvdzvvvv0+xWOTT
+      Tz+lo6ODlpYWRkdH+fjjj7HZbMc9faGJTLMHGBgYoFwuk8/n2djYIBaLkUqliEajZLNZXC4X
+      Q0NDZDIZNjY2eO+995iYmDjuaQtNZooASJKE0+lEkiQ+//xzotEos7OzvP/++yiKgqIoaJqG
+      z+dDVdXtVQJFUY576vuiaRqxWAx4vMIRi8XQNI3Z2VmKxSIA8XiciYkJqtUqk5OTRKPR45zy
+      iWGKQyBd1/n973/P1tYWP/3pT7FYLGQyGSYnJ+nv76darZLL5bh//z5dXV2EQiHu3bvHT37y
+      k+Oe+r5Eo1Hu3LnDxx9/zMOHD/n666+5cuUKqqrS1tYGwO3bt+nv7yeZTPLo0SNu3LhxzLM+
+      GUwRAFmW+eCDD567z+Px0N3d/dx9H3/88fafz507dyRza4Tu7m4ikQiVSoXFxUW8Xi9ra2tU
+      KhVcLhfXrl3Dbrdz//593nzzTbLZLNPT00QikVP9Bbj7cWoDULr/AHVlraFjev76hygn8Dvz
+      Z2dn+eyzzzAMA7/fz8LCAj/84Q+ZnJykWCyysrKC1WqlXq9TKpWw2+3bh0Zmd2qvEBP7N/+W
+      /N/9fUPH7Pvf/x1bXw9wuq+gAqe7vmdrM8WbYEHYzak9BDrNKuNTrP3Tf9nQMQP/5GeE/sU/
+      a+iYrwIRgFeQoesYTy443bAx1XpDx3tViEMgwdREAARTO1AAipk4t++PAlCv5Pjsi9vkkxt8
+      9eUfWYqlGzpBQWimA18iqS2QxzB0lpbWCQa9bKULf75EUpv/2BtimrG6W6/XkZ7Uc5y1aVrj
+      j9f/sh7RELMH48mTu14rsrm5xVYqycDAELlcmrphOxENMc34hNNisfz50jrHWFtdafzaxV/W
+      Ixpi9lBIb5LLZVnZ9PD2u++Sy2Xxup1MTc8xMDTc0MkKQjMdKADe1gjXWiPbt30+PwAXLl5o
+      zKwE4YiIVSDB1EQABFM7tk+CNzc3WVxc5Nq1a9y6dQu3240kSSwuLnLz5k0GBwf5/PPPKZVK
+      vPXWW9y6dYt33nmHjo6O45qycAod2x7AbrdTffJx/vXr1ykUCrzzzjuMjIxsn6l3/vx56vU6
+      d+7c4Qc/+AFjY2PHNV3hlDq2AAQCASyWxzugiYkJbty4ga7rZLNZWlpaAKhUKiiKgqqqOBwO
+      0zdvCI13bIdADx8+ZHR0FIvFwuzsLNlslhs3bnD58mVUVSUWizE+Pk6lUuHmzZv8+te/5p13
+      3jmu6Qqn1LEF4MqVK1y5cgVgx/7U3t5eent7t2//4he/OLK5CeZxZAFI5crMb6QaOmZPm5+O
+      4MlrURReHUcWgMnlOP/+f37V0DF/+eHr/PSdkYaOKZiL+BxAMDURAMHURAAEUzvYJZIMnUql
+      Chio1QqFUhnD0CkUCmh6075lRRAa7mCXSMqluDc6CbrO6soiE/cfsLgyz+zcDI8WNho9R0Fo
+      mgNeIilEpDUHskx7OExNcoKmcunyVRbnd75EkqZpDZ04gLZH15LoCHs5oiPsJeRTMWZnZ5Es
+      NlbnJvG3RnC1OPnm/l18od4dO8Ka8U3Lyh5dS8fZEWYYBtPT0/T396OqKpubm5w9e5Y//vGP
+      9PT00N/fTzab5fPPP+fKlSusra3h8Xi4cuXKvuYtOsIO59AdYW5/mPfffw9ZVujpbMMwwGq1
+      Euns2z6/x8wqlQrRaJRgMEihUGB9fZ1wOMzZs2f55ptv6O/vZ2lpiatXr9LR0YHD4eCLL77g
+      4sWLp/ZJd1CJRIK7d+/ywQcf8OWXXxKJRPB6vdy/f58PP/wQgLt377KwsMCPfvQjfvOb3zA0
+      NMSbb765r/EP9B5AVhRsNhsWi4LVasNmsyFJElarVZywBjidTnp6Hn+H6MDAAIqi4PF4WFxc
+      5Pvf/z4AXq+XL774gnv37rG2toYsiwW5nfj9fgKBALquMzIyQrFYJBgM4nnmS4pXVlYYGRmh
+      VqthtVoZHBzc9/ji5boJ8vk8t27dIhgM0tPTw+3bt9E0jampKVRVpVqtUqlUkCQJWZaZn5/f
+      PjVceJ7Vat0+fLbb7dsvtE/vMwyD69evs7S0RK1W4/r169y6dYuf//zn+3oxFgFoAq/Xy69+
+      9avt2093x+++++5zj7tw4XEP9c2bN49ucq+Y5eVlJicnMQyDeDxONpvdfo9ls9lob28nm82S
+      TCb5q7/6K/7whz9w4cKFfR+JiAA0SDpfRm/gypMiywQ8joaN96rq6+vjl7/85Xfuf3omMTw+
+      c/jp7Z/97GcvNb4IQIP88//4W/LlWsPG62z18J/+1Y8bNt6rQsvlyf/9Zw0d03amF9cbV3f8
+      OxEA4UTRkini/+4/NHRM3z/6YNcAiKUHwdREAARTEwEQTE0EQDA1EQDB1MQqkPDSDMNgbGyM
+      WCzG8PAwX331FSMjI1y+fJlPP/2UdDrNe++9x+3bt7lx48Zz3+5x0og9gHAgMzMzOJ1ONE3j
+      xz9+/HmFxWLho48+oquri8XFRS5dusTk5OQxz3RvB75E0t1vxzEMnZnxb7l9f4xiOsZXX37J
+      6lau0XMUTqBr164xPz+PqqpMTExw9uxZALLZLG63G6/Xy9LS0ok/O/jAl0gK+fIY9Rq4Whiw
+      lZnczPLGjZvMz86ihzxH0hCzV9PGUTfENHprBuxa21H8Ll/UELO+vo7dbqenp4disYjVamV5
+      eZlCocCFCxfY2tri4cOHDA0NvVRjTb1+tM0+h4qnJEnUKlUKWh2XXaFULqDx+JRoRVGQZXn7
+      FaAZDTHPjr/T3BrNYrFsb+8vt93orUlPtreT+hH8Lvf63QK8/fbb23++evXxp6zPHut7PJ7t
+      vcLLMJqwx9irtgNtLZdYJ5GIoytOOgJ2UjUv57tbGJ+Y5ezI82fiNbs/4Kj7D8xS27O3Y6kC
+      W+liw7ZjUWQunAk3bLz92K22XQNgGAZ6vcLi4gpWdwu9XW3br3K+UBc3Ql3bjw09+f9rV15r
+      6KSFk+Ef7i3wvz5v3JtZv9vOf/vX/7hh4x3GrgFYmX7I/Owyk6kqg5EQPV3vN3w3LwjHbdcA
+      9AxfwmqxoS+vUpZc4skvnEq7LoNqaolkuki5XCPg9TR8lUMQToJd9wC5eJYzV4ZgyofVaRF7
+      AOFU2nUPkF6bYXIlR1fEy+j4I7EHEE6lXQMw8P13scbnuP3NBH/z4d+IcyaEU2nXQyBJtvC9
+      t947yrkIwpETL+yCqYkACKYmAiCYmgiAYGoiAIKpHS4AhsHm6jyTcyvoWpWxh6MUa40/n1sQ
+      muVQATC0GhvpCrZihun5ebr7e1mcX27U3ASh6Q7XfSDJWOpF4mUDjyOA2+1FIWbKSyQdbUfY
+      0XZN6bre0G3tVdsr1RHGk6YCQ5LobPVx7+4dugcumfISSc3oCNuttqO+RFKjL96xV23N6gjb
+      rbbDtUTKFi5/7/vbt98KRQ4znCAcObEKJJiaCIBgaiIAgqmJAAimJgIgmJoIgGBqIgCCqYkA
+      CKYmAiCYmgiAYGoiAIKpiQAIpnboU+8Mw8AwHp8YahgGkiQd+dd6C8JBHS4AhsbYN3+iZg3Q
+      F7QyuxylJTLA+bPirFDh1XCoAOh1lVyhiNVpJ1mRuX7zbRbmZ9D1dtEQc0iiIaZxmneJJMVC
+      IBBEr5RRdTdTU2NYHEHRENMAoiGmcZraEDM8MkKppuPzOMll83h8vsPNVhCO0KHjZrU78dsf
+      /9kf8B92OEE4UmIZVDA1EQDB1EQABFMTARBMTQRAMDURAMHURAAEUxMBEExNBEAwNREAwdRE
+      AARTEwEQTO3QATAMnY2NKIZeY2b6EWW18ef9C0KzHDoAyY1FJudXWF2Yx98aYH5+pRHzEoQj
+      cajToTW1xNTcOnK9Rk71MxQMk07OiEskNYDoCGucpnWEyYqNixcvsLyyQqTFw727t4n0nxcd
+      YQ0gOsIap6kdYcFQiGAoBMBbHd2HGU4QjpxYBRJMTQRAMDURAMHURAAEUxMBEExNBEAwNREA
+      wdREAARTEwEQTE0EQDA1EQDB1EQABFMTARBM7XDnnuoaj6bG2NwqMjDcydLiGqHuYYb72ho0
+      PUForsMFQJI50z+AocQol1Wu33yHxbkZdD0kGmIOSTTENE7TGmIMo87ExCThzl6Map6lxTnq
+      klM0xDSAaIhpnKY1xCApdPd0U6vrtPedJR1PEAyLwx/h1XG4jjBJpq2ja/t2e0fHoSckCEdJ
+      rAIJpiYCIJiaCIBgaiIAgqmJAAimJgIgmJoIgGBqIgCCqYkACKbWsAAYWpXxh6OUauL6AMKr
+      o2EBWFlYoKu/l4X5pUYNKQhN17AAaJKC2+3Dws6nuQrCSdSwALQHvdy7extXMNKoIQWh6Rp2
+      8rU7GOGtt8STX3i1SEYTWqeedoNtbm7icDgAKNfqpHLlff28YRj7amjxu+14nLYdf05LptAL
+      xX1tC0naV0OLtSsCTxo2isUibrd7+++iyQL6Pn6V+63Nosi0t/x5/Gd/zqjWqMc29zHj/W9P
+      9nlRWgLbt5+tL1eqki/VGrYtRZboCHp2/jm1jroRfeEYL7M92eNGaQ1u3362tqYE4KlkMklr
+      a2uzhn+OYRjout6UzrOdHGVt8LhV0NKEbqndHGV9x1nbqfocoNGteyfJUQX7OBxnbUf+jEls
+      RlF1yOeTFAqPd6tbawuMzy7t/kO6xuzcPPoe+ypJknbdHUZXFsmVH69OldIx1uK5HR5VIxpN
+      7rOKndWLOeK5IqASjSYAMNQi9/90n3x1989HUtFl4vnqnmPvVptazrGwEntyS2dudm7HQ7Fo
+      NPad+15WNBr9zlgrc5PMr+5+OJaNrxNL730oulttulpibnHt6S0WZufQdngSRKOxA38JgvLJ
+      J598cqCf3IdyuYzL5XruvlRii2wuT71e4tH4DGVDQS1kyOQqoJeZeTRNTXazMTfB/PImbd0R
+      0tEVNjdTeF0Sdx/MUKxphIL+PY/bC8ko344/QpI0VteiWF0+vE4LMzMzaLKdbGyRR7PLBNo6
+      qBcSPHg4SrEmUa9rlDJpMtkEczOPUBUP6zPjLK7Eae/u4Olr1U61aeU8sXSaSrXO6swjlmMp
+      fE6FrVQGm8PK7MMJ1lM57HqBh2PTSA4fHpvG9MwSis1JdHGSudVNwm3tWJQ9qtNVxr79lnxV
+      I7a2QqGmE2kPsbUyTzRVxGXRGZ+coKgqtPqcTIx+y8xKHJtFwu+3sLqyxczYJNF0AUs9x+jY
+      NIrbj9dl3/PfbmsrSj5boFRIsbi4QN3iJrMVo1KX0OpJpmY3cCs1Ho5PUZedBFwy09MLYHUQ
+      X51hbmmdllA7Nsser7tGncnRByRLKvH1ZTJlja5IG8mNJdbiOVx2mYnxMbIViXCLm0fjDxlf
+      iOJxWHC5FdbXtpifmmZ1K41TqvBgbArd6iLgce5Y25HvAarFNGtbGaw2Jxdeu4JVLVDAwUAQ
+      lrLwvTdeR89FkbxdBB0KGpBIJMinVonG03QPv45e2ukV/HmbiSQXX7tCNZdm6NJFMltx6rU8
+      2UyZ+blFJKuHi30tJIt1sqk05y69hscmk80WSG7FyasS33vjKlpmHdnXS8Au8+LPuHUW5uax
+      2O2Eus5wJuRncTPJ61dfJ721TEvHWdq8DuK5KheH+6mUylRzSXLVOnOLS9g8LfSEPJQqe7/h
+      1Eop5EAP3S1OFF8Yv16lbBgkEimSi0tslaqcu3CJajGDVili8bfT3xUml81SK+dJ5fIEI4OE
+      PTaShRrnz/VRKe+9BwLIxqOkyiqKzcO1669Tjy+j+3vxKiUCbWE6A26imSKvXR6inC+i5lNk
+      KipzC4soTh9nu4LkC5W9f4OVPLorxNmOFnS7l5BUpwgkEkkyG2tEswXOnDuPVs2hqyqG08+5
+      3g4K+Ry1SpFkJoc/3EeH38VmtsTli4NUCqVdt3fkAejoHeLqyBkkxYnLZSfU0UlXwMam5udy
+      byuSZCUU6SY++zUTa0kUIBwO0943QptHYXr8Ae09/S9ctTlz5gxzUxMEI72szs3Te7YPi81D
+      S9DHhQtDFFIxlrIyPQE74Ugnq3ML+EJtuMlRUtxEwiEkyUKos4fNR18xvZHmRUeqitPHW2+/
+      jVxXCYdbCIRDXBg8y9T4JGcGLxEOewiGQ3gtNf7ud79Hsdmx+0IE3G4uDp8lFVshrzkIeOx7
+      b8fdhs9IEc1reChDSxtOIBRupff8ebyyxuT4JF29/chOLw41hyrZONvdxtcPFumMdGzPxSNX
+      +O2tL1Gstj23CTB44SoD7X68wdDjf6fec7SQQvJGcFtctIRDtDoN/t+vf4dsd2LxBgl6XFwc
+      GSQbX2erAOGga89tyI4AQWuF5XiBoANUXytuIBwO0TkwRNCp8Ghyko6uPiSrHY+sUtYV+ro6
+      +ObhHJHODsJhH8FwiIBd49e/+QzZ7th1eyd0FcigmM8jWR24HM8sc+p1NCzstQfd7/j1uoZi
+      sXwnSLpeR9NlrNsb2Xkuh1klUasVyrU6Ho8b+Znj30athuiaBrL83NgAGAY1tY7VZt2uW62W
+      Kde078zloPXVa1WKlRoejwdFbkJtugZIOy54qDUVyzO11WsVihUVr9eza21Ht/b0UiTcXt93
+      75UtDZqwtOs/hixbeP53u/NcDsNqd2Dd4UW+UUuB8m6rKpKEzfb8F1JZ7c4d53JQFpsdv+27
+      AzasNnn3/bD1L2qz2Bz4bbu/+sMJWQat14rEYunjnkbTrK+uNfyrE0+KbGKL/D7eP5xUx74H
+      2FyeZX5jk9aOCJUlHUnPUqvk2EqV6R86w9rCEoqrlWuvDR33VF+arha496cxqrKDmqoSdDvI
+      qFWiqxu4Au046jk2Nwtc/dEP8Lx4uBNnYeohSxtp+gb6yElW6rJGdGUVu78Nn1xmYyPL5ffe
+      JnCCP8M49j1AplTjwsg5FOrkc3ni8SSK3cdrQwPk8kkifedQ9FfzDFOtkMDbfZ6Qz0mpkCed
+      TFCs6gyefw2PpYpq8RAJuPexunQyVXSFof4edLVKMpGgUFHpO3cJvwOq2OkJ+dBO+K7v2ANw
+      pqeTjc0s7e19UFon2NtPe0c7Tr+fztYQtz/7Dfn6yX0F2Ysl0IujsoGvtY3uzgDRnEFPRzte
+      t4P2zh7Km3PcnlmjgYfgR6qrvZVCXaKnpxdbwE5PZ4QWv5v2SCf1zBqfj85jb8KXFDfS/wdy
+      SOpWclOHjgAAAABJRU5ErkJggg==
+    </thumbnail>
+  </thumbnails>
+</workbook>

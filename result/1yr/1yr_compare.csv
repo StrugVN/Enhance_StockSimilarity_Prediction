@@ -1,0 +1,8 @@
+﻿ model, k0_LS_profit,k0_L_profit,LS_profit, L_profit
+ GradientBoostingClassifier,130.033,127.299,174.037,149.301
+ GradientBoostingRegressor,110.408,112.527,162.038,146.549
+ RandomForestClassifier,109.726,117.284,179.116,151.979
+ RandomForestRegressor,113.635,114.14,164.856,147.958
+ LSTM,72.685,97.777,92.043,111.552
+ XGBClassifier,104.926,109.786,171.989,148.415
+ XGBRegressor,127.532,125.2,211.899,170.447
